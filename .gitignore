@@ -1,3 +1,5 @@
 src/PalcoNet/bin/Debug
 src/PalcoNet/obj/Debug
+src/MyLibrary/bin/Debug
+src/MyLibrary/obj/Debug
 *.suo

@@ -636,6 +636,71 @@ BEGIN TRANSACTION
 COMMIT TRANSACTION;
 GO
 
+-- -----------------------------------------------------
+-- SPs
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.BUSCAR_USUARIO @Usuario nvarchar(50), @Password nvarchar(50)
+as
+begin 
+	declare @habilitado bit
+	declare @cant_int_fallido int
+
+	select @habilitado = Usuario_Habilitado from EL_GROUP_BY.USUARIO where Usuario_Username =  @Usuario and Usuario_Password = HASHBYTES('SHA2_256',@Password)
+	select @cant_int_fallido = Usuario_Intentos from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario
+
+	if not exists(select 1 from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario)
+		select 0 as estado
+	if exists(select 1 from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario and Usuario_Password <> HASHBYTES('SHA2_256',@Password))
+		if (@cant_int_fallido = 3) 
+			begin
+				update EL_GROUP_BY.USUARIO set Usuario_Habilitado = 0 where Usuario_Username = @Usuario
+				select 2 as estado
+			end
+		else select 1 as estado
+	if @habilitado = 0
+		select 2 as estado
+	if @habilitado = 1
+		begin
+			if @cant_int_fallido = 1 or @cant_int_fallido = 2
+				update EL_GROUP_BY.USUARIO set Usuario_Intentos = 0 where Usuario_Username = @Usuario
+			select 3 as estado
+		end
+end
+go
+
+create procedure EL_GROUP_BY.REG_INTENTO_FALLIDO @Usuario varchar(50)
+as
+begin
+	declare @cant_int_fallido int
+	select @cant_int_fallido = Usuario_Intentos from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario
+
+	if @cant_int_fallido between 0 and 2
+		update EL_GROUP_BY.USUARIO set Usuario_Intentos = Usuario_Intentos + 1 where Usuario_Username = @Usuario
+end
+go
+
+create procedure EL_GROUP_BY.OBTENER_ID_USUARIO @USUARIO varchar(50)
+as
+begin
+	select USUARIO_ID from EL_GROUP_BY.USUARIO where Usuario_Username = @USUARIO
+end
+go
+
+create procedure EL_GROUP_BY.OBTENER_CANT_ROLES @USU_ID int
+as
+begin
+	select count(USUARIO_ID) from EL_GROUP_BY.ROL_USUARIO where USUARIO_ID = @USU_ID and ROL_USUARIO_ESTADO = 1  
+end
+go
+
+create procedure EL_GROUP_BY.OBTENER_ROLES_ACTIVOS @ID int
+as
+begin
+	select R.Rol_Nombre, R.ROL_ID from EL_GROUP_BY.ROL R inner join EL_GROUP_BY.ROL_USUARIO RXU 
+		on R.ROL_ID = RXU.ROL_ID where RXU.USUARIO_ID = @ID and R.Rol_Habilitado = 1 
+end
+go
 --------------------------------------------------------
 -- Borrador para hacer algunas pruebas
 --------------------------------------------------------
@@ -645,7 +710,8 @@ drop proc EL_GROUP_BY.CARGAR_USUARIOS;
 
 exec EL_GROUP_BY.CARGAR_USUARIOS;
 
-select * from EL_GROUP_BY.Usuario where Usuario_Id = 780;
+select * from EL_GROUP_BY.Usuario;
+select * from EL_GROUP_BY.Cliente where Usuario_ID = 3;
 
 exec EL_GROUP_BY.CARGAR_CLIENTES;
 
