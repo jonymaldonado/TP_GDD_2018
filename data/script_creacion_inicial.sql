@@ -100,7 +100,7 @@ GO
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Rol (
-  Rol_ID INT NOT NULL,
+  Rol_ID INT IDENTITY(1,1),
   Rol_Nombre NVARCHAR(20) NOT NULL,
   Rol_Habilitado BIT NOT NULL,
   PRIMARY KEY (Rol_ID))
@@ -111,9 +111,10 @@ CREATE TABLE EL_GROUP_BY.Rol (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Funcionalidad (
-  Funcionalidad_ID INT NOT NULL,
-  Rol_Nombre NVARCHAR(20) NOT NULL,
-  PRIMARY KEY (Funcionalidad_ID))
+  Fun_ID INT IDENTITY(1,1),
+  Fun_Nombre NVARCHAR(30) NOT NULL,
+  Fun_visible BIT,
+  PRIMARY KEY (Fun_ID))
 ;
 
 -- -----------------------------------------------------
@@ -121,10 +122,21 @@ CREATE TABLE EL_GROUP_BY.Funcionalidad (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Rol_Funcionalidad (
-  Rol_ID INT NOT NULL,
+  Rol_ID INT,
   Funcionalidad_ID INT NOT NULL,
   PRIMARY KEY (Funcionalidad_ID, Rol_ID))
 ;
+
+-- -----------------------------------------------------
+-- Creación de Tabla EL_GROUP_BY.Rol_Usuario
+-- -----------------------------------------------------
+
+CREATE TABLE EL_GROUP_BY.ROL_USUARIO(
+	USUARIO_ID int,
+	ROL_ID int not null,
+	ROL_USUARIO_ESTADO bit,
+	PRIMARY KEY (USUARIO_ID, ROL_ID)
+);
 
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Usuario
@@ -144,12 +156,7 @@ CREATE TABLE EL_GROUP_BY.Usuario (
   Usuario_Piso NUMERIC(18,0),
   Usuario_Depto NVARCHAR(255),
   Usuario_Codigo_Postal NVARCHAR(255),
-  Rol_ID INT
-  PRIMARY KEY (Usuario_ID),
-  CONSTRAINT FK_Usuario_Rol_ID FOREIGN KEY (Rol_ID)     
-    REFERENCES EL_GROUP_BY.Rol (Rol_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE)
+  PRIMARY KEY (Usuario_ID))
 ;
 
 CREATE UNIQUE INDEX Usuario_Username_UNIQUE ON EL_GROUP_BY.Usuario (Usuario_Username ASC);
@@ -426,7 +433,6 @@ BEGIN TRAN
 					,Cli_Piso
 					,Cli_Depto
 					,Cli_Cod_Postal
-					,1
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
 		UNION
@@ -442,7 +448,6 @@ BEGIN TRAN
 					,Espec_Empresa_Piso
 					,Espec_Empresa_Depto
 					,Espec_Empresa_Cod_Postal
-					,2
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
 
@@ -458,8 +463,7 @@ BEGIN TRAN
 		,123
 		,null
 		,null
-		,'1990'
-		,3)
+		,'1990')
 COMMIT
 GO
 
@@ -482,6 +486,19 @@ BEGIN TRANSACTION
 					,EL_GROUP_BY.FUNC_COD_USUARIO(Cli_Nombre + CONVERT(NVARCHAR(50),Cli_Dni))
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
+
+	-- Acá cargaremos al admin como un cliente más
+	INSERT INTO EL_GROUP_BY.Cliente
+		VALUES ('admin'
+			,'admin'
+			,'DNI'
+			,35123123
+			,null
+			,CONVERT(DATETIME,'1990/02/02 00:00:00',121)
+			,'SANTANDER RIO'
+			,4242424242424242
+			,CONVERT(DATETIME,'2018/02/02 00:00:00',121)
+			,783)
 COMMIT
 GO
 
@@ -499,11 +516,133 @@ BEGIN TRANSACTION
 					,EL_GROUP_BY.FUNC_COD_USUARIO(CONVERT(NVARCHAR(50),Espec_Empresa_Cuit))
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
+
+	-- Acá cargaremos al admin como una empresa más
+	INSERT INTO EL_GROUP_BY.Empresa
+		VALUES ('RAZON SOCIAL X'
+		    ,'30-71031609-7'
+			,null
+			,CONVERT(DATETIME,'1980/02/02 00:00:00',121)
+			,783)
 COMMIT
 GO
+
+-- -----------------------------------------------------
+-- Cargar Roles
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_ROLES AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.ROL VALUES ('CLIENTE',1)
+	INSERT INTO EL_GROUP_BY.ROL VALUES ('EMPRESA',1)
+	INSERT INTO EL_GROUP_BY.ROL VALUES ('ADMINISTRADOR',1)
+COMMIT;
+GO
+
+-- -----------------------------------------------------
+-- Cargar Funcionalidades
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_FUNCIONALIDADES AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('ABM_ROL',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('ABM_CLIENTE',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('ABM_EMPRESA',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('ABM_RUBRO',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('ABM_GRADO_PUBLICACION',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('GENERAR_PUBLICACION',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('EDITAR_PUBLICACION',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('COMPRAR',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('HISTORIAL_CLIENTE',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('CANJE_ADMINISTRACION_PUNTOS',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('GENERAR_PAGO_COMISIONES',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('LISTADO_ESTADISTICO',1)
+COMMIT;
+GO
+
+-- -----------------------------------------------------
+-- Cargar Roles_X_Usuario
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_ROLES_X_USUARIO AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.ROL_USUARIO
+			SELECT Usuario_ID,
+					1,
+					1
+			FROM EL_GROUP_BY.USUARIO
+			WHERE Usuario_Username = 'admin'
+	UNION
+			SELECT Usuario_ID,
+					2,
+					1
+		FROM EL_GROUP_BY.USUARIO
+		WHERE Usuario_Username = 'admin'
+	UNION
+			SELECT Usuario_ID,
+					3,
+					1
+		FROM EL_GROUP_BY.USUARIO
+		WHERE Usuario_Username = 'admin'
+	UNION
+		SELECT USUARIO_ID,
+				ROL_ID,
+				1
+			FROM EL_GROUP_BY.Cliente, EL_GROUP_BY.ROL
+			WHERE Rol_Nombre = 'CLIENTE'
+	UNION
+		SELECT USUARIO_ID,
+				ROL_ID,
+				1
+			FROM EL_GROUP_BY.Empresa, EL_GROUP_BY.ROL
+			WHERE Rol_Nombre = 'EMPRESA'
+
+COMMIT;
+GO
+
+-- -----------------------------------------------------
+-- Cargar Roles_X_Funcionalidad
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.ROL_FUNCIONALIDAD
+		SELECT Rol_ID,
+				FUN_ID
+			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
+			WHERE R.Rol_Nombre = 'ADMINISTRADOR' AND
+					(F.FUN_ID = 1 OR
+					F.FUN_ID = 2 OR
+					F.FUN_ID = 3)
+	UNION
+		SELECT Rol_ID,
+				Fun_ID
+			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
+			WHERE R.Rol_Nombre = 'CLIENTE' AND
+					(F.Fun_ID = 8 OR
+					F.Fun_ID = 9 OR
+					F.Fun_ID = 10 OR
+					F.Fun_ID = 12)
+	UNION
+		SELECT Rol_ID,
+				Fun_ID
+			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
+			WHERE R.Rol_Nombre = 'EMPRESA' AND
+					(F.Fun_ID = 4 OR
+						F.Fun_ID = 5 OR
+						F.Fun_ID = 6 OR
+						F.Fun_ID = 7 OR
+						F.Fun_ID = 11)
+COMMIT TRANSACTION;
+GO
+
+--------------------------------------------------------
+-- Borrador para hacer algunas pruebas
+--------------------------------------------------------
 select Cli_Dni from gd_esquema.Maestra where Cli_Dni is not null;
 drop table EL_GROUP_BY.Usuario;
 drop proc EL_GROUP_BY.CARGAR_USUARIOS;
+
 exec EL_GROUP_BY.CARGAR_USUARIOS;
 
 select * from EL_GROUP_BY.Usuario where Usuario_Id = 780;
@@ -511,9 +650,32 @@ select * from EL_GROUP_BY.Usuario where Usuario_Id = 780;
 exec EL_GROUP_BY.CARGAR_CLIENTES;
 
 drop table EL_GROUP_BY.Cliente;
+drop proc EL_GROUP_BY.CARGAR_CLIENTES;
 
 select * from EL_GROUP_BY.Cliente;
+
+drop table EL_GROUP_BY.Empresa;
+drop proc EL_GROUP_BY.CARGAR_EMPRESAS;
 
 exec EL_GROUP_BY.CARGAR_EMPRESAS;
 
 select * from EL_GROUP_BY.Empresa;
+
+exec EL_GROUP_BY.CARGAR_ROLES;
+
+select * from EL_GROUP_BY.Rol;
+
+exec EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
+drop table EL_GROUP_BY.Funcionalidad;
+drop proc EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
+
+select * from EL_GROUP_BY.Funcionalidad;
+
+exec EL_GROUP_BY.CARGAR_ROLES_X_USUARIO;
+
+select * from EL_GROUP_BY.ROL_USUARIO;
+
+exec EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD;
+drop table EL_GROUP_BY.Rol_Funcionalidad;
+
+select * from EL_GROUP_BY.Rol_Funcionalidad;
