@@ -701,6 +701,15 @@ begin
 		on R.ROL_ID = RXU.ROL_ID where RXU.USUARIO_ID = @ID and R.Rol_Habilitado = 1 
 end
 go
+
+create procedure EL_GROUP_BY.OBTENER_FUNCIONALIDADES_ROL @ID_ROL int
+as
+begin
+	select F.Fun_ID from EL_GROUP_BY.FUNCIONALIDAD F inner join EL_GROUP_BY.ROL_FUNCIONALIDAD RXU 
+		on F.Fun_ID = RXU.Funcionalidad_ID where RXU.Rol_ID = @ID_ROL and F.Fun_visible = 1 
+end
+go
+
 --------------------------------------------------------
 -- Borrador para hacer algunas pruebas
 --------------------------------------------------------

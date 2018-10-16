@@ -61,7 +61,7 @@ namespace MyLibrary
         public static SqlDataReader GetFunctionsIds(int roleId)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@ROL_ID", roleId));
+            parameters.Add(new SqlParameter("@ID_ROL", roleId));
             return Connection.GetDataReader("EL_GROUP_BY.OBTENER_FUNCIONALIDADES_ROL", Connection.Type.StoredProcedure, parameters);
         }
     }

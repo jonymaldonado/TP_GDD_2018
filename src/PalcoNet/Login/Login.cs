@@ -176,7 +176,7 @@ namespace PalcoNet.Login
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Environment.Exit(0);
         }
     }
 
