@@ -33,9 +33,7 @@ namespace PalcoNet.Login
 
         public void EnableRoleSelection(bool state)
         {
-            lbl_user.Enabled = state;
             txt_user.Enabled = state;
-            lbl_pass.Enabled = state;
             txt_pass.Enabled = state;
             cmb_rol.Visible = !state;
             lbl_rol.Visible = !state;

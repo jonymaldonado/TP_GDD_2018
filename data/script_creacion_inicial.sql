@@ -702,11 +702,63 @@ begin
 end
 go
 
-create procedure EL_GROUP_BY.OBTENER_FUNCIONALIDADES_ROL @ID_ROL int
+create procedure EL_GROUP_BY.OBTENER_FUNCIONALIDADES_X_ROL @ROL_ID int
 as
 begin
 	select F.Fun_ID from EL_GROUP_BY.FUNCIONALIDAD F inner join EL_GROUP_BY.ROL_FUNCIONALIDAD RXU 
-		on F.Fun_ID = RXU.Funcionalidad_ID where RXU.Rol_ID = @ID_ROL and F.Fun_visible = 1 
+		on F.Fun_ID = RXU.Funcionalidad_ID where RXU.Rol_ID = @ROL_ID and F.Fun_visible = 1 
+end
+go
+
+create procedure EL_GROUP_BY.GUARDAR_ROL @nombre varchar(25), @habilitado bit
+as
+begin
+	insert into EL_GROUP_BY.ROL values (@nombre, @habilitado);
+end
+go
+
+create procedure EL_GROUP_BY.DAME_ID_X_NOMBRE @nombre varchar(25)
+as
+begin
+	select Rol_ID from EL_GROUP_BY.ROL where Rol_Nombre = @nombre 
+end
+go
+
+create procedure EL_GROUP_BY.ELIMINAR_ROL @ID int
+as
+begin
+	update EL_GROUP_BY.ROL set Rol_Habilitado = 0 where Rol_ID = @ID;
+end
+go
+
+create procedure EL_GROUP_BY.AGREGAR_FUNCIONALIDAD_A_ROL @ROL_ID INT, @FUNCIONALIDAD_ID INT
+as
+begin
+	insert into EL_GROUP_BY.ROL_FUNCIONALIDAD values (@ROL_ID,@FUNCIONALIDAD_ID)
+end
+go
+
+create procedure EL_GROUP_BY.ELIMINAR_FUNCIONALIDAD_A_ROL @ROL_ID INT, @FUNCIONALIDAD_ID INT
+as
+begin
+	delete from EL_GROUP_BY.ROL_FUNCIONALIDAD where Rol_ID = @ROL_ID and FUNCIONALIDAD_ID = @FUNCIONALIDAD_ID
+end
+go
+
+create procedure EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL @ROL_ID int
+as
+begin
+	select f.* from EL_GROUP_BY.ROL_FUNCIONALIDAD as rxf inner join EL_GROUP_BY.FUNCIONALIDAD as f
+		   on rxf.FUNCIONALIDAD_ID = f.FUN_ID where rxf.Rol_ID = @ROL_ID;
+end
+go
+
+create procedure EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL_NO_ASIGNADAS @ROL_ID int
+as
+begin
+	select * from EL_GROUP_BY.FUNCIONALIDAD except 
+									     select f.* from EL_GROUP_BY.ROL_FUNCIONALIDAD as rxf inner join EL_GROUP_BY.FUNCIONALIDAD as f
+										 on rxf.Funcionalidad_ID = f.Fun_ID where rxf.Rol_ID = @ROL_ID;
 end
 go
 

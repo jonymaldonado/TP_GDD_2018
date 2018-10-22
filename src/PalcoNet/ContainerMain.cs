@@ -163,6 +163,18 @@ namespace PalcoNet
             Login.Login fr = new Login.Login(this);
             fr.Show();
         }
+
+        private void aBMRoleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Abm_Rol.FormRole());
+        }
+
+        private void openForm(Form fr)
+        {
+            this.Hide();
+            fr.ShowDialog();
+            this.Show();
+        }
     }
 
 }

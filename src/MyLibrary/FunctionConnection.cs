@@ -14,9 +14,9 @@ namespace MyLibrary
         {
             FunctionDAO functionDAO = new FunctionDAO();
 
-            functionDAO.Id = reader.GetInt32(reader.GetOrdinal("FUN_ID"));
-            functionDAO.Name = reader.GetString(reader.GetOrdinal("FUN_DESCRIPCION"));
-            functionDAO.Visible = reader.GetBoolean(reader.GetOrdinal("FUN_VISIBLE"));
+            functionDAO.Id = reader.GetInt32(reader.GetOrdinal("FUN_Id"));
+            functionDAO.Name = reader.GetString(reader.GetOrdinal("FUN_Nombre"));
+            functionDAO.Visible = reader.GetBoolean(reader.GetOrdinal("FUN_Visible"));
 
             return functionDAO;
         }
@@ -61,8 +61,56 @@ namespace MyLibrary
         public static SqlDataReader GetFunctionsIds(int roleId)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@ID_ROL", roleId));
-            return Connection.GetDataReader("EL_GROUP_BY.OBTENER_FUNCIONALIDADES_ROL", Connection.Type.StoredProcedure, parameters);
+            parameters.Add(new SqlParameter("@ROL_Id", roleId));
+            return Connection.GetDataReader("EL_GROUP_BY.OBTENER_FUNCIONALIDADES_X_ROL", Connection.Type.StoredProcedure, parameters);
+        }
+
+        public static List<FunctionDAO> GetFunctionsForRole(Int32 id)
+        {
+            List<FunctionDAO> functions = new List<FunctionDAO>();
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            parameters.Add(new SqlParameter("@Rol_Id", id));
+
+            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL", Connection.Type.StoredProcedure, parameters);
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    FunctionDAO funcion = GetFunction(reader);
+                    functions.Add(funcion);
+                }
+            }
+
+            reader.Close();
+
+            return functions;
+        }
+
+        public static List<FunctionDAO> GetFunctionsNotAssignedForRole(Int32 id)
+        {
+            List<FunctionDAO> funciones = new List<FunctionDAO>();
+
+            List<SqlParameter> parametros = new List<SqlParameter>();
+
+            parametros.Add(new SqlParameter("@Rol_Id", id));
+
+            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL_NO_ASIGNADAS", Connection.Type.StoredProcedure, parametros);
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    FunctionDAO funcion = GetFunction(reader);
+                    funciones.Add(funcion);
+                }
+            }
+
+            reader.Close();
+
+            return funciones;
         }
     }
 

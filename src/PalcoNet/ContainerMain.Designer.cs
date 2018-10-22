@@ -81,12 +81,12 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(140, 6);
             // 
             // closeSessionToolStripMenuItem
             // 
             this.closeSessionToolStripMenuItem.Name = "closeSessionToolStripMenuItem";
-            this.closeSessionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeSessionToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.closeSessionToolStripMenuItem.Text = "Cerrar Sesion";
             this.closeSessionToolStripMenuItem.Click += new System.EventHandler(this.closeSessionToolStripMenuItem_Click);
             // 
@@ -94,7 +94,7 @@
             // 
             this.exitToolStripMenuItem.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.exitToolStripMenuItem.Text = "&Salir";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -115,6 +115,7 @@
             this.aBMRoleToolStripMenuItem.Name = "aBMRoleToolStripMenuItem";
             this.aBMRoleToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.aBMRoleToolStripMenuItem.Text = "Rol";
+            this.aBMRoleToolStripMenuItem.Click += new System.EventHandler(this.aBMRoleToolStripMenuItem_Click);
             // 
             // aBMClientToolStripMenuItem
             // 
