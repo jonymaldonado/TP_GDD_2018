@@ -111,10 +111,10 @@ CREATE TABLE EL_GROUP_BY.Rol (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Funcionalidad (
-  Fun_ID INT IDENTITY(1,1),
-  Fun_Nombre NVARCHAR(30) NOT NULL,
-  Fun_visible BIT,
-  PRIMARY KEY (Fun_ID))
+  Funcionalidad_ID INT IDENTITY(1,1),
+  Funcionalidad_Nombre NVARCHAR(30) NOT NULL,
+  Funcionalidad_visible BIT,
+  PRIMARY KEY (Funcionalidad_ID))
 ;
 
 -- -----------------------------------------------------
@@ -122,7 +122,7 @@ CREATE TABLE EL_GROUP_BY.Funcionalidad (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Rol_Funcionalidad (
-  Rol_ID INT,
+  Rol_ID INT NOT NULL,
   Funcionalidad_ID INT NOT NULL,
   PRIMARY KEY (Funcionalidad_ID, Rol_ID))
 ;
@@ -131,12 +131,11 @@ CREATE TABLE EL_GROUP_BY.Rol_Funcionalidad (
 -- Creación de Tabla EL_GROUP_BY.Rol_Usuario
 -- -----------------------------------------------------
 
-CREATE TABLE EL_GROUP_BY.ROL_USUARIO(
-	USUARIO_ID int,
-	ROL_ID int not null,
-	ROL_USUARIO_ESTADO bit,
-	PRIMARY KEY (USUARIO_ID, ROL_ID)
-);
+CREATE TABLE EL_GROUP_BY.Rol_Usuario(
+	Usuario_ID int,
+	Rol_ID int not null,
+	PRIMARY KEY (Usuario_ID, Rol_ID))
+;
 
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Usuario
@@ -149,6 +148,7 @@ CREATE TABLE EL_GROUP_BY.Usuario (
   Usuario_Tipo NVARCHAR(20) NOT NULL,
   Usuario_Habilitado BIT NOT NULL,
   Usuario_Intentos SMALLINT NOT NULL,
+  Usuario_Primer_Login BIT NOT NULL,	
   Usuario_Mail NVARCHAR(255),
   Usuario_Telefono NVARCHAR(20),
   Usuario_Calle NVARCHAR(255),
@@ -156,6 +156,7 @@ CREATE TABLE EL_GROUP_BY.Usuario (
   Usuario_Piso NUMERIC(18,0),
   Usuario_Depto NVARCHAR(255),
   Usuario_Codigo_Postal NVARCHAR(255),
+  Usuario_Localidad NVARCHAR(50) NOT NULL,
   PRIMARY KEY (Usuario_ID))
 ;
 
@@ -231,12 +232,12 @@ CREATE TABLE EL_GROUP_BY.Espectaculo (
   Espectaculo_ID INT NOT NULL,
   Espectaculo_Codigo NUMERIC(18,0) NOT NULL,
   Espectaculo_Descripcion NVARCHAR(255) NOT NULL,
+  Espectaculo_Direccion NVARCHAR(255) NOT NULL,
   Espectaculo_Fecha DATETIME NOT NULL,
   Espectaculo_Fecha_Vencimiento DATETIME NOT NULL,
   Espectaculo_Estado NVARCHAR(255) NOT NULL,
-  Espectaculo_Ubicaciones_Disponibles NUMERIC(18,0) NOT NULL,
-  Espectaculo_Total_Ubicaciones NUMERIC(18,0) NOT NULL,
   Rubro_ID INT NOT NULL,
+  Empresa_ID INT NOT NULL,
   PRIMARY KEY (Espectaculo_ID),
   CONSTRAINT FK_Espectaculo_Rubro_ID FOREIGN KEY (Rubro_ID)     
     REFERENCES EL_GROUP_BY.Rubro (Rubro_ID)     
@@ -267,7 +268,7 @@ CREATE TABLE EL_GROUP_BY.Ubicacion (
   Ubicacion_Precio NUMERIC(18,0) NOT NULL,
   Ubicacion_Disponible BIT NOT NULL,
   Ubicacion_Tipo_ID INT NOT NULL,
-  Espectaculo_ID INT NOT NULL,
+  Ubicacion_Canjeada BIT NOT NULL,
   PRIMARY KEY (Ubicacion_ID),
   CONSTRAINT FK_Ubicacion_Espectaculo_ID FOREIGN KEY (Espectaculo_ID)     
     REFERENCES EL_GROUP_BY.Espectaculo (Espectaculo_ID)     
@@ -294,11 +295,12 @@ CREATE TABLE EL_GROUP_BY.Publicacion (
   Publicacion_ID INT NOT NULL,
   Publicacion_Descripcion_Inicio NVARCHAR(255) NOT NULL,
   Publicacion_Fecha DATETIME NOT NULL,
+  Publicacion_FechaHora DATETIME NOT NULL,
   Publicacion_Estado NVARCHAR(255) NOT NULL,
   Publicacion_Cantidad_Localidades NUMERIC(7,0) NOT NULL,
-  Usuario_ID INT NOT NULL,
-  Grado_Publicacion_ID INT NOT NULL,
+  Publicacion_Usuario NVARCHAR(50) NOT NULL,
   Espectaculo_ID INT NOT NULL,
+  Grado_Publicacion_ID INT NOT NULL,
   PRIMARY KEY (Publicacion_ID),
   CONSTRAINT FK_Publicacion_Usuario_ID FOREIGN KEY (Usuario_ID)     
     REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
@@ -323,6 +325,7 @@ CREATE TABLE EL_GROUP_BY.Factura (
   Factura_Nro NUMERIC(18,0) NOT NULL,
   Factura_Fecha DATETIME NOT NULL,
   Factura_Total NUMERIC(18,2) NOT NULL,
+  Factura_Empresa_ID VARCHAR(45) NULL,
   PRIMARY KEY (Factura_ID))
 ;
 
@@ -344,8 +347,9 @@ CREATE TABLE EL_GROUP_BY.Compra (
   Compra_ID INT NOT NULL,
   Compra_Fecha DATETIME NOT NULL,
   Compra_Cantidad NUMERIC(18,0) NOT NULL,
-  Factura_ID INT NOT NULL,
-  Usuario_ID INT NOT NULL,
+  Compra_Monto_Total DECIMAL(18,2) NOT NULL,
+  Compra_Rendida BIT NOT NULL,
+  Cliente_ID INT NOT NULL,
   Forma_Pago_ID INT NOT NULL,
   PRIMARY KEY (Compra_ID),
   CONSTRAINT FK_Compra_Factura_ID FOREIGN KEY (Factura_ID)     
@@ -372,6 +376,7 @@ CREATE TABLE EL_GROUP_BY.Item (
   Item_Monto NUMERIC(18,2) NOT NULL,
   Item_Cantidad NUMERIC(18,0) NOT NULL,
   Item_Descripcion NVARCHAR(60) NOT NULL,
+  Compra_ID INT NOT NULL,
   Factura_ID INT NOT NULL,
   PRIMARY KEY (Item_ID),
   CONSTRAINT FK_Item_Factura_ID FOREIGN KEY (Factura_ID)     
@@ -397,6 +402,17 @@ CREATE TABLE EL_GROUP_BY.Puntos (
     ON UPDATE CASCADE)
 ;
 GO
+-- -----------------------------------------------------
+-- Creación de Tabla EL_GROUP_BY.Publicacion_Ubicacion
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS EL_GROUP_BY.Publicacion_Ubicacion (
+  Ubicacion_ID INT NOT NULL,
+  Publicacion_ID INT NOT NULL,
+  Compra_ID INT NULL,
+  PRIMARY KEY (Ubicacion_ID, Publicacion_ID)
+;
+GO
+	       
 -- -----------------------------------------------------
 -- Funciones
 -- -----------------------------------------------------
@@ -616,23 +632,23 @@ BEGIN TRANSACTION
 					F.FUN_ID = 3)
 	UNION
 		SELECT Rol_ID,
-				Fun_ID
+				Funcionalidad_ID
 			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
 			WHERE R.Rol_Nombre = 'CLIENTE' AND
-					(F.Fun_ID = 8 OR
-					F.Fun_ID = 9 OR
-					F.Fun_ID = 10 OR
-					F.Fun_ID = 12)
+					(F.Funcionalidad_ID = 8 OR
+					F.Funcionalidad_ID = 9 OR
+					F.Funcionalidad_ID = 10 OR
+					F.Funcionalidad_ID = 12)
 	UNION
 		SELECT Rol_ID,
-				Fun_ID
+				Funcionalidad_ID
 			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
 			WHERE R.Rol_Nombre = 'EMPRESA' AND
-					(F.Fun_ID = 4 OR
-						F.Fun_ID = 5 OR
-						F.Fun_ID = 6 OR
-						F.Fun_ID = 7 OR
-						F.Fun_ID = 11)
+					(F.Funciondalidad_ID = 4 OR
+						F.Funcionalidad_ID = 5 OR
+						F.Funcionalidad_ID = 6 OR
+						F.Funcionalidad_ID = 7 OR
+						F.Funcionalidad_ID = 11)
 COMMIT TRANSACTION;
 GO
 
@@ -705,8 +721,8 @@ go
 create procedure EL_GROUP_BY.OBTENER_FUNCIONALIDADES_X_ROL @ROL_ID int
 as
 begin
-	select F.Fun_ID from EL_GROUP_BY.FUNCIONALIDAD F inner join EL_GROUP_BY.ROL_FUNCIONALIDAD RXU 
-		on F.Fun_ID = RXU.Funcionalidad_ID where RXU.Rol_ID = @ROL_ID and F.Fun_visible = 1 
+	select F.Funcionalidad_ID from EL_GROUP_BY.FUNCIONALIDAD F inner join EL_GROUP_BY.ROL_FUNCIONALIDAD RXU 
+		on F.Funcionalidad_ID = RXU.Funcionalidad_ID where RXU.Rol_ID = @ROL_ID and F.Fun_visible = 1 
 end
 go
 
@@ -749,7 +765,7 @@ create procedure EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL @ROL_ID int
 as
 begin
 	select f.* from EL_GROUP_BY.ROL_FUNCIONALIDAD as rxf inner join EL_GROUP_BY.FUNCIONALIDAD as f
-		   on rxf.FUNCIONALIDAD_ID = f.FUN_ID where rxf.Rol_ID = @ROL_ID;
+		   on rxf.Funcionalidad_ID = f.Funcionalidad_ID where rxf.Rol_ID = @ROL_ID;
 end
 go
 
@@ -758,7 +774,7 @@ as
 begin
 	select * from EL_GROUP_BY.FUNCIONALIDAD except 
 									     select f.* from EL_GROUP_BY.ROL_FUNCIONALIDAD as rxf inner join EL_GROUP_BY.FUNCIONALIDAD as f
-										 on rxf.Funcionalidad_ID = f.Fun_ID where rxf.Rol_ID = @ROL_ID;
+										 on rxf.Funcionalidad_ID = f.Funcionalidad_ID where rxf.Rol_ID = @ROL_ID;
 end
 go
 
