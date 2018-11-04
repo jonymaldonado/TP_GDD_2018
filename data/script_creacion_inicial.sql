@@ -14,7 +14,7 @@ IF (SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'EL_
 GO
 
 CREATE SCHEMA [EL_GROUP_BY] AUTHORIZATION [gdEspectaculos2018]
-GO
+GO 
 
 -- -----------------------------------------------------
 -- Configuraciones
@@ -762,6 +762,74 @@ begin
 end
 go
 
+create procedure EL_GROUP_BY.LISTAR_CLIENTES_EXISTENTES
+@NOMBRE VARCHAR(255), 
+@APELLIDO VARCHAR(255),
+@EMAIL VARCHAR(255),
+@NRO_DOC NUMERIC(18,0)
+as
+begin
+	select  U.Usuario_ID,
+			C.Cliente_Nombre,
+			C.Cliente_Apellido,
+			U.Usuario_Mail,
+			C.Cliente_Tipo_Documento,
+			convert(varchar(50), C.Cliente_Numero_Documento) as NRO_DOC
+	from EL_GROUP_BY.Cliente C inner join EL_GROUP_BY.USUARIO U
+	on C.Usuario_ID = U.Usuario_ID
+		AND C.Cliente_Nombre LIKE ISNULL('%' + @NOMBRE + '%', '%')
+              AND C.Cliente_Apellido LIKE ISNULL('%' + @APELLIDO + '%', '%')
+              AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
+              AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
+              AND U.Usuario_Habilitado = 1;
+end
+go
+
+CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
+@USUARIO VARCHAR(50),
+@PASSWORD VARCHAR(50),
+@NOMBRE VARCHAR(255),
+@APELLIDO VARCHAR(255),
+@TIPO_DOC VARCHAR(10),
+@NRO_DOC NUMERIC(18,0),
+@DIRECCION VARCHAR(255),
+@TELEFONO NUMERIC(18,0),
+@MAIL VARCHAR(255),
+@FECHA_NAC DATETIME -- falta la fecha de creacion
+AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.USUARIO VALUES (@USUARIO
+										 ,HASHBYTES('SHA2_256', @PASSWORD)
+										 ,@NOMBRE
+										 ,@APELLIDO
+										 ,@TIPO_DOC
+										 ,@NRO_DOC
+										 ,@DIRECCION
+										 ,@TELEFONO
+										 ,@MAIL
+										 ,@FECHA_NAC
+										 ,1)
+
+	INSERT INTO EL_GROUP_BY.Cliente VALUES (@ESTADO_CIVIL
+										  ,@CANT_HIJOS_FAM
+										  ,@PLAN_MEDICO
+										  ,@NRO_AFILIADO
+										  ,@NRO_AFILIADO_PPAL
+										  ,SCOPE_IDENTITY()
+										  ,1)
+COMMIT
+GO
+
+CREATE PROCEDURE EL_GROUP_BY.ELIMINAR_CLIENTE
+@USUARIO_ID INT
+AS
+BEGIN TRANSACTION
+DECLARE @ID_AFILIADO INT
+	UPDATE EL_GROUP_BY.USUARIO
+		SET Usuario_Habilitado = 0
+		WHERE Usuario_ID = @USUARIO_ID;
+COMMIT
+GO
 --------------------------------------------------------
 -- Borrador para hacer algunas pruebas
 --------------------------------------------------------
@@ -806,3 +874,9 @@ exec EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD;
 drop table EL_GROUP_BY.Rol_Funcionalidad;
 
 select * from EL_GROUP_BY.Rol_Funcionalidad;
+
+select Espectaculo_Cod, Espectaculo_Descripcion, Ubicacion_Fila, Ubicacion_Asiento from gd_esquema.Maestra where Ubicacion_Fila = 'A';
+
+select Espectaculo_Estado from gd_esquema.Maestra;
+
+select * from gd_esquema.Maestra;

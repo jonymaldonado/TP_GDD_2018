@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace PalcoNet.Abm_Empresa_Espectaculo
 {
-    public partial class Form1 : Form
+    public partial class FormAMEmpresaEspectaculos : Form
     {
-        public Form1()
+        public FormAMEmpresaEspectaculos()
         {
             InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

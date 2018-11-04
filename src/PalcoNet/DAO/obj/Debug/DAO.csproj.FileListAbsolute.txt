@@ -3,3 +3,8 @@ C:\Users\JuanCarlos\git\TP_GDD_2018\src\PalcoNet\DAO\bin\Debug\DAO.pdb
 C:\Users\JuanCarlos\git\TP_GDD_2018\src\PalcoNet\DAO\obj\Debug\DAO.dll
 C:\Users\JuanCarlos\git\TP_GDD_2018\src\PalcoNet\DAO\obj\Debug\DAO.pdb
 C:\Users\JuanCarlos\git\TP_GDD_2018\src\PalcoNet\DAO\obj\Debug\DAO.csprojResolveAssemblyReference.cache
+C:\Users\RetailAdmin\Documents\GitHub\TP_GDD_2018\src\PalcoNet\DAO\bin\Debug\DAO.dll
+C:\Users\RetailAdmin\Documents\GitHub\TP_GDD_2018\src\PalcoNet\DAO\bin\Debug\DAO.pdb
+C:\Users\RetailAdmin\Documents\GitHub\TP_GDD_2018\src\PalcoNet\DAO\obj\Debug\DAO.csprojResolveAssemblyReference.cache
+C:\Users\RetailAdmin\Documents\GitHub\TP_GDD_2018\src\PalcoNet\DAO\obj\Debug\DAO.dll
+C:\Users\RetailAdmin\Documents\GitHub\TP_GDD_2018\src\PalcoNet\DAO\obj\Debug\DAO.pdb

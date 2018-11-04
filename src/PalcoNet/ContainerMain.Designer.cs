@@ -122,6 +122,7 @@
             this.aBMClientToolStripMenuItem.Name = "aBMClientToolStripMenuItem";
             this.aBMClientToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.aBMClientToolStripMenuItem.Text = "Cliente";
+            this.aBMClientToolStripMenuItem.Click += new System.EventHandler(this.aBMClientToolStripMenuItem_Click);
             // 
             // aBMCompanyToolStripMenuItem
             // 

@@ -169,12 +169,18 @@ namespace PalcoNet
             openForm(new Abm_Rol.FormRole());
         }
 
+        private void aBMClientToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Abm_Cliente.FormClient());
+        }
+
         private void openForm(Form fr)
         {
             this.Hide();
             fr.ShowDialog();
             this.Show();
         }
+
     }
 
 }
