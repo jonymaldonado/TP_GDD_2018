@@ -219,7 +219,7 @@ CREATE UNIQUE INDEX Empresa_Cuit_UNIQUE ON EL_GROUP_BY.Empresa (Empresa_Cuit ASC
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Rubro (
-  Rubro_ID INT NOT NULL,
+  Rubro_ID INT IDENTITY(1,1),
   Rubro_Descripcion NVARCHAR(255) NOT NULL,
   PRIMARY KEY (Rubro_ID))
 ;
@@ -229,7 +229,7 @@ CREATE TABLE EL_GROUP_BY.Rubro (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Espectaculo (
-  Espectaculo_ID INT NOT NULL,
+  Espectaculo_ID INT IDENTITY(1,1),
   Espectaculo_Codigo NUMERIC(18,0) NOT NULL,
   Espectaculo_Descripcion NVARCHAR(255) NOT NULL,
   Espectaculo_Direccion NVARCHAR(255) NOT NULL,
@@ -250,7 +250,7 @@ CREATE TABLE EL_GROUP_BY.Espectaculo (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Ubicacion_Tipo (
-  Ubicacion_Tipo_ID INT NOT NULL,
+  Ubicacion_Tipo_ID INT IDENTITY(1,1),
   Ubicacion_Tipo_Codigo NUMERIC(18,0) NOT NULL,
   Ubicacion_Tipo_Descripcion NVARCHAR(255) NOT NULL,
   PRIMARY KEY (Ubicacion_Tipo_ID))
@@ -261,7 +261,7 @@ CREATE TABLE EL_GROUP_BY.Ubicacion_Tipo (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Ubicacion (
-  Ubicacion_ID INT NOT NULL,
+  Ubicacion_ID INT IDENTITY(1,1),
   Ubicacion_Fila VARCHAR(3) NULL,
   Ubicacion_Asiento NUMERIC(18,0) NULL,
   Ubicacion_Sin_Numerar BIT NOT NULL,
@@ -281,7 +281,7 @@ CREATE TABLE EL_GROUP_BY.Ubicacion (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
-  Grado_Publicacion_ID INT NOT NULL,
+  Grado_Publicacion_ID INT IDENTITY(1,1),
   Grado_Publicacion_Comision NUMERIC(3,3) NOT NULL,
   Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
   PRIMARY KEY (Grado_Publicacion_ID))
@@ -292,7 +292,7 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Publicacion (
-  Publicacion_ID INT NOT NULL,
+  Publicacion_ID INT IDENTITY(1,1),
   Publicacion_Descripcion NVARCHAR(255) NOT NULL,
   Publicacion_Fecha DATETIME NOT NULL,
   Publicacion_FechaHora DATETIME NOT NULL,
@@ -301,6 +301,7 @@ CREATE TABLE EL_GROUP_BY.Publicacion (
   Publicacion_Usuario NVARCHAR(50) NOT NULL,
   Espectaculo_ID INT NOT NULL,
   Grado_Publicacion_ID INT NOT NULL,
+  Estado_Publicacion_ID INT NOT NULL,
   PRIMARY KEY (Publicacion_ID),
   CONSTRAINT FK_Publicacion_Usuario_ID FOREIGN KEY (Usuario_ID)     
     REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
@@ -321,10 +322,9 @@ CREATE TABLE EL_GROUP_BY.Publicacion (
 -- -----------------------------------------------------
 	       
 CREATE TABLE EL_GROUP_BY.Estado_Publicacion (
-  Estado_Publicacion_ID INT NOT NULL,
+  Estado_Publicacion_ID INT IDENTITY(1,1),
   Estado_Publicacion_Descripcion NVARCHAR(255) NOT NULL,
   Estado_Publicacion_Modificable BIT NOT NULL,
-  Publicacion_ID INT NOT NULL,
   PRIMARY KEY (Estado_Publicacion_ID)
 ;
 	
@@ -333,7 +333,7 @@ CREATE TABLE EL_GROUP_BY.Estado_Publicacion (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Factura (
-  Factura_ID INT NOT NULL,
+  Factura_ID INT IDENTITY(1,1),
   Factura_Nro NUMERIC(18,0) NOT NULL,
   Factura_Fecha DATETIME NOT NULL,
   Factura_Total NUMERIC(18,2) NOT NULL,
@@ -346,7 +346,7 @@ CREATE TABLE EL_GROUP_BY.Factura (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Forma_Pago (
-  Forma_Pago_ID INT NOT NULL,
+  Forma_Pago_ID INT IDENTITY(1,1),
   Forma_Pago_Descripcion NVARCHAR(255) NOT NULL,
   PRIMARY KEY (Forma_Pago_ID))
 ;
@@ -356,7 +356,7 @@ CREATE TABLE EL_GROUP_BY.Forma_Pago (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Compra (
-  Compra_ID INT NOT NULL,
+  Compra_ID INT IDENTITY(1,1),
   Compra_Fecha DATETIME NOT NULL,
   Compra_Cantidad NUMERIC(18,0) NOT NULL,
   Compra_Monto_Total DECIMAL(18,2) NOT NULL,
@@ -384,7 +384,7 @@ CREATE TABLE EL_GROUP_BY.Compra (
 
 
 CREATE TABLE EL_GROUP_BY.Item (
-  Item_ID INT NOT NULL,
+  Item_ID INT IDENTITY(1,1),
   Item_Monto NUMERIC(18,2) NOT NULL,
   Item_Cantidad NUMERIC(18,0) NOT NULL,
   Item_Descripcion NVARCHAR(60) NOT NULL,
@@ -403,7 +403,7 @@ CREATE TABLE EL_GROUP_BY.Item (
 
 
 CREATE TABLE EL_GROUP_BY.Puntos (
-  Puntos_ID INT NOT NULL,
+  Puntos_ID INT IDENTITY(1,1),
   Puntos_Cantidad NUMERIC(18,0) NOT NULL,
   Puntos_Fecha_Vencimiento DATETIME NOT NULL,
   Cliente_ID INT NOT NULL,
@@ -668,7 +668,60 @@ BEGIN TRANSACTION
 						F.Funcionalidad_ID = 11)
 COMMIT TRANSACTION;
 GO
+									      
+-- -----------------------------------------------------
+-- Cargar Formas_Pago
+-- -----------------------------------------------------
+									      
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_FORMAS_PAGO AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Forma_Pago
+		SELECT DISTINCT Forma_Pago_Desc
+			FROM gd_esquema.Maestra M
+			WHERE M.Forma_Pago IS NOT NULL
+COMMIT TRANSACTION;	
+GO
 
+-- -----------------------------------------------------
+-- Cargar Ubicacion_Tipo
+-- -----------------------------------------------------
+									      
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_UBICACION_TIPOS AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Ubicacion_Tipo
+		SELECT DISTINCT Ubicacion_Tipo_Codigo
+					,Ubicacion_Tipo_Descripcion
+			FROM gd_esquema.Maestra M
+			WHERE Ubicacion_Tipo_Codigo IS NOT NULL
+COMMIT TRANSACTION;	
+GO
+
+-- -----------------------------------------------------
+-- Cargar Rubros
+-- -----------------------------------------------------
+									      
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_RUBROS AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Rubro
+		SELECT DISTINCT Espectaculo_Rubro_Descripcion
+			FROM gd_esquema.Maestra M
+			WHERE M.Espectaculo_Rubro_Descripcion IS NOT NULL
+COMMIT TRANSACTION;	
+GO	
+									      
+-- -----------------------------------------------------
+-- Cargar Estados_Publicacion
+-- -----------------------------------------------------
+									      
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Estado_Publicacion VALUES ('BORRADOR',1)
+	INSERT INTO EL_GROUP_BY.Estado_Publicacion VALUES ('ACTIVA',0)
+	INSERT INTO EL_GROUP_BY.Estado_Publicacion VALUES ('FINALIZADA',0)
+COMMIT;
+GO
+					      
+									      
 -- -----------------------------------------------------
 -- SPs
 -- -----------------------------------------------------
