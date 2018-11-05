@@ -156,7 +156,7 @@ CREATE TABLE EL_GROUP_BY.Usuario (
   Usuario_Piso NUMERIC(18,0),
   Usuario_Depto NVARCHAR(255),
   Usuario_Codigo_Postal NVARCHAR(255),
-  Usuario_Localidad NVARCHAR(50) NOT NULL,
+  Usuario_Localidad NVARCHAR(50),
   PRIMARY KEY (Usuario_ID))
 ;
 
@@ -293,7 +293,7 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 
 CREATE TABLE EL_GROUP_BY.Publicacion (
   Publicacion_ID INT NOT NULL,
-  Publicacion_Descripcion_Inicio NVARCHAR(255) NOT NULL,
+  Publicacion_Descripcion NVARCHAR(255) NOT NULL,
   Publicacion_Fecha DATETIME NOT NULL,
   Publicacion_FechaHora DATETIME NOT NULL,
   Publicacion_Estado NVARCHAR(255) NOT NULL,
@@ -316,6 +316,18 @@ CREATE TABLE EL_GROUP_BY.Publicacion (
     ON UPDATE CASCADE)
 ;
 
+-- -----------------------------------------------------
+-- Creación de Tabla EL_GROUP_BY.Estado_Publicacion
+-- -----------------------------------------------------
+	       
+CREATE TABLE EL_GROUP_BY.Estado_Publicacion (
+  Estado_Publicacion_ID INT NOT NULL,
+  Estado_Publicacion_Descripcion NVARCHAR(255) NOT NULL,
+  Estado_Publicacion_Modificable BIT NOT NULL,
+  Publicacion_ID INT NOT NULL,
+  PRIMARY KEY (Estado_Publicacion_ID)
+;
+	
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Factura
 -- -----------------------------------------------------
@@ -376,8 +388,8 @@ CREATE TABLE EL_GROUP_BY.Item (
   Item_Monto NUMERIC(18,2) NOT NULL,
   Item_Cantidad NUMERIC(18,0) NOT NULL,
   Item_Descripcion NVARCHAR(60) NOT NULL,
-  Compra_ID INT NOT NULL,
   Factura_ID INT NOT NULL,
+  Compra_ID INT NOT NULL,
   PRIMARY KEY (Item_ID),
   CONSTRAINT FK_Item_Factura_ID FOREIGN KEY (Factura_ID)     
     REFERENCES EL_GROUP_BY.Factura (Factura_ID)     
@@ -442,6 +454,7 @@ BEGIN TRAN
 					,'CLIENTE'
 					,1
 					,0
+					,1
 					,Cli_Mail
 					,null
 					,Cli_Dom_Calle
@@ -449,6 +462,7 @@ BEGIN TRAN
 					,Cli_Piso
 					,Cli_Depto
 					,Cli_Cod_Postal
+					,null
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
 		UNION
@@ -457,6 +471,7 @@ BEGIN TRAN
 					,'EMPRESA'
 					,1
 					,0
+					,1
 					,Espec_Empresa_Mail
 					,null
 					,Espec_Empresa_Dom_Calle
@@ -464,6 +479,7 @@ BEGIN TRAN
 					,Espec_Empresa_Piso
 					,Espec_Empresa_Depto
 					,Espec_Empresa_Cod_Postal
+					,null
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
 
@@ -472,6 +488,7 @@ BEGIN TRAN
 		,HASHBYTES('SHA2_256', CONVERT(NVARCHAR(50),'w23e'))
 		,'ADMINISTRADOR'
 		,1
+		,0
 		,0
 		,'admin@frba.com'
 		,15123123
@@ -498,7 +515,7 @@ BEGIN TRANSACTION
 					,Cli_Fecha_Nac
 					,null
 					,null
-					,null
+					,(select getdate())
 					,EL_GROUP_BY.FUNC_COD_USUARIO(Cli_Nombre + CONVERT(NVARCHAR(50),Cli_Dni))
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
@@ -528,7 +545,7 @@ BEGIN TRANSACTION
 	SELECT DISTINCT Espec_Empresa_Razon_Social
 		            ,Espec_Empresa_Cuit
 					,null
-					,null
+					,(select getdate())
 					,EL_GROUP_BY.FUNC_COD_USUARIO(CONVERT(NVARCHAR(50),Espec_Empresa_Cuit))
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
@@ -627,9 +644,9 @@ BEGIN TRANSACTION
 				FUN_ID
 			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
 			WHERE R.Rol_Nombre = 'ADMINISTRADOR' AND
-					(F.FUN_ID = 1 OR
-					F.FUN_ID = 2 OR
-					F.FUN_ID = 3)
+					(F.Funcionalidad_ID = 1 OR
+					F.Funcionalidad_ID = 2 OR
+					F.Funcionlidad_ID = 3)
 	UNION
 		SELECT Rol_ID,
 				Funcionalidad_ID
