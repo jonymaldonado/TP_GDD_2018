@@ -830,6 +830,82 @@ DECLARE @ID_AFILIADO INT
 		WHERE Usuario_ID = @USUARIO_ID;
 COMMIT
 GO
+
+create procedure EL_GROUP_BY.LISTAR_EMPRESAS
+@RAZON_SOCIAL VARCHAR(255), 
+@CUIT VARCHAR(255),
+@EMAIL VARCHAR(255)
+as
+begin
+	select  U.Usuario_ID,
+			E.Empresa_ID,
+			E.Empresa_Razon_Social,
+			E.Empresa_Cuit,
+			U.Usuario_Mail,
+			E.Empresa_Ciudad
+	from EL_GROUP_BY.Empresa E inner join EL_GROUP_BY.USUARIO U
+	on E.Usuario_ID = U.Usuario_ID
+		AND E.Empresa_Razon_Social LIKE ISNULL('%' + @RAZON_SOCIAL + '%', '%')
+              AND E.Empresa_Cuit LIKE ISNULL('%' + @CUIT + '%', '%')
+              AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
+              AND U.Usuario_Habilitado = 1;
+end
+go
+
+CREATE PROCEDURE EL_GROUP_BY.ELIMINAR_EMPRESA
+@USUARIO_ID INT
+AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.USUARIO
+		SET Usuario_Habilitado = 0
+		WHERE Usuario_ID = @USUARIO_ID;
+COMMIT
+GO
+
+CREATE PROCEDURE EL_GROUP_BY.CREAR_EMPRESA
+@USUARIO		VARCHAR(50),
+@PASSWORD		VARCHAR(50),
+@RAZON_SOCIAL	VARCHAR(255),
+@EMAIL			VARCHAR(255),
+@TELEFONO		VARCHAR(20), 
+@CALLE			VARCHAR(50), 
+@NUMERO			NUMERIC(18,0),
+@PISO			NUMERIC(18,0),
+@DEPTO			VARCHAR(50), 
+@LOCALIDAD		VARCHAR(50),
+@CODIGO_POSTAL	VARCHAR(50), 
+@CIUDAD			VARCHAR(50), 
+@CUIT			VARCHAR(255)
+AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Usuario VALUES (@USUARIO
+										 ,HASHBYTES('SHA2_256', @PASSWORD)
+										 ,'Empresa'		--Tipo
+										 ,1				--Habilitado
+										 ,0				--Intentos
+										 ,1				--Primer login
+										 ,@TELEFONO
+										 ,@CALLE
+										 ,@NUMERO
+										 ,@PISO
+										 ,@DEPTO
+										 ,@CODIGO_POSTAL
+										 ,@LOCALIDAD
+										 ,@EMAIL)
+
+	INSERT INTO EL_GROUP_BY.Empresa VALUES (@RAZON_SOCIAL
+										  ,@CUIT
+										  ,@CIUDAD
+										  ,getDate()
+										  , (select Usuario_ID 
+												from Usuario u 
+												where u.Usuario_Username = @USUARIO 
+												and u.Usuario_Password = HASHBYTES('SHA2_256', @PASSWORD) )
+										   )
+COMMIT
+GO
+
+
 --------------------------------------------------------
 -- Borrador para hacer algunas pruebas
 --------------------------------------------------------

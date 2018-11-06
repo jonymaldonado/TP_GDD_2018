@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientDAO.cs" />
+    <Compile Include="EmpresaDAO.cs" />
     <Compile Include="FunctionDAO.cs" />
     <Compile Include="RoleDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
