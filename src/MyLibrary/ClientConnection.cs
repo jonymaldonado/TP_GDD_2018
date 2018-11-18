@@ -82,6 +82,28 @@ namespace MyLibrary
             parameter.Value = client.Password;
             parameters.Add(parameter);
 
+            LoadMoreParameters(client, parameters);
+            Connection.WriteInTheBase("EL_GROUP_BY.CREAR_CLIENTE", Connection.Type.StoredProcedure, parameters);
+        }
+
+        public static void UpdateClient(ClientDAO client, string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@USUARIO_ID", SqlDbType.Int, 50);
+            parameter.Value = userId;
+            parameters.Add(parameter);
+
+            LoadMoreParameters(client, parameters);
+            Connection.WriteInTheBase("EL_GROUP_BY.ACTUALIZAR_CLIENTE", Connection.Type.StoredProcedure, parameters);
+        }
+
+        private static void LoadMoreParameters(ClientDAO client, List<SqlParameter> parameters)
+        {
+            SqlParameter parameter;
+
             parameter = new SqlParameter("@NOMBRE", SqlDbType.VarChar, 255);
             parameter.Value = client.FirstName;
             parameters.Add(parameter);
@@ -98,11 +120,70 @@ namespace MyLibrary
             parameter.Value = client.NumberDoc;
             parameters.Add(parameter);
 
-            // me están faltando agregar más parámetros
-
+            parameter = new SqlParameter("@CUIL", SqlDbType.VarChar, 255);
+            parameter.Value = client.Cuil;
             parameters.Add(parameter);
 
-            Connection.WriteInTheBase("EL_GROUP_BY.CREAR_CLIENTE", Connection.Type.StoredProcedure, parameters);
+            parameter = new SqlParameter("@TELEFONO", SqlDbType.VarChar, 255);
+            parameter.Value = client.Phone;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@MAIL", SqlDbType.VarChar, 255);
+            parameter.Value = client.Email;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@CALLE", SqlDbType.VarChar, 255);
+            parameter.Value = client.Street;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@NRO_CALLE", SqlDbType.Int, 100);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(client.NumberStreet))
+            {
+                parameter.Value = Convert.ToInt32(client.NumberStreet);
+            }
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@PISO", SqlDbType.Int, 100);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(client.Floor))
+            {
+                parameter.Value = Convert.ToInt32(client.Floor);
+            }
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@DEPARTAMENTO", SqlDbType.VarChar, 255);
+            parameter.Value = client.Department;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@LOCALIDAD", SqlDbType.VarChar, 255);
+            parameter.Value = client.Location;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@CODIGO_POSTAL", SqlDbType.VarChar, 255);
+            parameter.Value = client.PostalCode;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@FECHA_NAC", SqlDbType.DateTime, 100);
+            parameter.Value = client.BirthDate;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@TARJETA_NOMBRE", SqlDbType.VarChar, 255);
+            parameter.Value = client.CardName;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@TARJETA_NRO", SqlDbType.Int, 100);
+            parameter.Value = client.CardNumber;
+            parameters.Add(parameter);
+        }
+
+        public static SqlDataReader GetUserForModify(string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@USER_ID", userId));
+            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_USER_FOR_MODIFY", Connection.Type.StoredProcedure, parameters);
+
+            return reader;
         }
     }
 

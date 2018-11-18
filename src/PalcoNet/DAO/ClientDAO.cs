@@ -12,5 +12,9 @@ namespace DAO
         public String LastName { get; set; }
         public String TypeDoc { get; set; }
         public Int32 NumberDoc { get; set; }
+        public String Cuil { get; set; }
+        public DateTime BirthDate { get; set; }
+        public String CardName { get; set; }
+        public Int64 CardNumber { get; set; }
     }
 }

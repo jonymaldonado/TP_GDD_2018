@@ -145,17 +145,19 @@ CREATE TABLE EL_GROUP_BY.ROL_USUARIO(
 CREATE TABLE EL_GROUP_BY.Usuario (
   Usuario_ID INT NOT NULL IDENTITY(1,1),
   Usuario_Username NVARCHAR(50) NOT NULL,
-  Usuario_Password NVARCHAR(50) NOT NULL,
+  Usuario_Password NVARCHAR(256) NOT NULL,
   Usuario_Tipo NVARCHAR(20) NOT NULL,
   Usuario_Habilitado BIT NOT NULL,
   Usuario_Intentos SMALLINT NOT NULL,
-  Usuario_Mail NVARCHAR(255),
+  Usuario_Primer_Login BIT,
   Usuario_Telefono NVARCHAR(20),
-  Usuario_Calle NVARCHAR(255),
+  Usuario_Calle NVARCHAR(50),
   Usuario_Numero_Calle NUMERIC(18,0),
   Usuario_Piso NUMERIC(18,0),
-  Usuario_Depto NVARCHAR(255),
-  Usuario_Codigo_Postal NVARCHAR(255),
+  Usuario_Depto NVARCHAR(50),
+  Usuario_Codigo_Postal NVARCHAR(50),
+  Usuario_Localidad NVARCHAR(50),
+  Usuario_Mail NVARCHAR(255)
   PRIMARY KEY (Usuario_ID))
 ;
 
@@ -426,13 +428,15 @@ BEGIN TRAN
 					,'CLIENTE'
 					,1
 					,0
-					,Cli_Mail
+					,0
 					,null
 					,Cli_Dom_Calle
 					,Cli_Nro_Calle
 					,Cli_Piso
 					,Cli_Depto
 					,Cli_Cod_Postal
+					,null
+					,Cli_Mail
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
 		UNION
@@ -441,13 +445,15 @@ BEGIN TRAN
 					,'EMPRESA'
 					,1
 					,0
-					,Espec_Empresa_Mail
+					,0
 					,null
 					,Espec_Empresa_Dom_Calle
 					,Espec_Empresa_Nro_Calle
 					,Espec_Empresa_Piso
 					,Espec_Empresa_Depto
 					,Espec_Empresa_Cod_Postal
+					,null
+					,Espec_Empresa_Mail
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
 
@@ -457,13 +463,15 @@ BEGIN TRAN
 		,'ADMINISTRADOR'
 		,1
 		,0
-		,'admin@frba.com'
-		,15123123
+		,0
+		,'42612123'
 		,'Calle Falsa'
 		,123
 		,null
 		,null
-		,'1990')
+		,'1842'
+		,'Echeverria'
+		,'admin@frba.com')
 COMMIT
 GO
 
@@ -493,7 +501,7 @@ BEGIN TRANSACTION
 			,'admin'
 			,'DNI'
 			,35123123
-			,null
+			,'20-35123123-4'
 			,CONVERT(DATETIME,'1990/02/02 00:00:00',121)
 			,'SANTANDER RIO'
 			,4242424242424242
@@ -512,7 +520,7 @@ BEGIN TRANSACTION
 	SELECT DISTINCT Espec_Empresa_Razon_Social
 		            ,Espec_Empresa_Cuit
 					,null
-					,null
+					,Espec_Empresa_Fecha_Creacion
 					,EL_GROUP_BY.FUNC_COD_USUARIO(CONVERT(NVARCHAR(50),Espec_Empresa_Cuit))
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
@@ -521,7 +529,7 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Empresa
 		VALUES ('RAZON SOCIAL X'
 		    ,'30-71031609-7'
-			,null
+			,'Baires'
 			,CONVERT(DATETIME,'1980/02/02 00:00:00',121)
 			,783)
 COMMIT
@@ -792,31 +800,89 @@ CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @APELLIDO VARCHAR(255),
 @TIPO_DOC VARCHAR(10),
 @NRO_DOC NUMERIC(18,0),
-@DIRECCION VARCHAR(255),
-@TELEFONO NUMERIC(18,0),
+@CUIL VARCHAR(255),
+@TELEFONO VARCHAR(255),
 @MAIL VARCHAR(255),
-@FECHA_NAC DATETIME -- falta la fecha de creacion
+@CALLE VARCHAR(255),
+@NRO_CALLE NUMERIC(18,0),
+@PISO NUMERIC(18,0),
+@DEPARTAMENTO VARCHAR(255),
+@LOCALIDAD VARCHAR(255),
+@CODIGO_POSTAL VARCHAR(255),
+@FECHA_NAC DATETIME,
+@TARJETA_NOMBRE VARCHAR(255),
+@TARJETA_NRO NUMERIC(16,0)
 AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.USUARIO VALUES (@USUARIO
 										 ,HASHBYTES('SHA2_256', @PASSWORD)
-										 ,@NOMBRE
-										 ,@APELLIDO
-										 ,@TIPO_DOC
-										 ,@NRO_DOC
-										 ,@DIRECCION
+										 ,'CLIENTE'
+										 ,1
+										 ,0
+										 ,1
 										 ,@TELEFONO
-										 ,@MAIL
-										 ,@FECHA_NAC
-										 ,1)
+										 ,@CALLE
+										 ,@NRO_CALLE
+										 ,@PISO
+										 ,@DEPARTAMENTO
+										 ,@CODIGO_POSTAL
+										 ,@LOCALIDAD
+										 ,@MAIL)
 
-	INSERT INTO EL_GROUP_BY.Cliente VALUES (@ESTADO_CIVIL
-										  ,@CANT_HIJOS_FAM
-										  ,@PLAN_MEDICO
-										  ,@NRO_AFILIADO
-										  ,@NRO_AFILIADO_PPAL
-										  ,SCOPE_IDENTITY()
-										  ,1)
+	INSERT INTO EL_GROUP_BY.Cliente VALUES (@NOMBRE
+										  ,@APELLIDO
+										  ,@TIPO_DOC
+										  ,@NRO_DOC
+										  ,@CUIL
+										  ,@FECHA_NAC
+										  ,@TARJETA_NOMBRE
+										  ,@TARJETA_NRO
+										  ,GETDATE()
+										  ,SCOPE_IDENTITY())
+COMMIT
+GO
+
+CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_CLIENTE
+@USUARIO_ID INT,
+@NOMBRE VARCHAR(255),
+@APELLIDO VARCHAR(255),
+@TIPO_DOC VARCHAR(10),
+@NRO_DOC NUMERIC(18,0),
+@CUIL VARCHAR(255),
+@TELEFONO VARCHAR(255),
+@MAIL VARCHAR(255),
+@CALLE VARCHAR(255),
+@NRO_CALLE NUMERIC(18,0),
+@PISO NUMERIC(18,0),
+@DEPARTAMENTO VARCHAR(255),
+@LOCALIDAD VARCHAR(255),
+@CODIGO_POSTAL VARCHAR(255),
+@FECHA_NAC DATETIME,
+@TARJETA_NOMBRE VARCHAR(255),
+@TARJETA_NRO NUMERIC(16,0)
+AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.Usuario
+		SET Usuario_Telefono = @TELEFONO,
+			Usuario_Calle = @CALLE,
+			Usuario_Numero_Calle = @NRO_CALLE,
+			Usuario_Piso = @PISO,
+			Usuario_Depto = @DEPARTAMENTO,
+			Usuario_Codigo_Postal = @CODIGO_POSTAL,
+			Usuario_Localidad = @LOCALIDAD,
+			Usuario_Mail = @MAIL
+		WHERE Usuario_ID = @USUARIO_ID
+
+	UPDATE EL_GROUP_BY.Cliente
+		SET Cliente_Nombre = @NOMBRE,
+			Cliente_Apellido = @APELLIDO,
+			Cliente_Tipo_Documento = @TIPO_DOC,
+			Cliente_Numero_Documento = @NRO_DOC,
+			Cliente_Cuil = @CUIL,
+			Cliente_Fecha_Nacimiento = @FECHA_NAC,
+			Cliente_Tarjeta_Marca = @TARJETA_NOMBRE,
+			Cliente_Tarjeta_Numero = @TARJETA_NRO
+		WHERE Usuario_ID = @USUARIO_ID
 COMMIT
 GO
 
@@ -824,12 +890,35 @@ CREATE PROCEDURE EL_GROUP_BY.ELIMINAR_CLIENTE
 @USUARIO_ID INT
 AS
 BEGIN TRANSACTION
-DECLARE @ID_AFILIADO INT
 	UPDATE EL_GROUP_BY.USUARIO
 		SET Usuario_Habilitado = 0
 		WHERE Usuario_ID = @USUARIO_ID;
 COMMIT
 GO
+
+create procedure EL_GROUP_BY.OBTENER_USER_FOR_MODIFY @USER_ID int
+as
+begin
+	SELECT  
+		C.Cliente_Nombre,
+		C.Cliente_Apellido,
+		C.Cliente_Tipo_Documento,
+		C.Cliente_Numero_Documento,
+		C.Cliente_Fecha_Nacimiento,
+		C.Cliente_Cuil,
+		U.Usuario_Calle,
+		U.Usuario_Numero_Calle,
+		U.Usuario_Piso,
+		U.Usuario_Depto,
+		U.Usuario_Localidad,
+		U.Usuario_Codigo_Postal,
+		U.Usuario_Telefono,
+		U.Usuario_Mail,
+		C.Cliente_Tarjeta_Numero,
+		C.Cliente_Tarjeta_Marca
+	FROM EL_GROUP_BY.USUARIO U INNER JOIN EL_GROUP_BY.Cliente C 
+	ON C.Usuario_ID = U.Usuario_ID and U.Usuario_ID = @USER_ID
+end
 --------------------------------------------------------
 -- Borrador para hacer algunas pruebas
 --------------------------------------------------------
@@ -839,15 +928,15 @@ drop proc EL_GROUP_BY.CARGAR_USUARIOS;
 
 exec EL_GROUP_BY.CARGAR_USUARIOS;
 
-select * from EL_GROUP_BY.Usuario;
-select * from EL_GROUP_BY.Cliente where Usuario_ID = 3;
+select * from EL_GROUP_BY.Usuario where Usuario_Id = 784;
+select * from EL_GROUP_BY.Cliente where Usuario_ID = 523;
 
 exec EL_GROUP_BY.CARGAR_CLIENTES;
 
 drop table EL_GROUP_BY.Cliente;
 drop proc EL_GROUP_BY.CARGAR_CLIENTES;
 
-select * from EL_GROUP_BY.Cliente;
+select * from EL_GROUP_BY.Cliente where Cliente_Tipo_Documento is null;
 
 drop table EL_GROUP_BY.Empresa;
 drop proc EL_GROUP_BY.CARGAR_EMPRESAS;

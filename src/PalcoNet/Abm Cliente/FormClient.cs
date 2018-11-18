@@ -73,7 +73,16 @@ namespace PalcoNet.Abm_Cliente
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormAMClient form = new FormAMClient(this);
+            FormAMClient form = new FormAMClient(this, true, null);
+            this.Hide();
+            form.ShowDialog();
+        }
+
+        private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string userId = dgv_list.CurrentRow.Cells[0].Value.ToString();
+
+            FormAMClient form = new FormAMClient(this, false, userId);
             this.Hide();
             form.ShowDialog();
         }

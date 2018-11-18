@@ -1,5 +1,7 @@
-src/PalcoNet/bin/Debug
-src/PalcoNet/obj/Debug
-src/MyLibrary/bin/Debug
-src/MyLibrary/obj/Debug
+src/PalcoNet/bin/
+src/PalcoNet/obj/
+src/MyLibrary/bin/
+src/MyLibrary/obj/
+src/PalcoNet/DAO/bin/
+src/PalcoNet/DAO/obj/
 *.suo

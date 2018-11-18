@@ -87,7 +87,7 @@
             this.btn_init.Location = new System.Drawing.Point(109, 113);
             this.btn_init.Name = "btn_init";
             this.btn_init.Size = new System.Drawing.Size(79, 23);
-            this.btn_init.TabIndex = 9;
+            this.btn_init.TabIndex = 3;
             this.btn_init.Text = "Iniciar";
             this.btn_init.UseVisualStyleBackColor = true;
             this.btn_init.Click += new System.EventHandler(this.btn_init_Click);
@@ -107,11 +107,12 @@
             // 
             this.cmb_rol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_rol.FormattingEnabled = true;
+            this.cmb_rol.ItemHeight = 13;
             this.cmb_rol.Location = new System.Drawing.Point(50, 174);
             this.cmb_rol.Name = "cmb_rol";
             this.cmb_rol.Size = new System.Drawing.Size(189, 21);
             this.cmb_rol.Sorted = true;
-            this.cmb_rol.TabIndex = 7;
+            this.cmb_rol.TabIndex = 4;
             this.cmb_rol.Visible = false;
             this.cmb_rol.SelectedIndexChanged += new System.EventHandler(this.cmb_rol_SelectedIndexChanged);
             // 
