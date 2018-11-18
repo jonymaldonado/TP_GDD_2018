@@ -8,6 +8,7 @@ namespace DAO
 {
     public class UserDAO
     {
+        public Int32 UserId { get; set; }
         public String User { get; set; }
         public String Password { get; set; }
         public String Phone { get; set; }
