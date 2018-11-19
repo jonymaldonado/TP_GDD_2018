@@ -111,6 +111,11 @@ IF OBJECT_ID('EL_GROUP_BY.CARGAR_RUBROS') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
 
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_ESPECTACULOS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_ESPECTACULOS;
+
+GO
+
 /****************************************************************
 *			DROP DE SPs DE MIGRACIÓN - FIN					*
 ****************************************************************/
@@ -191,6 +196,11 @@ IF OBJECT_ID('EL_GROUP_BY.CREAR_EMPRESA') IS NOT NULL
 ****************************************************************/
 IF OBJECT_ID('EL_GROUP_BY.FUNC_COD_USUARIO') IS NOT NULL
 	DROP FUNCTION EL_GROUP_BY.FUNC_COD_USUARIO;
+
+IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_EMPRESA') IS NOT NULL
+	DROP FUNCTION EL_GROUP_BY.FUNC_ID_EMPRESA;
+
+GO
 /****************************************************************
 *					DROP DE FUNCIONES - FIN						*
 ****************************************************************/
@@ -353,8 +363,6 @@ CREATE TABLE EL_GROUP_BY.Empresa (
 		ON UPDATE CASCADE)
 ;
 
-CREATE UNIQUE INDEX Empresa_Razon_Social_UNIQUE ON EL_GROUP_BY.Empresa (Empresa_Razon_Social ASC);
-
 CREATE UNIQUE INDEX Empresa_Cuit_UNIQUE ON EL_GROUP_BY.Empresa (Empresa_Cuit ASC);
 
 -- -----------------------------------------------------
@@ -375,7 +383,7 @@ CREATE TABLE EL_GROUP_BY.Espectaculo (
 		Espectaculo_ID INT IDENTITY(1,1),
 		Espectaculo_Codigo NUMERIC(18,0) NOT NULL,
 		Espectaculo_Descripcion NVARCHAR(255) NOT NULL,
-		Espectaculo_Direccion NVARCHAR(255) NOT NULL,
+		Espectaculo_Direccion NVARCHAR(255),
 		Espectaculo_Fecha DATETIME NOT NULL,
 		Espectaculo_Fecha_Vencimiento DATETIME NOT NULL,
 		Espectaculo_Estado NVARCHAR(255) NOT NULL,
@@ -586,6 +594,21 @@ BEGIN
 END;
 GO
 
+-- ---------------------------------------------
+-- ME DEVUELVE EL ID_EMPRESA
+-- ---------------------------------------------
+CREATE FUNCTION EL_GROUP_BY.FUNC_ID_EMPRESA(@EMPRESA_RAZON NVARCHAR(255),@EMPRESA_CUIT NVARCHAR(255))
+RETURNS INT
+AS
+BEGIN
+	DECLARE @RESULTADO INT
+	SELECT @RESULTADO = Empresa_ID 
+	FROM EL_GROUP_BY.Empresa 
+	WHERE Empresa_Razon_Social = @EMPRESA_RAZON AND
+		  Empresa_Cuit = @EMPRESA_CUIT
+	RETURN @RESULTADO
+END;
+GO
 
 /****************************************************************
 *					FUNCIONES - FIN								*
@@ -620,7 +643,7 @@ BEGIN TRAN
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
 		UNION
-		SELECT DISTINCT CONVERT(NVARCHAR(50),Espec_Empresa_Cuit)
+		SELECT DISTINCT (Espec_Empresa_Razon_Social + CONVERT(NVARCHAR(50),Espec_Empresa_Cuit))
 					,HASHBYTES('SHA2_256', CONVERT(NVARCHAR(50),Espec_Empresa_Cuit))
 					,'EMPRESA'
 					,1
@@ -700,7 +723,7 @@ BEGIN TRANSACTION
 		            ,Espec_Empresa_Cuit
 					,null
 					,Espec_Empresa_Fecha_Creacion
-					,EL_GROUP_BY.FUNC_COD_USUARIO(CONVERT(NVARCHAR(50),Espec_Empresa_Cuit))
+					,EL_GROUP_BY.FUNC_COD_USUARIO(Espec_Empresa_Razon_Social + CONVERT(NVARCHAR(50),Espec_Empresa_Cuit))
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
 
@@ -873,6 +896,25 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Estado_Publicacion VALUES ('ACTIVA',0)
 	INSERT INTO EL_GROUP_BY.Estado_Publicacion VALUES ('FINALIZADA',0)
 COMMIT;
+GO
+-- -----------------------------------------------------
+-- Cargar Espectaculos
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_ESPECTACULOS AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Espectaculo
+		SELECT DISTINCT Espectaculo_Cod
+		            ,Espectaculo_Descripcion
+					,null
+					,Espectaculo_Fecha
+					,Espectaculo_Fecha_Venc
+					,Espectaculo_Estado
+					,1
+					,EL_GROUP_BY.FUNC_ID_EMPRESA(Espec_Empresa_Razon_Social, Espec_Empresa_Cuit)
+		FROM gd_esquema.Maestra 
+		WHERE Espec_Empresa_Cuit IS NOT NULL
+COMMIT TRANSACTION;
 GO
 
 /****************************************************************
@@ -1336,6 +1378,7 @@ exec EL_GROUP_BY.CARGAR_FORMAS_PAGO;
 exec EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
 exec EL_GROUP_BY.CARGAR_RUBROS;
 exec EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
+exec EL_GROUP_BY.CARGAR_ESPECTACULOS;
 
 
 /****************************************************************
@@ -1413,3 +1456,5 @@ select distinct A.Cli_Nombre, A.Cli_Dni
 from gd_esquema.Maestra A
 join gd_esquema.Maestra B ON  a.cli_dni = b.cli_dni
 where a.cli_nombre != b.cli_nombre;
+
+select * from El_group_by.Rubro;
