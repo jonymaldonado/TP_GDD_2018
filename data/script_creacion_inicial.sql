@@ -1,13 +1,203 @@
--- -----------------------------------------------------
--- BD --
--- -----------------------------------------------------
+/****************************************************************
+*						BD - GD2C2018							*
+****************************************************************/
 
 USE [GD2C2018];
 GO
 
--- -----------------------------------------------------
--- Creación de Schema EL_GROUP_BY
--- -----------------------------------------------------
+/****************************************************************
+*					DROP DE TABLAS - COMIENZO					*
+****************************************************************/
+
+IF OBJECT_ID('EL_GROUP_BY.Publicacion') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Publicacion;
+
+IF OBJECT_ID('EL_GROUP_BY.Espectaculo') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Espectaculo;
+
+IF OBJECT_ID('EL_GROUP_BY.Compra') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Compra;
+
+IF OBJECT_ID('EL_GROUP_BY.Puntos') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Puntos;
+
+IF OBJECT_ID('EL_GROUP_BY.Cliente') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Cliente;
+
+IF OBJECT_ID('EL_GROUP_BY.Item') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Item;
+
+IF OBJECT_ID('EL_GROUP_BY.Factura') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Factura;
+
+IF OBJECT_ID('EL_GROUP_BY.Empresa') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Empresa;
+
+IF OBJECT_ID('EL_GROUP_BY.Rol_Usuario') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Rol_Usuario;
+
+IF OBJECT_ID('EL_GROUP_BY.Rol_Funcionalidad') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Rol_Funcionalidad;
+
+IF OBJECT_ID('EL_GROUP_BY.Rol') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Rol;
+
+IF OBJECT_ID('EL_GROUP_BY.Usuario') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Usuario;
+
+IF OBJECT_ID('EL_GROUP_BY.Funcionalidad') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Funcionalidad;
+
+IF OBJECT_ID('EL_GROUP_BY.Rubro') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Rubro;
+
+IF OBJECT_ID('EL_GROUP_BY.Ubicacion') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Ubicacion;
+
+IF OBJECT_ID('EL_GROUP_BY.Ubicacion_Tipo') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Ubicacion_Tipo;
+
+IF OBJECT_ID('EL_GROUP_BY.Grado_Publicacion') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Grado_Publicacion;
+
+IF OBJECT_ID('EL_GROUP_BY.Estado_Publicacion') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Estado_Publicacion;
+
+IF OBJECT_ID('EL_GROUP_BY.Forma_Pago') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Forma_Pago;
+
+IF OBJECT_ID('EL_GROUP_BY.Publicacion_Ubicacion ') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Publicacion_Ubicacion 
+GO
+
+/****************************************************************
+*					DROP DE TABLAS - FIN						*
+****************************************************************/
+
+/****************************************************************
+*			DROP DE SPs DE MIGRACIÓN - COMIENZO					*
+****************************************************************/
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_USUARIOS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_USUARIOS;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_CLIENTES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_CLIENTES;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_EMPRESAS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_EMPRESAS;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_ROLES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_ROLES;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_FUNCIONALIDADES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_ROLES_X_USUARIO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_ROLES_X_USUARIO;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_FORMAS_PAGO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_FORMAS_PAGO;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_UBICACION_TIPOS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_RUBROS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_RUBROS;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
+
+/****************************************************************
+*			DROP DE SPs DE MIGRACIÓN - FIN					*
+****************************************************************/
+
+/****************************************************************
+*					DROP DE SPs - COMIENZO						*
+****************************************************************/
+
+IF OBJECT_ID('EL_GROUP_BY.BUSCAR_USUARIO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.BUSCAR_USUARIO;
+
+IF OBJECT_ID('EL_GROUP_BY.REG_INTENTO_FALLIDO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.REG_INTENTO_FALLIDO;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_ID_USUARIO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_ID_USUARIO;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_CANT_ROLES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_CANT_ROLES;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_ROLES_ACTIVOS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_ROLES_ACTIVOS;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_FUNCIONALIDADES_X_ROL') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_FUNCIONALIDADES_X_ROL;
+
+IF OBJECT_ID('EL_GROUP_BY.GUARDAR_ROL') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.GUARDAR_ROL;
+
+IF OBJECT_ID('EL_GROUP_BY.DAME_ID_X_NOMBRE') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.DAME_ID_X_NOMBRE;
+
+IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_ROL') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ELIMINAR_ROL;
+
+IF OBJECT_ID('EL_GROUP_BY.AGREGAR_FUNCIONALIDAD_A_ROL') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.AGREGAR_FUNCIONALIDAD_A_ROL;
+
+IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_FUNCIONALIDAD_A_ROL') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ELIMINAR_FUNCIONALIDAD_A_ROL;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL_NO_ASIGNADAS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL_NO_ASIGNADAS;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_CLIENTES_EXISTENTES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_CLIENTES_EXISTENTES;
+
+IF OBJECT_ID('EL_GROUP_BY.CREAR_CLIENTE') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_CLIENTE;
+
+IF OBJECT_ID('EL_GROUP_BY.ACTUALIZAR_CLIENTE') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ACTUALIZAR_CLIENTE;
+
+IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_CLIENTE') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ELIMINAR_CLIENTE;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_USER_FOR_MODIFY') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_USER_FOR_MODIFY;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_EMPRESAS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_EMPRESAS;
+
+IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_EMPRESA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ELIMINAR_EMPRESA;
+
+IF OBJECT_ID('EL_GROUP_BY.CREAR_EMPRESA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_EMPRESA;
+
+/****************************************************************
+*					DROP DE SPs - FIN							*
+****************************************************************/
+
+/****************************************************************
+*				DROP DE FUNCIONES - COMIENZO					*
+****************************************************************/
+IF OBJECT_ID('EL_GROUP_BY.FUNC_COD_USUARIO') IS NOT NULL
+	DROP FUNCTION EL_GROUP_BY.FUNC_COD_USUARIO;
+/****************************************************************
+*					DROP DE FUNCIONES - FIN						*
+****************************************************************/
+
+/****************************************************************
+*				CREACIÓN DE ESQUEMA - EL_GROUP_BY				*
+****************************************************************/
 
 IF (SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'EL_GROUP_BY') IS NOT NULL
 	DROP SCHEMA EL_GROUP_BY
@@ -16,94 +206,30 @@ GO
 CREATE SCHEMA [EL_GROUP_BY] AUTHORIZATION [gdEspectaculos2018]
 GO 
 
--- -----------------------------------------------------
--- Configuraciones
--- -----------------------------------------------------
+/****************************************************************
+*					CONFIGURACIONES - COMIENZO					*
+****************************************************************/
 
 SET NOCOUNT ON
 GO
 
--- -----------------------------------------------------
--- Borramos las tablas
--- -----------------------------------------------------
 
-IF OBJECT_ID('EL_GROUP_BY.Rol') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Rol;
-GO
+/****************************************************************
+*					CONFIGURACIONES - FIN						*
+****************************************************************/
 
-IF OBJECT_ID('EL_GROUP_BY.Usuario') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Usuario;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Funcionalidad') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Funcionalidad;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Cliente') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Cliente;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Empresa') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Empresa;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Rubro') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Rubro;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Espectaculo') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Espectaculo;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Ubicacion_Tipo') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Ubicacion_Tipo;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Ubicacion') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Ubicacion;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Grado_Publicacion') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Grado_Publicacion;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Publicacion') IS NOT NULL
-	DROP TABLE EL_GROUP_BYPublicacion.;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Factura') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Factura;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Forma_Pago') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Forma_Pago;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Compra') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Compra;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Item') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Item;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Puntos') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Puntos;
-GO
-
-IF OBJECT_ID('EL_GROUP_BY.Rol_Funcionalidad') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Rol_Funcionalidad;
-GO
-
+/****************************************************************
+*				CREACIÓN DE TABLAS - COMIENZO					*
+****************************************************************/
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Rol
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Rol (
-  Rol_ID INT IDENTITY(1,1),
-  Rol_Nombre NVARCHAR(20) NOT NULL,
-  Rol_Habilitado BIT NOT NULL,
-  PRIMARY KEY (Rol_ID))
+		Rol_ID INT IDENTITY(1,1),
+		Rol_Nombre NVARCHAR(20) NOT NULL,
+		Rol_Habilitado BIT NOT NULL,
+	PRIMARY KEY (Rol_ID))
 ;
 
 -- -----------------------------------------------------
@@ -111,10 +237,10 @@ CREATE TABLE EL_GROUP_BY.Rol (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Funcionalidad (
-  Funcionalidad_ID INT IDENTITY(1,1),
-  Funcionalidad_Nombre NVARCHAR(30) NOT NULL,
-  Funcionalidad_visible BIT,
-  PRIMARY KEY (Funcionalidad_ID))
+		Funcionalidad_ID INT IDENTITY(1,1),
+		Funcionalidad_Nombre NVARCHAR(30) NOT NULL,
+		Funcionalidad_visible BIT,
+	PRIMARY KEY (Funcionalidad_ID))
 ;
 
 -- -----------------------------------------------------
@@ -122,19 +248,17 @@ CREATE TABLE EL_GROUP_BY.Funcionalidad (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Rol_Funcionalidad (
-  Rol_ID INT NOT NULL,
-  Funcionalidad_ID INT NOT NULL,
-  PRIMARY KEY (Funcionalidad_ID, Rol_ID))
-;
-
--- -----------------------------------------------------
--- Creación de Tabla EL_GROUP_BY.Rol_Usuario
--- -----------------------------------------------------
-
-CREATE TABLE EL_GROUP_BY.Rol_Usuario(
-	Usuario_ID int,
-	Rol_ID int not null,
-	PRIMARY KEY (Usuario_ID, Rol_ID))
+		Rol_ID INT NOT NULL,
+		Funcionalidad_ID INT NOT NULL,
+	PRIMARY KEY (Funcionalidad_ID, Rol_ID),
+	CONSTRAINT FK_Rol_Funcionalidad_Rol_ID FOREIGN KEY (Rol_ID)
+		REFERENCES EL_GROUP_BY.Rol (Rol_ID)
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE,
+	CONSTRAINT FK_Rol_Funcionalidad_Funcionalidad_ID FOREIGN KEY (Funcionalidad_ID)     
+		REFERENCES EL_GROUP_BY.Funcionalidad (Funcionalidad_ID)
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE)
 ;
 
 -- -----------------------------------------------------
@@ -142,47 +266,66 @@ CREATE TABLE EL_GROUP_BY.Rol_Usuario(
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Usuario (
-  Usuario_ID INT NOT NULL IDENTITY(1,1),
-  Usuario_Username NVARCHAR(50) NOT NULL,
-  Usuario_Password NVARCHAR(256) NOT NULL,
-  Usuario_Tipo NVARCHAR(20) NOT NULL,
-  Usuario_Habilitado BIT NOT NULL,
-  Usuario_Intentos SMALLINT NOT NULL,
-  Usuario_Primer_Login BIT,
-  Usuario_Telefono NVARCHAR(20),
-  Usuario_Calle NVARCHAR(50),
-  Usuario_Numero_Calle NUMERIC(18,0),
-  Usuario_Piso NUMERIC(18,0),
-  Usuario_Depto NVARCHAR(50),
-  Usuario_Codigo_Postal NVARCHAR(50),
-  Usuario_Localidad NVARCHAR(50),
-  Usuario_Mail NVARCHAR(255)
-  PRIMARY KEY (Usuario_ID))
+		Usuario_ID INT NOT NULL IDENTITY(1,1),
+		Usuario_Username NVARCHAR(50) NOT NULL,
+		Usuario_Password NVARCHAR(256) NOT NULL,
+		Usuario_Tipo NVARCHAR(20) NOT NULL,
+		Usuario_Habilitado BIT NOT NULL,
+		Usuario_Intentos SMALLINT NOT NULL,
+		Usuario_Primer_Login BIT,
+		Usuario_Telefono NVARCHAR(20),
+		Usuario_Calle NVARCHAR(50),
+		Usuario_Numero_Calle NUMERIC(18,0),
+		Usuario_Piso NUMERIC(18,0),
+		Usuario_Depto NVARCHAR(50),
+		Usuario_Codigo_Postal NVARCHAR(50),
+		Usuario_Localidad NVARCHAR(50),
+		Usuario_Mail NVARCHAR(255)
+	PRIMARY KEY (Usuario_ID))
 ;
 
 CREATE UNIQUE INDEX Usuario_Username_UNIQUE ON EL_GROUP_BY.Usuario (Usuario_Username ASC);
+
+-- -----------------------------------------------------
+-- Creación de Tabla EL_GROUP_BY.Rol_Usuario
+-- -----------------------------------------------------
+
+CREATE TABLE EL_GROUP_BY.Rol_Usuario(
+		Usuario_ID int,
+		Rol_ID int not null,
+		Rol_Usuario_Estado BIT NOT NULL,
+	PRIMARY KEY (Usuario_ID, Rol_ID),
+	CONSTRAINT FK_Rol_Usuario_Rol_ID FOREIGN KEY (Rol_ID)
+		REFERENCES EL_GROUP_BY.Rol (Rol_ID)
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE,
+	CONSTRAINT FK_Rol_Usuario_Usuario_ID FOREIGN KEY (Usuario_ID)     
+		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE)
+;
 
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Cliente
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Cliente (
-  Cliente_ID INT NOT NULL IDENTITY(1,1),
-  Cliente_Nombre NVARCHAR(255),
-  Cliente_Apellido NVARCHAR(255),
-  Cliente_Tipo_Documento NVARCHAR(10),
-  Cliente_Numero_Documento NUMERIC(18,0),
-  Cliente_Cuil NVARCHAR(20),
-  Cliente_Fecha_Nacimiento DATETIME,
-  Cliente_Tarjeta_Marca NVARCHAR(20),
-  Cliente_Tarjeta_Numero NUMERIC(16,0),
-  Cliente_Fecha_Creacion DATETIME,
-  Usuario_ID INT,
-  PRIMARY KEY (Cliente_ID),
-  CONSTRAINT FK_Cliente_Usuario_ID FOREIGN KEY (Usuario_ID)     
-    REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE)
+		Cliente_ID INT NOT NULL IDENTITY(1,1),
+		Cliente_Nombre NVARCHAR(255),
+		Cliente_Apellido NVARCHAR(255),
+		Cliente_Tipo_Documento NVARCHAR(10),
+		Cliente_Numero_Documento NUMERIC(18,0),
+		Cliente_Cuil NVARCHAR(20),
+		Cliente_Fecha_Nacimiento DATETIME,
+		Cliente_Tarjeta_Marca NVARCHAR(20),
+		Cliente_Tarjeta_Numero NUMERIC(16,0),
+		Cliente_Fecha_Creacion DATETIME,
+		Usuario_ID INT,
+	PRIMARY KEY (Cliente_ID),
+	CONSTRAINT FK_Cliente_Usuario_ID FOREIGN KEY (Usuario_ID)     
+		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE)
 ;
 
 CREATE UNIQUE INDEX Cliente_Tipo_Documento_UNIQUE ON EL_GROUP_BY.Cliente (Cliente_Tipo_Documento ASC);
@@ -197,17 +340,17 @@ CREATE UNIQUE INDEX Cliente_Cuil_UNIQUE ON EL_GROUP_BY.Cliente (Cliente_Cuil ASC
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Empresa (
-  Empresa_ID INT NOT NULL IDENTITY(1,1),
-  Empresa_Razon_Social NVARCHAR(255) NOT NULL,
-  Empresa_Cuit NVARCHAR(255) NOT NULL,
-  Empresa_Ciudad NVARCHAR(50),
-  Empresa_Fecha_Creacion DATETIME,
-  Usuario_ID INT,
-  PRIMARY KEY (Empresa_ID),
-  CONSTRAINT FK_Empresa_Usuario_ID FOREIGN KEY (Usuario_ID)     
-    REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE)
+		Empresa_ID INT NOT NULL IDENTITY(1,1),
+		Empresa_Razon_Social NVARCHAR(255) NOT NULL,
+		Empresa_Cuit NVARCHAR(255) NOT NULL,
+		Empresa_Ciudad NVARCHAR(50),
+		Empresa_Fecha_Creacion DATETIME,
+		Usuario_ID INT,
+	PRIMARY KEY (Empresa_ID),
+	CONSTRAINT FK_Empresa_Usuario_ID FOREIGN KEY (Usuario_ID)     
+		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE)
 ;
 
 CREATE UNIQUE INDEX Empresa_Razon_Social_UNIQUE ON EL_GROUP_BY.Empresa (Empresa_Razon_Social ASC);
@@ -219,9 +362,9 @@ CREATE UNIQUE INDEX Empresa_Cuit_UNIQUE ON EL_GROUP_BY.Empresa (Empresa_Cuit ASC
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Rubro (
-  Rubro_ID INT IDENTITY(1,1),
-  Rubro_Descripcion NVARCHAR(255) NOT NULL,
-  PRIMARY KEY (Rubro_ID))
+		Rubro_ID INT IDENTITY(1,1),
+		Rubro_Descripcion NVARCHAR(255) NOT NULL,
+	PRIMARY KEY (Rubro_ID))
 ;
 
 -- -----------------------------------------------------
@@ -229,20 +372,24 @@ CREATE TABLE EL_GROUP_BY.Rubro (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Espectaculo (
-  Espectaculo_ID INT IDENTITY(1,1),
-  Espectaculo_Codigo NUMERIC(18,0) NOT NULL,
-  Espectaculo_Descripcion NVARCHAR(255) NOT NULL,
-  Espectaculo_Direccion NVARCHAR(255) NOT NULL,
-  Espectaculo_Fecha DATETIME NOT NULL,
-  Espectaculo_Fecha_Vencimiento DATETIME NOT NULL,
-  Espectaculo_Estado NVARCHAR(255) NOT NULL,
-  Rubro_ID INT NOT NULL,
-  Empresa_ID INT NOT NULL,
-  PRIMARY KEY (Espectaculo_ID),
-  CONSTRAINT FK_Espectaculo_Rubro_ID FOREIGN KEY (Rubro_ID)     
-    REFERENCES EL_GROUP_BY.Rubro (Rubro_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE)
+		Espectaculo_ID INT IDENTITY(1,1),
+		Espectaculo_Codigo NUMERIC(18,0) NOT NULL,
+		Espectaculo_Descripcion NVARCHAR(255) NOT NULL,
+		Espectaculo_Direccion NVARCHAR(255) NOT NULL,
+		Espectaculo_Fecha DATETIME NOT NULL,
+		Espectaculo_Fecha_Vencimiento DATETIME NOT NULL,
+		Espectaculo_Estado NVARCHAR(255) NOT NULL,
+		Rubro_ID INT NOT NULL,
+		Empresa_ID INT NOT NULL,
+	PRIMARY KEY (Espectaculo_ID),
+	CONSTRAINT FK_Espectaculo_Empresa_ID FOREIGN KEY (Empresa_ID)
+		REFERENCES EL_GROUP_BY.Empresa (Empresa_ID)
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE,  
+	CONSTRAINT FK_Espectaculo_Rubro_ID FOREIGN KEY (Rubro_ID)
+		REFERENCES EL_GROUP_BY.Rubro (Rubro_ID)     
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE)
 ;
 
 -- -----------------------------------------------------
@@ -250,10 +397,10 @@ CREATE TABLE EL_GROUP_BY.Espectaculo (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Ubicacion_Tipo (
-  Ubicacion_Tipo_ID INT IDENTITY(1,1),
-  Ubicacion_Tipo_Codigo NUMERIC(18,0) NOT NULL,
-  Ubicacion_Tipo_Descripcion NVARCHAR(255) NOT NULL,
-  PRIMARY KEY (Ubicacion_Tipo_ID))
+		Ubicacion_Tipo_ID INT IDENTITY(1,1),
+		Ubicacion_Tipo_Codigo NUMERIC(18,0) NOT NULL,
+		Ubicacion_Tipo_Descripcion NVARCHAR(255) NOT NULL,
+	PRIMARY KEY (Ubicacion_Tipo_ID))
 ;
 
 -- -----------------------------------------------------
@@ -261,19 +408,19 @@ CREATE TABLE EL_GROUP_BY.Ubicacion_Tipo (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Ubicacion (
-  Ubicacion_ID INT IDENTITY(1,1),
-  Ubicacion_Fila VARCHAR(3) NULL,
-  Ubicacion_Asiento NUMERIC(18,0) NULL,
-  Ubicacion_Sin_Numerar BIT NOT NULL,
-  Ubicacion_Precio NUMERIC(18,0) NOT NULL,
-  Ubicacion_Disponible BIT NOT NULL,
-  Ubicacion_Tipo_ID INT NOT NULL,
-  Ubicacion_Canjeada BIT NOT NULL,
-  PRIMARY KEY (Ubicacion_ID),
-  CONSTRAINT FK_Ubicacion_Espectaculo_ID FOREIGN KEY (Espectaculo_ID)     
-    REFERENCES EL_GROUP_BY.Espectaculo (Espectaculo_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE)
+		Ubicacion_ID INT IDENTITY(1,1),
+		Ubicacion_Fila VARCHAR(3) NULL,
+		Ubicacion_Asiento NUMERIC(18,0) NULL,
+		Ubicacion_Sin_Numerar BIT NOT NULL,
+		Ubicacion_Precio NUMERIC(18,0) NOT NULL,
+		Ubicacion_Disponible BIT NOT NULL,
+		Ubicacion_Tipo_ID INT NOT NULL,
+		Ubicacion_Canjeada BIT NOT NULL,
+	PRIMARY KEY (Ubicacion_ID),
+	CONSTRAINT FK_Ubicacion_Tipo_ID FOREIGN KEY (Ubicacion_Tipo_ID)     
+		REFERENCES EL_GROUP_BY.Ubicacion_Tipo (Ubicacion_Tipo_ID)     
+	    ON DELETE CASCADE    
+		ON UPDATE CASCADE)
 ;
 
 -- -----------------------------------------------------
@@ -281,10 +428,10 @@ CREATE TABLE EL_GROUP_BY.Ubicacion (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
-  Grado_Publicacion_ID INT IDENTITY(1,1),
-  Grado_Publicacion_Comision NUMERIC(3,3) NOT NULL,
-  Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
-  PRIMARY KEY (Grado_Publicacion_ID))
+		Grado_Publicacion_ID INT IDENTITY(1,1),
+		Grado_Publicacion_Comision NUMERIC(3,3) NOT NULL,
+		Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
+	PRIMARY KEY (Grado_Publicacion_ID))
 ;
 
 -- -----------------------------------------------------
@@ -292,21 +439,17 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Publicacion (
-  Publicacion_ID INT IDENTITY(1,1),
-  Publicacion_Descripcion NVARCHAR(255) NOT NULL,
-  Publicacion_Fecha DATETIME NOT NULL,
-  Publicacion_FechaHora DATETIME NOT NULL,
-  Publicacion_Estado NVARCHAR(255) NOT NULL,
-  Publicacion_Cantidad_Localidades NUMERIC(7,0) NOT NULL,
-  Publicacion_Usuario NVARCHAR(50) NOT NULL,
-  Espectaculo_ID INT NOT NULL,
-  Grado_Publicacion_ID INT NOT NULL,
-  Estado_Publicacion_ID INT NOT NULL,
+		Publicacion_ID INT IDENTITY(1,1),
+		Publicacion_Descripcion NVARCHAR(255) NOT NULL,
+		Publicacion_Fecha DATETIME NOT NULL,
+		Publicacion_FechaHora DATETIME NOT NULL,
+		Publicacion_Estado NVARCHAR(255) NOT NULL,
+		Publicacion_Cantidad_Localidades NUMERIC(7,0) NOT NULL,
+		Publicacion_Usuario NVARCHAR(50) NOT NULL,
+		Espectaculo_ID INT NOT NULL,
+		Grado_Publicacion_ID INT NOT NULL,
+		Estado_Publicacion_ID INT NOT NULL,
   PRIMARY KEY (Publicacion_ID),
-  CONSTRAINT FK_Publicacion_Usuario_ID FOREIGN KEY (Usuario_ID)     
-    REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE,
   CONSTRAINT FK_Publicacion_Grado_Publicacion_ID FOREIGN KEY (Grado_Publicacion_ID)     
     REFERENCES EL_GROUP_BY.Grado_Publicacion (Grado_Publicacion_ID)     
     ON DELETE CASCADE    
@@ -322,10 +465,10 @@ CREATE TABLE EL_GROUP_BY.Publicacion (
 -- -----------------------------------------------------
 	       
 CREATE TABLE EL_GROUP_BY.Estado_Publicacion (
-  Estado_Publicacion_ID INT IDENTITY(1,1),
-  Estado_Publicacion_Descripcion NVARCHAR(255) NOT NULL,
-  Estado_Publicacion_Modificable BIT NOT NULL,
-  PRIMARY KEY (Estado_Publicacion_ID)
+		Estado_Publicacion_ID INT IDENTITY(1,1),
+		Estado_Publicacion_Descripcion NVARCHAR(255) NOT NULL,
+		Estado_Publicacion_Modificable BIT NOT NULL,
+	PRIMARY KEY (Estado_Publicacion_ID))
 ;
 	
 -- -----------------------------------------------------
@@ -333,11 +476,11 @@ CREATE TABLE EL_GROUP_BY.Estado_Publicacion (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Factura (
-  Factura_ID INT IDENTITY(1,1),
-  Factura_Nro NUMERIC(18,0) NOT NULL,
-  Factura_Fecha DATETIME NOT NULL,
-  Factura_Total NUMERIC(18,2) NOT NULL,
-  Factura_Empresa_ID VARCHAR(45) NULL,
+		Factura_ID INT IDENTITY(1,1),
+		Factura_Nro NUMERIC(18,0) NOT NULL,
+		Factura_Fecha DATETIME NOT NULL,
+		Factura_Total NUMERIC(18,2) NOT NULL,
+		Factura_Empresa_ID VARCHAR(45) NULL,
   PRIMARY KEY (Factura_ID))
 ;
 
@@ -346,9 +489,9 @@ CREATE TABLE EL_GROUP_BY.Factura (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Forma_Pago (
-  Forma_Pago_ID INT IDENTITY(1,1),
-  Forma_Pago_Descripcion NVARCHAR(255) NOT NULL,
-  PRIMARY KEY (Forma_Pago_ID))
+		Forma_Pago_ID INT IDENTITY(1,1),
+		Forma_Pago_Descripcion NVARCHAR(255) NOT NULL,
+	PRIMARY KEY (Forma_Pago_ID))
 ;
 
 -- -----------------------------------------------------
@@ -356,26 +499,22 @@ CREATE TABLE EL_GROUP_BY.Forma_Pago (
 -- -----------------------------------------------------
 
 CREATE TABLE EL_GROUP_BY.Compra (
-  Compra_ID INT IDENTITY(1,1),
-  Compra_Fecha DATETIME NOT NULL,
-  Compra_Cantidad NUMERIC(18,0) NOT NULL,
-  Compra_Monto_Total DECIMAL(18,2) NOT NULL,
-  Compra_Rendida BIT NOT NULL,
-  Cliente_ID INT NOT NULL,
-  Forma_Pago_ID INT NOT NULL,
-  PRIMARY KEY (Compra_ID),
-  CONSTRAINT FK_Compra_Factura_ID FOREIGN KEY (Factura_ID)     
-    REFERENCES EL_GROUP_BY.Factura (Factura_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE,
-  CONSTRAINT FK_Compra_Usuario_ID FOREIGN KEY (Usuario_ID)     
-    REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE,
-  CONSTRAINT FK_Compra_Forma_Pago_ID FOREIGN KEY (Forma_Pago_ID)     
-    REFERENCES EL_GROUP_BY.Forma_Pago (Forma_Pago_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE)
+		Compra_ID INT IDENTITY(1,1),
+		Compra_Fecha DATETIME NOT NULL,
+		Compra_Cantidad NUMERIC(18,0) NOT NULL,
+		Compra_Monto_Total DECIMAL(18,2) NOT NULL,
+		Compra_Rendida BIT NOT NULL,
+		Cliente_ID INT NOT NULL,
+		Forma_Pago_ID INT NOT NULL,
+	PRIMARY KEY (Compra_ID),
+	CONSTRAINT FK_Compra_Usuario_ID FOREIGN KEY (Cliente_ID)     
+		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE,
+	CONSTRAINT FK_Compra_Forma_Pago_ID FOREIGN KEY (Forma_Pago_ID)     
+		REFERENCES EL_GROUP_BY.Forma_Pago (Forma_Pago_ID)     
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE)
 ;
 
 -- -----------------------------------------------------
@@ -384,17 +523,17 @@ CREATE TABLE EL_GROUP_BY.Compra (
 
 
 CREATE TABLE EL_GROUP_BY.Item (
-  Item_ID INT IDENTITY(1,1),
-  Item_Monto NUMERIC(18,2) NOT NULL,
-  Item_Cantidad NUMERIC(18,0) NOT NULL,
-  Item_Descripcion NVARCHAR(60) NOT NULL,
-  Factura_ID INT NOT NULL,
-  Compra_ID INT NOT NULL,
-  PRIMARY KEY (Item_ID),
-  CONSTRAINT FK_Item_Factura_ID FOREIGN KEY (Factura_ID)     
-    REFERENCES EL_GROUP_BY.Factura (Factura_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE)
+		Item_ID INT IDENTITY(1,1),
+		Item_Monto NUMERIC(18,2) NOT NULL,
+		Item_Cantidad NUMERIC(18,0) NOT NULL,
+		Item_Descripcion NVARCHAR(60) NOT NULL,
+		Factura_ID INT NOT NULL,
+		Compra_ID INT NOT NULL,
+	PRIMARY KEY (Item_ID),
+	CONSTRAINT FK_Item_Factura_ID FOREIGN KEY (Factura_ID)     
+		REFERENCES EL_GROUP_BY.Factura (Factura_ID)     
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE)
 ;
 
 -- -----------------------------------------------------
@@ -403,33 +542,40 @@ CREATE TABLE EL_GROUP_BY.Item (
 
 
 CREATE TABLE EL_GROUP_BY.Puntos (
-  Puntos_ID INT IDENTITY(1,1),
-  Puntos_Cantidad NUMERIC(18,0) NOT NULL,
-  Puntos_Fecha_Vencimiento DATETIME NOT NULL,
-  Cliente_ID INT NOT NULL,
-  PRIMARY KEY (Puntos_ID),
-  CONSTRAINT FK_Puntos_Cliente_ID FOREIGN KEY (Cliente_ID)     
-    REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
-    ON DELETE CASCADE    
-    ON UPDATE CASCADE)
+		Puntos_ID INT IDENTITY(1,1),
+		Puntos_Cantidad NUMERIC(18,0) NOT NULL,
+		Puntos_Fecha_Vencimiento DATETIME NOT NULL,
+		Cliente_ID INT NOT NULL,
+	PRIMARY KEY (Puntos_ID),
+	CONSTRAINT FK_Puntos_Cliente_ID FOREIGN KEY (Cliente_ID)     
+		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
+		ON DELETE CASCADE    
+		ON UPDATE CASCADE)
 ;
-GO
+
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Publicacion_Ubicacion
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS EL_GROUP_BY.Publicacion_Ubicacion (
-  Ubicacion_ID INT NOT NULL,
-  Publicacion_ID INT NOT NULL,
-  Compra_ID INT NULL,
-  PRIMARY KEY (Ubicacion_ID, Publicacion_ID)
+CREATE TABLE EL_GROUP_BY.Publicacion_Ubicacion (
+		Ubicacion_ID INT NOT NULL,
+		Publicacion_ID INT NOT NULL,
+		Compra_ID INT NULL,
+	PRIMARY KEY (Ubicacion_ID, Publicacion_ID))
 ;
 GO
-	       
--- -----------------------------------------------------
--- Funciones
--- -----------------------------------------------------
 
+/****************************************************************
+*					CREACIÓN DE TABLAS - FIN					*
+****************************************************************/
+	       
+
+/****************************************************************
+*					FUNCIONES - COMIENZO						*
+****************************************************************/
+
+-- ---------------------------------------------
 -- ME DEVUELVE EL ID_USUARIO
+-- ---------------------------------------------
 CREATE FUNCTION EL_GROUP_BY.FUNC_COD_USUARIO(@USU NVARCHAR(50))
 RETURNS INT
 AS
@@ -440,16 +586,24 @@ BEGIN
 END;
 GO
 
+
+/****************************************************************
+*					FUNCIONES - FIN								*
+****************************************************************/
+
+/****************************************************************
+*				SPs DE MIGRACIÓN - COMIENZO						*
+****************************************************************/
+
 -- -----------------------------------------------------
 -- Cargar Usuarios
 -- -----------------------------------------------------
-GO
 
 CREATE PROC EL_GROUP_BY.CARGAR_USUARIOS
 AS
 BEGIN TRAN
 	INSERT INTO EL_GROUP_BY.USUARIO
-	SELECT DISTINCT (Cli_Nombre + CONVERT(NVARCHAR(50),Cli_Dni))
+					 SELECT DISTINCT (Cli_Nombre + CONVERT(NVARCHAR(50),Cli_Dni))
 					,HASHBYTES('SHA2_256', CONVERT(NVARCHAR(50),Cli_Dni))
 					,'CLIENTE'
 					,1
@@ -504,7 +658,6 @@ GO
 -- -----------------------------------------------------
 -- Cargar Clientes
 -- -----------------------------------------------------
-
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_CLIENTES AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Cliente 
@@ -642,12 +795,12 @@ CREATE PROCEDURE EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.ROL_FUNCIONALIDAD
 		SELECT Rol_ID,
-				FUN_ID
+				Funcionalidad_ID
 			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
 			WHERE R.Rol_Nombre = 'ADMINISTRADOR' AND
 					(F.Funcionalidad_ID = 1 OR
 					F.Funcionalidad_ID = 2 OR
-					F.Funcionlidad_ID = 3)
+					F.Funcionalidad_ID = 3)
 	UNION
 		SELECT Rol_ID,
 				Funcionalidad_ID
@@ -662,7 +815,7 @@ BEGIN TRANSACTION
 				Funcionalidad_ID
 			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
 			WHERE R.Rol_Nombre = 'EMPRESA' AND
-					(F.Funciondalidad_ID = 4 OR
+					(F.Funcionalidad_ID = 4 OR
 						F.Funcionalidad_ID = 5 OR
 						F.Funcionalidad_ID = 6 OR
 						F.Funcionalidad_ID = 7 OR
@@ -679,7 +832,7 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Forma_Pago
 		SELECT DISTINCT Forma_Pago_Desc
 			FROM gd_esquema.Maestra M
-			WHERE M.Forma_Pago IS NOT NULL
+			WHERE M.Forma_Pago_Desc IS NOT NULL
 COMMIT TRANSACTION;	
 GO
 
@@ -721,10 +874,19 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Estado_Publicacion VALUES ('FINALIZADA',0)
 COMMIT;
 GO
+
+/****************************************************************
+*					SPs DE MIGRACIÓN - FIN						*
+****************************************************************/
 					      
 									      
+/****************************************************************
+*						SPs - COMIENZO							*
+****************************************************************/
+
+
 -- -----------------------------------------------------
--- SPs
+-- SP - Buscar Usuario
 -- -----------------------------------------------------
 
 create procedure EL_GROUP_BY.BUSCAR_USUARIO @Usuario nvarchar(50), @Password nvarchar(50)
@@ -756,6 +918,10 @@ begin
 end
 go
 
+-- -----------------------------------------------------
+-- SP - Intento Fallido
+-- -----------------------------------------------------
+
 create procedure EL_GROUP_BY.REG_INTENTO_FALLIDO @Usuario varchar(50)
 as
 begin
@@ -767,6 +933,10 @@ begin
 end
 go
 
+-- -----------------------------------------------------
+-- SP - Obtener ID Usuario
+-- -----------------------------------------------------
+
 create procedure EL_GROUP_BY.OBTENER_ID_USUARIO @USUARIO varchar(50)
 as
 begin
@@ -774,12 +944,20 @@ begin
 end
 go
 
+-- -----------------------------------------------------
+-- SP - Cantidad de Roles del Usuario
+-- -----------------------------------------------------
+
 create procedure EL_GROUP_BY.OBTENER_CANT_ROLES @USU_ID int
 as
 begin
 	select count(USUARIO_ID) from EL_GROUP_BY.ROL_USUARIO where USUARIO_ID = @USU_ID and ROL_USUARIO_ESTADO = 1  
 end
 go
+
+-- -----------------------------------------------------
+-- SP - Rol Activo
+-- -----------------------------------------------------
 
 create procedure EL_GROUP_BY.OBTENER_ROLES_ACTIVOS @ID int
 as
@@ -789,13 +967,21 @@ begin
 end
 go
 
+-- -----------------------------------------------------
+-- SP - Funcionalidades del Rol
+-- -----------------------------------------------------
+
 create procedure EL_GROUP_BY.OBTENER_FUNCIONALIDADES_X_ROL @ROL_ID int
 as
 begin
 	select F.Funcionalidad_ID from EL_GROUP_BY.FUNCIONALIDAD F inner join EL_GROUP_BY.ROL_FUNCIONALIDAD RXU 
-		on F.Funcionalidad_ID = RXU.Funcionalidad_ID where RXU.Rol_ID = @ROL_ID and F.Fun_visible = 1 
+		on F.Funcionalidad_ID = RXU.Funcionalidad_ID where RXU.Rol_ID = @ROL_ID and F.Funcionalidad_visible = 1 
 end
 go
+
+-- -----------------------------------------------------
+-- SP - Crear Rol
+-- -----------------------------------------------------
 
 create procedure EL_GROUP_BY.GUARDAR_ROL @nombre varchar(25), @habilitado bit
 as
@@ -804,12 +990,20 @@ begin
 end
 go
 
+-- -----------------------------------------------------
+-- SP - Rol ID
+-- -----------------------------------------------------
+
 create procedure EL_GROUP_BY.DAME_ID_X_NOMBRE @nombre varchar(25)
 as
 begin
 	select Rol_ID from EL_GROUP_BY.ROL where Rol_Nombre = @nombre 
 end
 go
+
+-- -----------------------------------------------------
+-- SP - Eliminar Rol
+-- -----------------------------------------------------
 
 create procedure EL_GROUP_BY.ELIMINAR_ROL @ID int
 as
@@ -818,12 +1012,21 @@ begin
 end
 go
 
+-- -----------------------------------------------------
+-- SP - Agregar Funcionalidad
+-- -----------------------------------------------------
+
 create procedure EL_GROUP_BY.AGREGAR_FUNCIONALIDAD_A_ROL @ROL_ID INT, @FUNCIONALIDAD_ID INT
+
 as
 begin
 	insert into EL_GROUP_BY.ROL_FUNCIONALIDAD values (@ROL_ID,@FUNCIONALIDAD_ID)
 end
 go
+
+-- -----------------------------------------------------
+-- SP - Quitar Funcionalidad a Rol
+-- -----------------------------------------------------
 
 create procedure EL_GROUP_BY.ELIMINAR_FUNCIONALIDAD_A_ROL @ROL_ID INT, @FUNCIONALIDAD_ID INT
 as
@@ -831,6 +1034,10 @@ begin
 	delete from EL_GROUP_BY.ROL_FUNCIONALIDAD where Rol_ID = @ROL_ID and FUNCIONALIDAD_ID = @FUNCIONALIDAD_ID
 end
 go
+
+-- -----------------------------------------------------
+-- SP - Listar Funcionalidades
+-- -----------------------------------------------------
 
 create procedure EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL @ROL_ID int
 as
@@ -840,6 +1047,10 @@ begin
 end
 go
 
+-- -----------------------------------------------------
+-- SP - Listar Funcionalidades No Asignadas
+-- -----------------------------------------------------
+
 create procedure EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL_NO_ASIGNADAS @ROL_ID int
 as
 begin
@@ -848,6 +1059,10 @@ begin
 										 on rxf.Funcionalidad_ID = f.Funcionalidad_ID where rxf.Rol_ID = @ROL_ID;
 end
 go
+
+-- -----------------------------------------------------
+-- SP - Listar Clientes
+-- -----------------------------------------------------
 
 create procedure EL_GROUP_BY.LISTAR_CLIENTES_EXISTENTES
 @NOMBRE VARCHAR(255), 
@@ -871,6 +1086,10 @@ begin
               AND U.Usuario_Habilitado = 1;
 end
 go
+
+-- -----------------------------------------------------
+-- SP - Nuevo Cliente
+-- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @USUARIO VARCHAR(50),
@@ -921,6 +1140,10 @@ BEGIN TRANSACTION
 COMMIT
 GO
 
+-- -----------------------------------------------------
+-- SP - Actualizar Cliente
+-- -----------------------------------------------------
+
 CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_CLIENTE
 @USUARIO_ID INT,
 @NOMBRE VARCHAR(255),
@@ -965,6 +1188,10 @@ BEGIN TRANSACTION
 COMMIT
 GO
 
+-- -----------------------------------------------------
+-- SP - Eliminar Cliente
+-- -----------------------------------------------------
+
 CREATE PROCEDURE EL_GROUP_BY.ELIMINAR_CLIENTE
 @USUARIO_ID INT
 AS
@@ -974,6 +1201,10 @@ BEGIN TRANSACTION
 		WHERE Usuario_ID = @USUARIO_ID;
 COMMIT
 GO
+
+-- -----------------------------------------------------
+-- SP - Obtener Usuario a Modificar
+-- -----------------------------------------------------
 
 create procedure EL_GROUP_BY.OBTENER_USER_FOR_MODIFY @USER_ID int
 as
@@ -1000,6 +1231,10 @@ begin
 end
 GO
 
+-- -----------------------------------------------------
+-- SP - Listar Empresas
+-- -----------------------------------------------------
+
 create procedure EL_GROUP_BY.LISTAR_EMPRESAS
 @RAZON_SOCIAL VARCHAR(255), 
 @CUIT VARCHAR(255),
@@ -1021,6 +1256,10 @@ begin
 end
 go
 
+-- -----------------------------------------------------
+-- SP - Eliminar Empresa
+-- -----------------------------------------------------
+
 CREATE PROCEDURE EL_GROUP_BY.ELIMINAR_EMPRESA
 @USUARIO_ID INT
 AS
@@ -1030,6 +1269,11 @@ BEGIN TRANSACTION
 		WHERE Usuario_ID = @USUARIO_ID;
 COMMIT
 GO
+
+-- -----------------------------------------------------
+-- SP - Nueva Empresa
+-- -----------------------------------------------------
+
 
 CREATE PROCEDURE EL_GROUP_BY.CREAR_EMPRESA
 @USUARIO		VARCHAR(50),
@@ -1074,6 +1318,30 @@ BEGIN TRANSACTION
 COMMIT
 GO
 
+/****************************************************************
+*							SPs - FIN							*
+****************************************************************/
+
+/****************************************************************
+*			EJECUCIÓN DE MIGRACIÓN - COMIENZO					*
+****************************************************************/
+exec EL_GROUP_BY.CARGAR_USUARIOS;
+exec EL_GROUP_BY.CARGAR_CLIENTES;
+exec EL_GROUP_BY.CARGAR_EMPRESAS;
+exec EL_GROUP_BY.CARGAR_ROLES;
+exec EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
+exec EL_GROUP_BY.CARGAR_ROLES_X_USUARIO;
+exec EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD;
+exec EL_GROUP_BY.CARGAR_FORMAS_PAGO;
+exec EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
+exec EL_GROUP_BY.CARGAR_RUBROS;
+exec EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
+
+
+/****************************************************************
+*			EJECUCIÓN DE MIGRACIÓN - FIN						*
+****************************************************************/
+
 --------------------------------------------------------
 -- Borrador para hacer algunas pruebas
 --------------------------------------------------------
@@ -1117,6 +1385,22 @@ select * from EL_GROUP_BY.ROL_USUARIO;
 exec EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD;
 drop table EL_GROUP_BY.Rol_Funcionalidad;
 
+
+exec EL_GROUP_BY.CARGAR_FORMAS_PAGO;
+drop table EL_GROUP_BY.Forma_Pago;
+
+
+exec EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
+drop table EL_GROUP_BY.Ubicacion_Tipo;
+
+
+exec EL_GROUP_BY.CARGAR_RUBROS;
+drop table EL_GROUP_BY.Rubro;
+
+
+exec EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
+drop table EL_GROUP_BY.Estado_Publicacion;
+
 select * from EL_GROUP_BY.Rol_Funcionalidad;
 
 select Espectaculo_Cod, Espectaculo_Descripcion, Ubicacion_Fila, Ubicacion_Asiento from gd_esquema.Maestra where Ubicacion_Fila = 'A';
@@ -1124,3 +1408,8 @@ select Espectaculo_Cod, Espectaculo_Descripcion, Ubicacion_Fila, Ubicacion_Asien
 select Espectaculo_Estado from gd_esquema.Maestra;
 
 select * from gd_esquema.Maestra;
+
+select distinct A.Cli_Nombre, A.Cli_Dni 
+from gd_esquema.Maestra A
+join gd_esquema.Maestra B ON  a.cli_dni = b.cli_dni
+where a.cli_nombre != b.cli_nombre;
