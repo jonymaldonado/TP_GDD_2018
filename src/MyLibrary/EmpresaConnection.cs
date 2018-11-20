@@ -83,31 +83,31 @@ namespace MyLibrary
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@TELEFONO", SqlDbType.VarChar, 20);
-            parameter.Value = empresa.Telefono;
+            parameter.Value = empresa.Phone;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@CALLE", SqlDbType.NVarChar, 50);
-            parameter.Value = empresa.Calle;
+            parameter.Value = empresa.Street;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@NUMERO", SqlDbType.Int, 18);
-            parameter.Value = empresa.Piso;
+            parameter.Value = empresa.NumberStreet;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@PISO", SqlDbType.Int, 18);
-            parameter.Value = empresa.Piso;
+            parameter.Value = empresa.Floor;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@DEPTO", SqlDbType.NVarChar, 50);
-            parameter.Value = empresa.Depto;
+            parameter.Value = empresa.Department;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@LOCALIDAD", SqlDbType.NVarChar, 50);
-            parameter.Value = empresa.Localidad;
+            parameter.Value = empresa.Location;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@CODIGO_POSTAL", SqlDbType.NVarChar, 50);
-            parameter.Value = empresa.CodigoPostal;
+            parameter.Value = empresa.PostalCode;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@CIUDAD", SqlDbType.NVarChar, 50);
@@ -119,6 +119,15 @@ namespace MyLibrary
             parameters.Add(parameter);
 
             Connection.WriteInTheBase("EL_GROUP_BY.CREAR_EMPRESA", Connection.Type.StoredProcedure, parameters);
+        }
+
+        public static SqlDataReader GetEmpresaForModify(string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@USER_ID", userId));
+            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_USER_FOR_MODIFY", Connection.Type.StoredProcedure, parameters);
+
+            return reader;
         }
 
     }
