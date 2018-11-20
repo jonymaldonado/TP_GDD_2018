@@ -114,6 +114,9 @@ IF OBJECT_ID('EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_ESPECTACULOS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_ESPECTACULOS;
 
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_PUBLICACIONES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACIONES;
+
 GO
 
 /****************************************************************
@@ -200,6 +203,9 @@ IF OBJECT_ID('EL_GROUP_BY.FUNC_COD_USUARIO') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_EMPRESA') IS NOT NULL
 	DROP FUNCTION EL_GROUP_BY.FUNC_ID_EMPRESA;
 
+IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_RUBRO') IS NOT NULL
+	DROP FUNCTION EL_GROUP_BY.FUNC_ID_RUBRO;
+
 GO
 /****************************************************************
 *					DROP DE FUNCIONES - FIN						*
@@ -252,7 +258,6 @@ CREATE TABLE EL_GROUP_BY.Funcionalidad (
 		Funcionalidad_visible BIT,
 	PRIMARY KEY (Funcionalidad_ID))
 ;
-
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Rol_Funcionalidad
 -- -----------------------------------------------------
@@ -448,10 +453,9 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 
 CREATE TABLE EL_GROUP_BY.Publicacion (
 		Publicacion_ID INT IDENTITY(1,1),
-		Publicacion_Descripcion NVARCHAR(255) NOT NULL,
-		Publicacion_Fecha DATETIME NOT NULL,
-		Publicacion_FechaHora DATETIME NOT NULL,
-		Publicacion_Estado NVARCHAR(255) NOT NULL,
+		Publicacion_Descripcion NVARCHAR(255),
+		Publicacion_Fecha DATETIME,
+		Publicacion_FechaHora DATETIME,
 		Publicacion_Cantidad_Localidades NUMERIC(7,0) NOT NULL,
 		Publicacion_Usuario NVARCHAR(50) NOT NULL,
 		Espectaculo_ID INT NOT NULL,
@@ -610,6 +614,20 @@ BEGIN
 END;
 GO
 
+-- ---------------------------------------------
+-- ME DEVUELVE EL ID_RUBRO
+-- ---------------------------------------------
+CREATE FUNCTION EL_GROUP_BY.FUNC_ID_RUBRO(@RUBRO_DESCRIPCION NVARCHAR(255))
+RETURNS INT
+AS
+BEGIN
+	DECLARE @RESULTADO INT
+	SELECT @RESULTADO = Rubro_ID 
+	FROM EL_GROUP_BY.Rubro 
+	WHERE Rubro_Descripcion = @RUBRO_DESCRIPCION
+	RETURN @RESULTADO
+END;
+GO
 /****************************************************************
 *					FUNCIONES - FIN								*
 ****************************************************************/
@@ -910,10 +928,36 @@ BEGIN TRANSACTION
 					,Espectaculo_Fecha
 					,Espectaculo_Fecha_Venc
 					,Espectaculo_Estado
-					,1
+					,EL_GROUP_BY.FUNC_ID_RUBRO(Espectaculo_Rubro_Descripcion)
 					,EL_GROUP_BY.FUNC_ID_EMPRESA(Espec_Empresa_Razon_Social, Espec_Empresa_Cuit)
 		FROM gd_esquema.Maestra 
 		WHERE Espec_Empresa_Cuit IS NOT NULL
+COMMIT TRANSACTION;
+GO
+-- -----------------------------------------------------
+-- Cargar Publicaciones
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACIONES AS
+BEGIN TRANSACTION
+	DECLARE @CANT_ESPEC_ID INT
+	DECLARE @ESPEC_ID INT
+	SET @CANT_ESPEC_ID = (SELECT COUNT(Espectaculo_ID)
+						  FROM EL_GROUP_BY.Espectaculo )
+	SET @ESPEC_ID = 1
+	WHILE @ESPEC_ID <= @CANT_ESPEC_ID
+	BEGIN
+		INSERT INTO EL_GROUP_BY.Publicacion VALUES(
+						 null
+				        ,null
+						,null
+						,0
+						,'MIGRA'
+						,@ESPEC_ID
+						,1 --Migro directamente Grado_Publicacion_ID = 1
+						,1) -- como se supone que estan las publicaciones? estado?
+		SET @ESPEC_ID = @ESPEC_ID + 1
+	END
 COMMIT TRANSACTION;
 GO
 
@@ -1392,23 +1436,24 @@ GO
 *			EJECUCIÓN DE MIGRACIÓN - COMIENZO					*
 ****************************************************************/
 exec EL_GROUP_BY.CARGAR_USUARIOS;
-exec EL_GROUP_BY.CARGAR_CLIENTES;
-exec EL_GROUP_BY.CARGAR_EMPRESAS;
-exec EL_GROUP_BY.CARGAR_ROLES;
-exec EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
-exec EL_GROUP_BY.CARGAR_ROLES_X_USUARIO;
-exec EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD;
-exec EL_GROUP_BY.CARGAR_FORMAS_PAGO;
-exec EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
-exec EL_GROUP_BY.CARGAR_RUBROS;
-exec EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
-exec EL_GROUP_BY.CARGAR_ESPECTACULOS;
+-- exec EL_GROUP_BY.CARGAR_CLIENTES; -- HAY QUE VER PQ PINCHA LA FK
+EXEC EL_GROUP_BY.CARGAR_EMPRESAS;
+EXEC EL_GROUP_BY.CARGAR_ROLES;
+EXEC EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
+EXEC EL_GROUP_BY.CARGAR_ROLES_X_USUARIO;
+EXEC EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD;
+EXEC EL_GROUP_BY.CARGAR_FORMAS_PAGO;
+EXEC EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
+EXEC EL_GROUP_BY.CARGAR_RUBROS;
+EXEC EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
+EXEC EL_GROUP_BY.CARGAR_ESPECTACULOS;
+EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
 
 
 /****************************************************************
 *			EJECUCIÓN DE MIGRACIÓN - FIN						*
 ****************************************************************/
-
+/* COMENTE TODO PARA CORRER LA MIGRACION
 --------------------------------------------------------
 -- Borrador para hacer algunas pruebas
 --------------------------------------------------------
@@ -1482,3 +1527,4 @@ join gd_esquema.Maestra B ON  a.cli_dni = b.cli_dni
 where a.cli_nombre != b.cli_nombre;
 
 select * from El_group_by.Rubro;
+*/
