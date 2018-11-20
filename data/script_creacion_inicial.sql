@@ -1360,6 +1360,30 @@ BEGIN TRANSACTION
 COMMIT
 GO
 
+-- -----------------------------------------------------
+-- SP - Obtener Empresa a Modificar
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY @USER_ID int
+as
+begin
+	SELECT  
+		E.Empresa_Razon_Social,
+		U.Usuario_Mail,
+		U.Usuario_Telefono,
+		E.Empresa_Cuit,
+		U.Usuario_Calle,
+		U.Usuario_Numero_Calle,
+		U.Usuario_Piso,
+		U.Usuario_Depto,
+		U.Usuario_Codigo_Postal,
+		U.Usuario_Localidad,
+		E.Empresa_Ciudad
+	FROM EL_GROUP_BY.USUARIO U INNER JOIN EL_GROUP_BY.Empresa E 
+	ON E.Usuario_ID = U.Usuario_ID and U.Usuario_ID = @USER_ID
+end
+GO
+
 /****************************************************************
 *							SPs - FIN							*
 ****************************************************************/

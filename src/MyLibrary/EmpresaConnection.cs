@@ -125,7 +125,7 @@ namespace MyLibrary
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
             parameters.Add(new SqlParameter("@USER_ID", userId));
-            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_USER_FOR_MODIFY", Connection.Type.StoredProcedure, parameters);
+            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY", Connection.Type.StoredProcedure, parameters);
 
             return reader;
         }
