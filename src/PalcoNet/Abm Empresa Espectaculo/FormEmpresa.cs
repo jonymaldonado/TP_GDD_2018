@@ -22,11 +22,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*
-            FormAMEmpresa form = new FormAMEmpresa(this);
+
+            FormAMEmpresa form = new FormAMEmpresa(this, true, null);
             this.Hide();
             form.ShowDialog();
-            */
+            
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
