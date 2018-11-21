@@ -88,7 +88,7 @@ namespace MyLibrary
             return reader;
         }
 
-        public static void UpdateEmpresa(EmpresaDAO empresa, string userId)
+        public static void UpdateEmpresa(EmpresaDAO empresa, string userId, Boolean active)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -96,6 +96,10 @@ namespace MyLibrary
 
             parameter = new SqlParameter("@USUARIO_ID", SqlDbType.Int, 50);
             parameter.Value = userId;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@HABILITADO", SqlDbType.Bit, 1);
+            parameter.Value = active;
             parameters.Add(parameter);
 
             LoadMoreParameters(empresa, parameters);

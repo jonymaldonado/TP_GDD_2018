@@ -1344,7 +1344,7 @@ begin
 		AND E.Empresa_Razon_Social LIKE ISNULL('%' + @RAZON_SOCIAL + '%', '%')
               AND E.Empresa_Cuit LIKE ISNULL('%' + @CUIT + '%', '%')
               AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
-              AND U.Usuario_Habilitado = 1;
+              --AND U.Usuario_Habilitado = 1; //Se deben poder modificar las eliminadas
 end
 go
 
@@ -1428,7 +1428,8 @@ begin
 		U.Usuario_Depto,
 		U.Usuario_Codigo_Postal,
 		U.Usuario_Localidad,
-		E.Empresa_Ciudad
+		E.Empresa_Ciudad,
+		U.Usuario_Habilitado
 	FROM EL_GROUP_BY.USUARIO U INNER JOIN EL_GROUP_BY.Empresa E 
 	ON E.Usuario_ID = U.Usuario_ID and U.Usuario_ID = @USER_ID
 end
@@ -1450,7 +1451,8 @@ CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_EMPRESA
 @LOCALIDAD		VARCHAR(50),
 @CODIGO_POSTAL	VARCHAR(50), 
 @CIUDAD			VARCHAR(50), 
-@CUIT			VARCHAR(255)
+@CUIT			VARCHAR(255),
+@HABILITADO     BIT
 AS
 BEGIN TRANSACTION
 	UPDATE EL_GROUP_BY.Usuario
@@ -1460,7 +1462,8 @@ BEGIN TRANSACTION
 			Usuario_Depto = @DEPTO,
 			Usuario_Codigo_Postal = @CODIGO_POSTAL,
 			Usuario_Localidad = @LOCALIDAD,
-			Usuario_Mail = @EMAIL
+			Usuario_Mail = @EMAIL,
+			Usuario_Habilitado = @HABILITADO
 		WHERE Usuario_ID = @USUARIO_ID
 
 	UPDATE EL_GROUP_BY.Empresa 

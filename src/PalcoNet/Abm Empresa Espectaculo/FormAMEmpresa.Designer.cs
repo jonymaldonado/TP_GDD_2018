@@ -34,6 +34,7 @@
             this.returnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.limpiarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.group_empresa = new System.Windows.Forms.GroupBox();
+            this.chk_active = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txt_city = new System.Windows.Forms.TextBox();
@@ -73,7 +74,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(585, 24);
             this.menuStrip1.TabIndex = 59;
             this.menuStrip1.Text = "menuStrip1";
-            //this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // aceptarToolStripMenuItem
             // 
@@ -100,6 +100,7 @@
             // 
             // group_empresa
             // 
+            this.group_empresa.Controls.Add(this.chk_active);
             this.group_empresa.Controls.Add(this.groupBox1);
             this.group_empresa.Controls.Add(this.label4);
             this.group_empresa.Controls.Add(this.txt_cuit);
@@ -111,10 +112,21 @@
             this.group_empresa.Controls.Add(this.txt_razon_social);
             this.group_empresa.Location = new System.Drawing.Point(13, 37);
             this.group_empresa.Name = "group_empresa";
-            this.group_empresa.Size = new System.Drawing.Size(547, 250);
+            this.group_empresa.Size = new System.Drawing.Size(547, 296);
             this.group_empresa.TabIndex = 60;
             this.group_empresa.TabStop = false;
             this.group_empresa.Text = "Datos Empresa";
+            // 
+            // chk_active
+            // 
+            this.chk_active.AutoSize = true;
+            this.chk_active.Location = new System.Drawing.Point(20, 253);
+            this.chk_active.Name = "chk_active";
+            this.chk_active.Size = new System.Drawing.Size(73, 17);
+            this.chk_active.TabIndex = 9;
+            this.chk_active.Text = "Habilitado";
+            this.chk_active.UseVisualStyleBackColor = true;
+            this.chk_active.Visible = false;
             // 
             // groupBox1
             // 
@@ -151,6 +163,7 @@
             // txt_city
             // 
             this.txt_city.Location = new System.Drawing.Point(334, 84);
+            this.txt_city.MaxLength = 50;
             this.txt_city.Name = "txt_city";
             this.txt_city.Size = new System.Drawing.Size(185, 20);
             this.txt_city.TabIndex = 79;
@@ -167,6 +180,7 @@
             // txt_postal_code
             // 
             this.txt_postal_code.Location = new System.Drawing.Point(334, 31);
+            this.txt_postal_code.MaxLength = 50;
             this.txt_postal_code.Name = "txt_postal_code";
             this.txt_postal_code.Size = new System.Drawing.Size(186, 20);
             this.txt_postal_code.TabIndex = 77;
@@ -183,6 +197,7 @@
             // txt_location
             // 
             this.txt_location.Location = new System.Drawing.Point(334, 58);
+            this.txt_location.MaxLength = 50;
             this.txt_location.Name = "txt_location";
             this.txt_location.Size = new System.Drawing.Size(185, 20);
             this.txt_location.TabIndex = 75;
@@ -199,6 +214,7 @@
             // txt_department
             // 
             this.txt_department.Location = new System.Drawing.Point(197, 82);
+            this.txt_department.MaxLength = 50;
             this.txt_department.Name = "txt_department";
             this.txt_department.Size = new System.Drawing.Size(56, 20);
             this.txt_department.TabIndex = 73;
@@ -215,9 +231,11 @@
             // txt_floor
             // 
             this.txt_floor.Location = new System.Drawing.Point(68, 82);
+            this.txt_floor.MaxLength = 18;
             this.txt_floor.Name = "txt_floor";
             this.txt_floor.Size = new System.Drawing.Size(52, 20);
             this.txt_floor.TabIndex = 71;
+            this.txt_floor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_floor_KeyPress);
             // 
             // label10
             // 
@@ -231,9 +249,11 @@
             // txt_number_street
             // 
             this.txt_number_street.Location = new System.Drawing.Point(68, 56);
+            this.txt_number_street.MaxLength = 18;
             this.txt_number_street.Name = "txt_number_street";
             this.txt_number_street.Size = new System.Drawing.Size(185, 20);
             this.txt_number_street.TabIndex = 69;
+            this.txt_number_street.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_number_street_KeyPress);
             // 
             // label7
             // 
@@ -247,6 +267,7 @@
             // txt_street
             // 
             this.txt_street.Location = new System.Drawing.Point(69, 30);
+            this.txt_street.MaxLength = 50;
             this.txt_street.Name = "txt_street";
             this.txt_street.Size = new System.Drawing.Size(184, 20);
             this.txt_street.TabIndex = 67;
@@ -263,9 +284,11 @@
             // txt_cuit
             // 
             this.txt_cuit.Location = new System.Drawing.Point(357, 65);
+            this.txt_cuit.MaxLength = 255;
             this.txt_cuit.Name = "txt_cuit";
             this.txt_cuit.Size = new System.Drawing.Size(184, 20);
             this.txt_cuit.TabIndex = 6;
+            this.txt_cuit.Validating += txt_cuit_Validating;
             // 
             // label3
             // 
@@ -279,6 +302,7 @@
             // txt_phone
             // 
             this.txt_phone.Location = new System.Drawing.Point(357, 29);
+            this.txt_phone.MaxLength = 20;
             this.txt_phone.Name = "txt_phone";
             this.txt_phone.Size = new System.Drawing.Size(184, 20);
             this.txt_phone.TabIndex = 4;
@@ -295,9 +319,12 @@
             // txt_email
             // 
             this.txt_email.Location = new System.Drawing.Point(89, 65);
+            this.txt_email.MaxLength = 255;
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(184, 20);
             this.txt_email.TabIndex = 2;
+            this.txt_email.Validating += txt_email_Validating;
+            
             // 
             // label1
             // 
@@ -311,6 +338,7 @@
             // txt_razon_social
             // 
             this.txt_razon_social.Location = new System.Drawing.Point(89, 29);
+            this.txt_razon_social.MaxLength = 255;
             this.txt_razon_social.Name = "txt_razon_social";
             this.txt_razon_social.Size = new System.Drawing.Size(184, 20);
             this.txt_razon_social.TabIndex = 0;
@@ -319,7 +347,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 304);
+            this.ClientSize = new System.Drawing.Size(585, 374);
             this.Controls.Add(this.group_empresa);
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormAMEmpresa";
@@ -365,5 +393,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txt_street;
         private System.Windows.Forms.ToolStripMenuItem limpiarToolStripMenuItem;
+        private System.Windows.Forms.CheckBox chk_active;
     }
 }

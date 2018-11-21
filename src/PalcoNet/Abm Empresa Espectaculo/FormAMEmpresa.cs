@@ -27,6 +27,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
             if (!isUpper) //Modificacion
             {
+                this.chk_active.Visible = true;
                 this.userId = userId;
                 this.LoadFieldsOfEmpresa();
             }
@@ -79,28 +80,23 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                     txt_postal_code.Text    = reader.IsDBNull(8) ? "" : reader.GetString(8);
                     txt_location.Text       = reader.IsDBNull(9) ? "" : reader.GetString(9);
                     txt_city.Text           = reader.IsDBNull(10) ? "" : reader.GetString(10);
+
+                    if(reader.GetSqlBoolean(11))
+                        chk_active.Checked = true;
                     
                 }
             }
 
             reader.Close();
         }
-        /*
-        private void FormAMEmpresa_Load(object sender, EventArgs e)
-        {
-            if (this.isUpper)
-                this.CreateEmpresa();
-            else
-                this.UpdateEmpresa();
-        }
-        */
+
         private void UpdateEmpresa()
         {
             if (this.checkMandatoryFields())
             {
                 EmpresaDAO empresa = GetEmpresaDAO();
 
-                EmpresaConnection.UpdateEmpresa(empresa, this.userId);
+                EmpresaConnection.UpdateEmpresa(empresa, this.userId, this.chk_active.Checked);
                 MessageBox.Show("La modificación de la empresa ha sido realizada correctamente.");
                 formPrevious.Show();
                 this.Close();
@@ -119,7 +115,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
                 EmpresaConnection.CreateEmpresa(empresaDAO);
                 MessageBox.Show("La nueva Empresa ha sido creado correctamente.");
-                //this.AskIfYouWantToAddAnotherClient();
+
             }
             else
             {
@@ -167,12 +163,82 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.isUpper)
-                this.CreateEmpresa();
-            else
-                this.UpdateEmpresa();
+            try
+            {
+                if (this.isUpper)
+                    this.CreateEmpresa();
+                else
+                    this.UpdateEmpresa();
+
+            }
+            catch (SqlException ex)
+            {
+                //if (ex.Message.Contains("UniqueConstraint"))
+                    //throw new UniqueConstraintException();
+                    MessageBox.Show(ex.Message.ToString());
+
+                //throw;
+
+            }
         }
 
 
+
+        private void txt_number_street_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Solo deja numericos
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '.'))
+            {
+                e.Handled = true;
+            }
+
+        }
+
+        private void txt_floor_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Solo deja numericos
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '.'))
+            {
+                e.Handled = true;
+            }
+
+        }
+
+        private void txt_email_Validating(object sender, CancelEventArgs e)
+        {
+
+            if(!Utilities.IsValidEmail(txt_email.Text))
+            {
+                MessageBox.Show("El Email es inválido");
+                e.Cancel = true;
+            }
+            else
+                e.Cancel = false;            
+
+        }
+
+        private void txt_cuit_Validating(object sender, CancelEventArgs e)
+        {
+
+            if (!Utilities.IsValidCuit(txt_cuit.Text))
+            {
+                MessageBox.Show("El CUIT es inválido");
+                e.Cancel = true;
+            }
+            else
+                e.Cancel = false;
+
+        }
+        
     }
 }

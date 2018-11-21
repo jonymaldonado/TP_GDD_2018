@@ -19,5 +19,6 @@ namespace DAO
         public String PostalCode { get; set; }
         public String Location { get; set; }
         public String Email { get; set; }
+        public Int32 Active { get; set; }
     }
 }
