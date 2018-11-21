@@ -10,7 +10,6 @@ namespace DAO
     {    
         public String RazonSocial { get; set; }
         public String Cuit { get; set; } 
-        public String Email { get; set; }
         public String Ciudad { get; set; }
         
     }

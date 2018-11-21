@@ -193,6 +193,28 @@ IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_EMPRESA') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CREAR_EMPRESA') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CREAR_EMPRESA;
 
+IF OBJECT_ID('EL_GROUP_BY.ACTUALIZAR_EMPRESA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ACTUALIZAR_EMPRESA;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_GRADOS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_GRADOS;
+
+IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_GRADO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ELIMINAR_GRADO;
+
+IF OBJECT_ID('EL_GROUP_BY.CREAR_GRADO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_GRADO;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_GRADO_FOR_MODIFY') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_GRADO_FOR_MODIFY;
+
+IF OBJECT_ID('EL_GROUP_BY.ACTUALIZAR_GRADO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ACTUALIZAR_GRADO;
+
+
 /****************************************************************
 *					DROP DE SPs - FIN							*
 ****************************************************************/
@@ -1350,7 +1372,7 @@ begin
 		AND E.Empresa_Razon_Social LIKE ISNULL('%' + @RAZON_SOCIAL + '%', '%')
               AND E.Empresa_Cuit LIKE ISNULL('%' + @CUIT + '%', '%')
               AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
-              AND U.Usuario_Habilitado = 1;
+              --AND U.Usuario_Habilitado = 1; //Se deben poder modificar las eliminadas
 end
 go
 
@@ -1416,6 +1438,154 @@ BEGIN TRANSACTION
 COMMIT
 GO
 
+-- -----------------------------------------------------
+-- SP - Obtener Empresa a Modificar
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY @USER_ID int
+as
+begin
+	SELECT  
+		E.Empresa_Razon_Social,
+		U.Usuario_Mail,
+		U.Usuario_Telefono,
+		E.Empresa_Cuit,
+		U.Usuario_Calle,
+		U.Usuario_Numero_Calle,
+		U.Usuario_Piso,
+		U.Usuario_Depto,
+		U.Usuario_Codigo_Postal,
+		U.Usuario_Localidad,
+		E.Empresa_Ciudad,
+		U.Usuario_Habilitado
+	FROM EL_GROUP_BY.USUARIO U INNER JOIN EL_GROUP_BY.Empresa E 
+	ON E.Usuario_ID = U.Usuario_ID and U.Usuario_ID = @USER_ID
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Actualizar Empresa
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_EMPRESA
+@USUARIO_ID INT,
+@RAZON_SOCIAL	VARCHAR(255),
+@EMAIL			VARCHAR(255),
+@TELEFONO		VARCHAR(20), 
+@CALLE			VARCHAR(50), 
+@NUMERO			NUMERIC(18,0),
+@PISO			NUMERIC(18,0),
+@DEPTO			VARCHAR(50), 
+@LOCALIDAD		VARCHAR(50),
+@CODIGO_POSTAL	VARCHAR(50), 
+@CIUDAD			VARCHAR(50), 
+@CUIT			VARCHAR(255),
+@HABILITADO     BIT
+AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.Usuario
+		SET Usuario_Telefono = @TELEFONO,
+			Usuario_Calle = @CALLE,
+			Usuario_Piso = @PISO,
+			Usuario_Depto = @DEPTO,
+			Usuario_Codigo_Postal = @CODIGO_POSTAL,
+			Usuario_Localidad = @LOCALIDAD,
+			Usuario_Mail = @EMAIL,
+			Usuario_Habilitado = @HABILITADO
+		WHERE Usuario_ID = @USUARIO_ID
+
+	UPDATE EL_GROUP_BY.Empresa 
+		SET Empresa_Razon_Social = @RAZON_SOCIAL,
+			Empresa_Cuit = @CUIT,
+			Empresa_Ciudad = @CIUDAD
+		WHERE Usuario_ID = @USUARIO_ID
+COMMIT
+GO
+
+
+-- -----------------------------------------------------
+-- SP - Listar Grados
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.LISTAR_GRADOS
+@PRIORIDAD VARCHAR(255)
+as
+begin
+	select  G.Grado_Publicacion_ID,
+			G.Grado_Publicacion_Comision,
+			G.Grado_Publicacion_Prioridad
+	from EL_GROUP_BY.Grado_Publicacion G 
+	where G.Grado_Publicacion_Prioridad LIKE ISNULL('%' + @PRIORIDAD + '%', '%')
+	  AND G.Grado_Publicacion_Habilitado = 1; 
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Eliminar Grado
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.ELIMINAR_GRADO
+@ID INT
+AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.Grado_Publicacion
+		SET Grado_Publicacion_Habilitado = 0
+		WHERE Grado_Publicacion_ID = @ID;
+COMMIT
+GO
+
+-- -----------------------------------------------------
+-- SP - Nuevo Grado
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.CREAR_GRADO
+@COMISION		NUMERIC(3,3),
+@PRIORIDAD		VARCHAR(10)
+AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (@COMISION
+										 ,@PRIORIDAD
+										 ,1				
+										 )
+
+
+COMMIT
+GO
+
+-- -----------------------------------------------------
+-- SP - Obtener Grado a Modificar
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_GRADO_FOR_MODIFY 
+@ID int
+as
+begin
+	SELECT  G.Grado_Publicacion_Comision,
+			G.Grado_Publicacion_Prioridad
+	FROM EL_GROUP_BY.Grado_Publicacion G
+	WHERE G.Grado_Publicacion_ID = @ID
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Actualizar Grado
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_GRADO
+@ID				INT,
+@COMISION		NUMERIC(3,3),
+@PRIORIDAD		VARCHAR(10)
+AS
+BEGIN TRANSACTION
+
+	UPDATE EL_GROUP_BY.Grado_Publicacion
+		SET Grado_Publicacion_Comision = @COMISION,
+			Grado_Publicacion_Prioridad = @PRIORIDAD
+		WHERE Grado_Publicacion_ID = @ID
+
+COMMIT
+GO
+
+
 /****************************************************************
 *							SPs - FIN							*
 ****************************************************************/
@@ -1436,7 +1606,7 @@ EXEC EL_GROUP_BY.CARGAR_RUBROS;
 EXEC EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
 EXEC EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION;
 EXEC EL_GROUP_BY.CARGAR_ESPECTACULOS;
-EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
+--EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
 
 
 /****************************************************************
