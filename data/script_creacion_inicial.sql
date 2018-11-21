@@ -120,6 +120,9 @@ IF OBJECT_ID('EL_GROUP_BY.CARGAR_ESPECTACULOS') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_PUBLICACIONES') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACIONES;
 
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_UBICACIONES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_UBICACIONES;
+
 GO
 
 /****************************************************************
@@ -230,6 +233,9 @@ IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_EMPRESA') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_RUBRO') IS NOT NULL
 	DROP FUNCTION EL_GROUP_BY.FUNC_ID_RUBRO;
+
+IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_UBICACION_TIPO') IS NOT NULL
+	DROP FUNCTION EL_GROUP_BY.FUNC_ID_UBICACION_TIPO;
 
 GO
 /****************************************************************
@@ -649,6 +655,22 @@ BEGIN
 	RETURN @RESULTADO
 END;
 GO
+
+-- ---------------------------------------------
+-- ME DEVUELVE EL ID_Ubicacion_Tipo
+-- ---------------------------------------------
+CREATE FUNCTION EL_GROUP_BY.FUNC_ID_UBICACION_TIPO(@TIPO_DESCRIPCION NVARCHAR(255))
+RETURNS INT
+AS
+BEGIN
+	DECLARE @RESULTADO INT
+	SELECT @RESULTADO = Ubicacion_Tipo_ID 
+	FROM EL_GROUP_BY.Ubicacion_Tipo 
+	WHERE Ubicacion_Tipo_Descripcion = @TIPO_DESCRIPCION
+	RETURN @RESULTADO
+END;
+GO
+
 /****************************************************************
 *					FUNCIONES - FIN								*
 ****************************************************************/
@@ -995,6 +1017,23 @@ BEGIN TRANSACTION
 COMMIT TRANSACTION;
 GO
 
+-- -----------------------------------------------------
+-- Cargar Ubicaciones
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_UBICACIONES AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Ubicacion
+		SELECT DISTINCT  Ubicacion_Fila
+						,Ubicacion_Asiento
+						,Ubicacion_Sin_numerar
+						,Ubicacion_Precio
+						,0 -- Ubicacion_Disponible Migramos como NO por ahora
+						,EL_GROUP_BY.FUNC_ID_UBICACION_TIPO(Ubicacion_Tipo_Descripcion)
+						,0 -- NO Canjeada dado que el canje de puntos es una funcionalidad nueva
+		FROM gd_esquema.Maestra
+COMMIT TRANSACTION;
+GO
 /****************************************************************
 *					SPs DE MIGRACIÓN - FIN						*
 ****************************************************************/
@@ -1593,8 +1632,8 @@ GO
 /****************************************************************
 *			EJECUCIÓN DE MIGRACIÓN - COMIENZO					*
 ****************************************************************/
-exec EL_GROUP_BY.CARGAR_USUARIOS;
-exec EL_GROUP_BY.CARGAR_CLIENTES; -- HAY QUE VER PQ PINCHA LA FK
+EXEC EL_GROUP_BY.CARGAR_USUARIOS;
+EXEC EL_GROUP_BY.CARGAR_CLIENTES;
 EXEC EL_GROUP_BY.CARGAR_EMPRESAS;
 EXEC EL_GROUP_BY.CARGAR_ROLES;
 EXEC EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
@@ -1604,12 +1643,14 @@ EXEC EL_GROUP_BY.CARGAR_FORMAS_PAGO;
 EXEC EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
 EXEC EL_GROUP_BY.CARGAR_RUBROS;
 EXEC EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
-EXEC EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION;
+EXEC EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION;		  
 EXEC EL_GROUP_BY.CARGAR_ESPECTACULOS;
 EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
+EXEC EL_GROUP_BY.CARGAR_UBICACIONES;
 
 
 /****************************************************************
+
 *			EJECUCIÓN DE MIGRACIÓN - FIN						*
 ****************************************************************/
 /* COMENTE TODO PARA CORRER LA MIGRACION
