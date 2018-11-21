@@ -123,6 +123,11 @@ IF OBJECT_ID('EL_GROUP_BY.CARGAR_PUBLICACIONES') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_UBICACIONES') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_UBICACIONES;
 
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_FACTURAS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_FACTURAS;
 GO
 
 /****************************************************************
@@ -659,14 +664,14 @@ GO
 -- ---------------------------------------------
 -- ME DEVUELVE EL ID_Ubicacion_Tipo
 -- ---------------------------------------------
-CREATE FUNCTION EL_GROUP_BY.FUNC_ID_UBICACION_TIPO(@TIPO_DESCRIPCION NVARCHAR(255))
+CREATE FUNCTION EL_GROUP_BY.FUNC_ID_UBICACION_TIPO(@TIPO_CODIGO NVARCHAR(255))
 RETURNS INT
 AS
 BEGIN
 	DECLARE @RESULTADO INT
 	SELECT @RESULTADO = Ubicacion_Tipo_ID 
 	FROM EL_GROUP_BY.Ubicacion_Tipo 
-	WHERE Ubicacion_Tipo_Descripcion = @TIPO_DESCRIPCION
+	WHERE Ubicacion_Tipo_Codigo = @TIPO_CODIGO
 	RETURN @RESULTADO
 END;
 GO
@@ -1029,11 +1034,51 @@ BEGIN TRANSACTION
 						,Ubicacion_Sin_numerar
 						,Ubicacion_Precio
 						,0 -- Ubicacion_Disponible Migramos como NO por ahora
-						,EL_GROUP_BY.FUNC_ID_UBICACION_TIPO(Ubicacion_Tipo_Descripcion)
+						,EL_GROUP_BY.FUNC_ID_UBICACION_TIPO(Ubicacion_Tipo_Codigo)
 						,0 -- NO Canjeada dado que el canje de puntos es una funcionalidad nueva
 		FROM gd_esquema.Maestra
 COMMIT TRANSACTION;
 GO
+
+-- -----------------------------------------------------
+-- Crear relacion Publicacion_Ubicacion
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Publicacion_Ubicacion
+		SELECT DISTINCT U.Ubicacion_ID
+				,P.Publicacion_ID
+				,NULL -- La compra la voy a relacionar luego
+		FROM EL_GROUP_BY.Ubicacion U,
+			 EL_GROUP_BY.Publicacion P,
+			 EL_GROUP_BY.Espectaculo E,
+			 gd_esquema.Maestra M
+		WHERE U.Ubicacion_Fila = M.Ubicacion_Fila AND
+			  U.Ubicacion_Asiento = M.Ubicacion_Asiento AND
+			  U.Ubicacion_Sin_Numerar = M.Ubicacion_Sin_numerar AND
+			  U.Ubicacion_Precio = M.Ubicacion_Precio AND
+			  E.Espectaculo_Codigo = M.Espectaculo_Cod AND
+			  P.Espectaculo_ID = E.Espectaculo_ID 	
+COMMIT TRANSACTION;
+GO
+
+-- -----------------------------------------------------
+-- Cargar Facturas
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_FACTURAS AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Factura
+		SELECT DISTINCT  Factura_Nro
+						,Factura_Fecha
+						,Factura_Total
+						,EL_GROUP_BY.FUNC_ID_EMPRESA(Espec_Empresa_Razon_Social, Espec_Empresa_Cuit)
+		FROM gd_esquema.Maestra
+		WHERE Factura_Nro IS NOT NULL
+COMMIT TRANSACTION;
+GO
+
 /****************************************************************
 *					SPs DE MIGRACIÓN - FIN						*
 ****************************************************************/
@@ -1647,7 +1692,8 @@ EXEC EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION;
 EXEC EL_GROUP_BY.CARGAR_ESPECTACULOS;
 EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
 EXEC EL_GROUP_BY.CARGAR_UBICACIONES;
-
+EXEC EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION;
+EXEC EL_GROUP_BY.CARGAR_FACTURAS;
 
 /****************************************************************
 
