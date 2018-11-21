@@ -20,7 +20,7 @@ namespace MyLibrary
 
             parameter = new SqlParameter("@RAZON_SOCIAL", SqlDbType.VarChar, 255);
             parameter.Value = DBNull.Value;
-            if (!String.IsNullOrEmpty(empresa.RazonSocial))
+            if ((empresa != null) && !String.IsNullOrEmpty(empresa.RazonSocial))
             {
                 parameter.Value = empresa.RazonSocial;
             }
@@ -28,7 +28,7 @@ namespace MyLibrary
 
             parameter = new SqlParameter("@CUIT", SqlDbType.VarChar, 255);
             parameter.Value = DBNull.Value;
-            if (!String.IsNullOrEmpty(empresa.Cuit))
+            if ((empresa != null) && !String.IsNullOrEmpty(empresa.Cuit))
             {
                 parameter.Value = empresa.Cuit;
             }
@@ -36,12 +36,12 @@ namespace MyLibrary
 
             parameter = new SqlParameter("@EMAIL", SqlDbType.VarChar, 255);
             parameter.Value = DBNull.Value;
-            if (!String.IsNullOrEmpty(empresa.Email))
+            if ((empresa != null) && !String.IsNullOrEmpty(empresa.Email))
             {
                 parameter.Value = empresa.Email;
             }
             parameters.Add(parameter);
-
+            
             DataSet ds = Connection.GetDataSet("EL_GROUP_BY.LISTAR_EMPRESAS", Connection.Type.StoredProcedure, parameters);
 
             return ds;
@@ -73,6 +73,38 @@ namespace MyLibrary
             parameter = new SqlParameter("@PASSWORD", SqlDbType.VarChar, 50);
             parameter.Value = empresa.Password;
             parameters.Add(parameter);
+
+            LoadMoreParameters(empresa, parameters);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.CREAR_EMPRESA", Connection.Type.StoredProcedure, parameters);
+        }
+
+        public static SqlDataReader GetEmpresaForModify(string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@USER_ID", userId));
+            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY", Connection.Type.StoredProcedure, parameters);
+
+            return reader;
+        }
+
+        public static void UpdateEmpresa(EmpresaDAO empresa, string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@USUARIO_ID", SqlDbType.Int, 50);
+            parameter.Value = userId;
+            parameters.Add(parameter);
+
+            LoadMoreParameters(empresa, parameters);
+            Connection.WriteInTheBase("EL_GROUP_BY.ACTUALIZAR_EMPRESA", Connection.Type.StoredProcedure, parameters);
+        }
+
+        private static void LoadMoreParameters(EmpresaDAO empresa, List<SqlParameter> parameters)
+        {
+            SqlParameter parameter;
 
             parameter = new SqlParameter("@RAZON_SOCIAL", SqlDbType.VarChar, 255);
             parameter.Value = empresa.RazonSocial;
@@ -118,17 +150,9 @@ namespace MyLibrary
             parameter.Value = empresa.Cuit;
             parameters.Add(parameter);
 
-            Connection.WriteInTheBase("EL_GROUP_BY.CREAR_EMPRESA", Connection.Type.StoredProcedure, parameters);
         }
 
-        public static SqlDataReader GetEmpresaForModify(string userId)
-        {
-            List<SqlParameter> parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@USER_ID", userId));
-            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY", Connection.Type.StoredProcedure, parameters);
 
-            return reader;
-        }
 
     }
 }

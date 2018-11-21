@@ -85,6 +85,93 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
             reader.Close();
         }
+        /*
+        private void FormAMEmpresa_Load(object sender, EventArgs e)
+        {
+            if (this.isUpper)
+                this.CreateEmpresa();
+            else
+                this.UpdateEmpresa();
+        }
+        */
+        private void UpdateEmpresa()
+        {
+            if (this.checkMandatoryFields())
+            {
+                EmpresaDAO empresa = GetEmpresaDAO();
+
+                EmpresaConnection.UpdateEmpresa(empresa, this.userId);
+                MessageBox.Show("La modificación de la empresa ha sido realizada correctamente.");
+                formPrevious.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Debe completar todos los campos obligatorios.");
+            }
+        }
+
+        private void CreateEmpresa()
+        {
+            if (this.checkMandatoryFields())
+            {
+                EmpresaDAO empresaDAO = GetEmpresaDAO();
+
+                EmpresaConnection.CreateEmpresa(empresaDAO);
+                MessageBox.Show("La nueva Empresa ha sido creado correctamente.");
+                //this.AskIfYouWantToAddAnotherClient();
+            }
+            else
+            {
+                MessageBox.Show("Debe completar todos los campos obligatorios.");
+            }
+        }
+
+        private bool checkMandatoryFields()
+        {
+            return (!string.IsNullOrEmpty(txt_razon_social.Text)
+                    && !string.IsNullOrEmpty(txt_phone.Text)
+                    && !string.IsNullOrEmpty(txt_email.Text)
+                    && !string.IsNullOrEmpty(txt_cuit.Text)
+                    && !string.IsNullOrEmpty(txt_street.Text)
+                    && !string.IsNullOrEmpty(txt_number_street.Text)
+                    && !string.IsNullOrEmpty(txt_floor.Text)
+                    && !string.IsNullOrEmpty(txt_department.Text)
+                    && !string.IsNullOrEmpty(txt_location.Text)
+                    && !string.IsNullOrEmpty(txt_postal_code.Text)
+                    && !string.IsNullOrEmpty(txt_city.Text));
+
+        }
+
+
+        private EmpresaDAO GetEmpresaDAO()
+        {
+            EmpresaDAO empresa = new EmpresaDAO();
+
+            empresa.User = txt_razon_social.Text + txt_cuit.Text;
+            empresa.Password = txt_cuit.Text;
+            empresa.RazonSocial = txt_razon_social.Text;
+            empresa.Cuit = txt_cuit.Text;
+            empresa.Email = txt_email.Text;
+            empresa.Ciudad = txt_city.Text;   
+            empresa.Phone = txt_phone.Text;
+            empresa.Street = txt_street.Text;
+            empresa.NumberStreet = txt_number_street.Text;
+            empresa.Floor = txt_floor.Text;
+            empresa.Department = txt_department.Text;
+            empresa.Location = txt_location.Text;
+            empresa.PostalCode = txt_postal_code.Text;
+
+            return empresa;
+        }
+
+        private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.isUpper)
+                this.CreateEmpresa();
+            else
+                this.UpdateEmpresa();
+        }
 
 
     }

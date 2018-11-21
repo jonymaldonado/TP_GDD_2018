@@ -190,6 +190,12 @@ IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_EMPRESA') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CREAR_EMPRESA') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CREAR_EMPRESA;
 
+IF OBJECT_ID('EL_GROUP_BY.ACTUALIZAR_EMPRESA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ACTUALIZAR_EMPRESA;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY;
+
 /****************************************************************
 *					DROP DE SPs - FIN							*
 ****************************************************************/
@@ -1428,6 +1434,43 @@ begin
 end
 GO
 
+-- -----------------------------------------------------
+-- SP - Actualizar Empresa
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_EMPRESA
+@USUARIO_ID INT,
+@RAZON_SOCIAL	VARCHAR(255),
+@EMAIL			VARCHAR(255),
+@TELEFONO		VARCHAR(20), 
+@CALLE			VARCHAR(50), 
+@NUMERO			NUMERIC(18,0),
+@PISO			NUMERIC(18,0),
+@DEPTO			VARCHAR(50), 
+@LOCALIDAD		VARCHAR(50),
+@CODIGO_POSTAL	VARCHAR(50), 
+@CIUDAD			VARCHAR(50), 
+@CUIT			VARCHAR(255)
+AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.Usuario
+		SET Usuario_Telefono = @TELEFONO,
+			Usuario_Calle = @CALLE,
+			Usuario_Piso = @PISO,
+			Usuario_Depto = @DEPTO,
+			Usuario_Codigo_Postal = @CODIGO_POSTAL,
+			Usuario_Localidad = @LOCALIDAD,
+			Usuario_Mail = @EMAIL
+		WHERE Usuario_ID = @USUARIO_ID
+
+	UPDATE EL_GROUP_BY.Empresa 
+		SET Empresa_Razon_Social = @RAZON_SOCIAL,
+			Empresa_Cuit = @CUIT,
+			Empresa_Ciudad = @CIUDAD
+		WHERE Usuario_ID = @USUARIO_ID
+COMMIT
+GO
+
 /****************************************************************
 *							SPs - FIN							*
 ****************************************************************/
@@ -1447,7 +1490,7 @@ EXEC EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
 EXEC EL_GROUP_BY.CARGAR_RUBROS;
 EXEC EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
 EXEC EL_GROUP_BY.CARGAR_ESPECTACULOS;
-EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
+--EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
 
 
 /****************************************************************

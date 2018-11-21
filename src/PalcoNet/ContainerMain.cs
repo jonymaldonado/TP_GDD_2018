@@ -181,6 +181,11 @@ namespace PalcoNet
             this.Show();
         }
 
+        private void aBMCompanyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Abm_Empresa_Espectaculo.FormEmpresa());
+        }
+
     }
 
 }

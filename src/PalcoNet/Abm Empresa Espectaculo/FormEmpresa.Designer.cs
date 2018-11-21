@@ -82,6 +82,7 @@
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
             this.updateToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
             this.updateToolStripMenuItem.Text = "Modificar";
+            this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
@@ -108,7 +109,7 @@
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(76, 30);
             this.label12.TabIndex = 44;
-            this.label12.Text = "Tipo Doc";
+            this.label12.Text = "Email";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label10
@@ -120,7 +121,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(80, 30);
             this.label10.TabIndex = 50;
-            this.label10.Text = "Id";
+            this.label10.Text = "Id Usuario";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label9
@@ -132,7 +133,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(103, 30);
             this.label9.TabIndex = 49;
-            this.label9.Text = "Nombre";
+            this.label9.Text = "Id Empresa";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label8
@@ -144,7 +145,7 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(99, 30);
             this.label8.TabIndex = 48;
-            this.label8.Text = "Apellido";
+            this.label8.Text = "Razon Social";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label7
@@ -156,7 +157,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(125, 30);
             this.label7.TabIndex = 47;
-            this.label7.Text = "Mail";
+            this.label7.Text = "CUIT";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label6
@@ -168,7 +169,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(139, 30);
             this.label6.TabIndex = 46;
-            this.label6.Text = "Nro Doc";
+            this.label6.Text = "Ciudad";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // dgv_list
@@ -274,7 +275,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 351);
+            this.ClientSize = new System.Drawing.Size(612, 478);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);

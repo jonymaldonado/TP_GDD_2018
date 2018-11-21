@@ -129,6 +129,7 @@
             this.aBMCompanyToolStripMenuItem.Name = "aBMCompanyToolStripMenuItem";
             this.aBMCompanyToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.aBMCompanyToolStripMenuItem.Text = "Empresa";
+            this.aBMCompanyToolStripMenuItem.Click += new System.EventHandler(this.aBMCompanyToolStripMenuItem_Click);
             // 
             // aBMCategoryToolStripMenuItem
             // 

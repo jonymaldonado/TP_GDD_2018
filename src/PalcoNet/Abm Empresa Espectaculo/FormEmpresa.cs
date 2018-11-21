@@ -39,13 +39,13 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
             if (ConfirmarBaja())
             {
-                EmpresaDAO empresa = null;
+                EmpresaDAO empresa = new EmpresaDAO() ;
 
                 empresa.UserId = Convert.ToInt32(dgv_list.CurrentRow.Cells[0].Value.ToString());
                 EmpresaConnection.DeleteEmpresa(empresa);
                 MessageBox.Show("La Empresa ha sido dada de baja correctamente.");
 
-                dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
+                dgv_list.DataSource = EmpresaConnection.ListExistingEmpresa(null).Tables[0];
             }
         }
 
@@ -64,13 +64,22 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void btn_search_Click(object sender, EventArgs e)
         {
-            EmpresaDAO empresa = null;
+            EmpresaDAO empresa = new EmpresaDAO();
 
             empresa.RazonSocial = txt_razon_social.Text;
             empresa.Cuit = txt_cuit.Text;
             empresa.Email = txt_email.Text;
             dgv_list.DataSource = EmpresaConnection.ListExistingEmpresa(empresa).Tables[0];
             
+        }
+
+        private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string userId = dgv_list.CurrentRow.Cells[0].Value.ToString();
+
+            FormAMEmpresa form = new FormAMEmpresa(this, false, userId);
+            this.Hide();
+            form.ShowDialog();
         }
 
     }
