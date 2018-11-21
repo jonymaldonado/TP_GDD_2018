@@ -111,6 +111,9 @@ IF OBJECT_ID('EL_GROUP_BY.CARGAR_RUBROS') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
 
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION;
+
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_ESPECTACULOS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_ESPECTACULOS;
 
@@ -343,12 +346,7 @@ CREATE TABLE EL_GROUP_BY.Cliente (
 		ON UPDATE CASCADE)
 ;
 
-CREATE UNIQUE INDEX Cliente_Tipo_Documento_UNIQUE ON EL_GROUP_BY.Cliente (Cliente_Tipo_Documento ASC);
-
 CREATE UNIQUE INDEX Cliente_Numero_Documento_UNIQUE ON EL_GROUP_BY.Cliente (Cliente_Numero_Documento ASC);
-
-CREATE UNIQUE INDEX Cliente_Cuil_UNIQUE ON EL_GROUP_BY.Cliente (Cliente_Cuil ASC);
-
 
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Empresa
@@ -444,6 +442,7 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 		Grado_Publicacion_ID INT IDENTITY(1,1),
 		Grado_Publicacion_Comision NUMERIC(3,3) NOT NULL,
 		Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
+		Grado_Publicacion_Habilitado BIT NOT NULL,
 	PRIMARY KEY (Grado_Publicacion_ID))
 ;
 
@@ -714,9 +713,10 @@ BEGIN TRANSACTION
 					,EL_GROUP_BY.FUNC_COD_USUARIO(Cli_Nombre + CONVERT(NVARCHAR(50),Cli_Dni))
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
+		ORDER BY Cli_Dni
 
 	-- Acá cargaremos al admin como un cliente más
-	INSERT INTO EL_GROUP_BY.Cliente
+/*	INSERT INTO EL_GROUP_BY.Cliente
 		VALUES ('admin'
 			,'admin'
 			,'DNI'
@@ -726,7 +726,7 @@ BEGIN TRANSACTION
 			,'SANTANDER RIO'
 			,4242424242424242
 			,CONVERT(DATETIME,'2018/02/02 00:00:00',121)
-			,783)
+			,783)*/
 COMMIT
 GO
 
@@ -914,7 +914,19 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Estado_Publicacion VALUES ('ACTIVA',0)
 	INSERT INTO EL_GROUP_BY.Estado_Publicacion VALUES ('FINALIZADA',0)
 COMMIT;
-GO
+GO	   
+
+-- -----------------------------------------------------
+-- Cargar Grados_Publicacion
+-- -----------------------------------------------------
+									      														 
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'BAJA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'MEDIA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'ALTA',1)
+COMMIT;
+GO	
 -- -----------------------------------------------------
 -- Cargar Espectaculos
 -- -----------------------------------------------------
@@ -955,7 +967,7 @@ BEGIN TRANSACTION
 						,'MIGRA'
 						,@ESPEC_ID
 						,1 --Migro directamente Grado_Publicacion_ID = 1
-						,1) -- como se supone que estan las publicaciones? estado?
+						,1)  -- Migramos como 1 - Borrador en primera instancia
 		SET @ESPEC_ID = @ESPEC_ID + 1
 	END
 COMMIT TRANSACTION;
@@ -1412,7 +1424,7 @@ GO
 *			EJECUCIÓN DE MIGRACIÓN - COMIENZO					*
 ****************************************************************/
 exec EL_GROUP_BY.CARGAR_USUARIOS;
--- exec EL_GROUP_BY.CARGAR_CLIENTES; -- HAY QUE VER PQ PINCHA LA FK
+exec EL_GROUP_BY.CARGAR_CLIENTES; -- HAY QUE VER PQ PINCHA LA FK
 EXEC EL_GROUP_BY.CARGAR_EMPRESAS;
 EXEC EL_GROUP_BY.CARGAR_ROLES;
 EXEC EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
@@ -1422,6 +1434,7 @@ EXEC EL_GROUP_BY.CARGAR_FORMAS_PAGO;
 EXEC EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
 EXEC EL_GROUP_BY.CARGAR_RUBROS;
 EXEC EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
+EXEC EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION;
 EXEC EL_GROUP_BY.CARGAR_ESPECTACULOS;
 EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
 
