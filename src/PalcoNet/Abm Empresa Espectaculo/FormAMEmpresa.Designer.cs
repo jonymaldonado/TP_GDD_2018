@@ -87,7 +87,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -288,7 +288,6 @@
             this.txt_cuit.Name = "txt_cuit";
             this.txt_cuit.Size = new System.Drawing.Size(184, 20);
             this.txt_cuit.TabIndex = 6;
-            this.txt_cuit.Validating += txt_cuit_Validating;
             // 
             // label3
             // 
@@ -323,8 +322,6 @@
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(184, 20);
             this.txt_email.TabIndex = 2;
-            this.txt_email.Validating += txt_email_Validating;
-            
             // 
             // label1
             // 
@@ -351,7 +348,7 @@
             this.Controls.Add(this.group_empresa);
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormAMEmpresa";
-            this.Text = "FormAMEmprEspc";
+            this.Text = "Empresa";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.group_empresa.ResumeLayout(false);

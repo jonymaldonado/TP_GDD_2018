@@ -81,12 +81,12 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(140, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
             // 
             // closeSessionToolStripMenuItem
             // 
             this.closeSessionToolStripMenuItem.Name = "closeSessionToolStripMenuItem";
-            this.closeSessionToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.closeSessionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeSessionToolStripMenuItem.Text = "Cerrar Sesion";
             this.closeSessionToolStripMenuItem.Click += new System.EventHandler(this.closeSessionToolStripMenuItem_Click);
             // 
@@ -94,7 +94,7 @@
             // 
             this.exitToolStripMenuItem.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "&Salir";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -142,6 +142,7 @@
             this.aBMDegreeOfPublicationToolStripMenuItem.Name = "aBMDegreeOfPublicationToolStripMenuItem";
             this.aBMDegreeOfPublicationToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.aBMDegreeOfPublicationToolStripMenuItem.Text = "Grado de publicación";
+            this.aBMDegreeOfPublicationToolStripMenuItem.Click += new System.EventHandler(this.aBMDegreeOfPublicationToolStripMenuItem_Click);
             // 
             // actionsToolStripMenuItem
             // 
@@ -190,7 +191,7 @@
             this.watchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.watchRecordClientToolStripMenuItem});
             this.watchToolStripMenuItem.Name = "watchToolStripMenuItem";
-            this.watchToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.watchToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
             this.watchToolStripMenuItem.Text = "Ver";
             // 
             // watchRecordClientToolStripMenuItem
@@ -211,7 +212,7 @@
             // listStatisticalToolStripMenuItem
             // 
             this.listStatisticalToolStripMenuItem.Name = "listStatisticalToolStripMenuItem";
-            this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.listStatisticalToolStripMenuItem.Text = "Estadístico";
             // 
             // ContainerMain

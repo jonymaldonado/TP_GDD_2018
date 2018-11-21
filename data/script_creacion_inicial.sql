@@ -450,6 +450,7 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 		Grado_Publicacion_ID INT IDENTITY(1,1),
 		Grado_Publicacion_Comision NUMERIC(3,3) NOT NULL,
 		Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
+		Grado_Publicacion_Habilitado BIT NOT NULL,
 	PRIMARY KEY (Grado_Publicacion_ID))
 ;
 
@@ -1473,6 +1474,90 @@ BEGIN TRANSACTION
 		WHERE Usuario_ID = @USUARIO_ID
 COMMIT
 GO
+
+
+-- -----------------------------------------------------
+-- SP - Listar Grados
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.LISTAR_GRADOS
+@PRIORIDAD VARCHAR(255)
+as
+begin
+	select  G.Grado_Publicacion_ID,
+			G.Grado_Publicacion_Comision,
+			G.Grado_Publicacion_Prioridad
+	from EL_GROUP_BY.Grado_Publicacion G 
+	where G.Grado_Publicacion_Prioridad LIKE ISNULL('%' + @PRIORIDAD + '%', '%')
+	  AND G.Grado_Publicacion_Habilitado = 1; 
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Eliminar Grado
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.ELIMINAR_GRADO
+@ID INT
+AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.Grado_Publicacion
+		SET Grado_Publicacion_Habilitado = 0
+		WHERE Grado_Publicacion_ID = @ID;
+COMMIT
+GO
+
+-- -----------------------------------------------------
+-- SP - Nuevo Grado
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.CREAR_GRADO
+@COMISION		NUMERIC(3,3),
+@PRIORIDAD		VARCHAR(10)
+AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (@COMISION
+										 ,@PRIORIDAD
+										 ,1				
+										 )
+
+
+COMMIT
+GO
+
+-- -----------------------------------------------------
+-- SP - Obtener Grado a Modificar
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_GRADO_FOR_MODIFY 
+@ID int
+as
+begin
+	SELECT  G.Grado_Publicacion_Comision,
+			G.Grado_Publicacion_Prioridad
+	FROM EL_GROUP_BY.Grado_Publicacion G
+	WHERE G.Grado_Publicacion_ID = @ID
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Actualizar Grado
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_GRADO
+@ID				INT,
+@COMISION		NUMERIC(3,3),
+@PRIORIDAD		VARCHAR(10)
+AS
+BEGIN TRANSACTION
+
+	UPDATE EL_GROUP_BY.Grado_Publicacion
+		SET Grado_Publicacion_Comision = @COMISION,
+			Grado_Publicacion_Prioridad = @PRIORIDAD
+		WHERE Grado_Publicacion_ID = @ID
+
+COMMIT
+GO
+
 
 /****************************************************************
 *							SPs - FIN							*

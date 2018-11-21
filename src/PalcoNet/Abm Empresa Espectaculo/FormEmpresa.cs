@@ -36,7 +36,6 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             if (ConfirmarBaja())
             {
                 EmpresaDAO empresa = new EmpresaDAO() ;

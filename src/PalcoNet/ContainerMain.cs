@@ -186,6 +186,11 @@ namespace PalcoNet
             openForm(new Abm_Empresa_Espectaculo.FormEmpresa());
         }
 
+        private void aBMDegreeOfPublicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Abm_Grado.FormGrado());
+        }
+
     }
 
 }
