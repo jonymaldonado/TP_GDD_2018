@@ -86,5 +86,6 @@ namespace PalcoNet.Abm_Cliente
             this.Hide();
             form.ShowDialog();
         }
+
     }
 }

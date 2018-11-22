@@ -81,12 +81,12 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(140, 6);
             // 
             // closeSessionToolStripMenuItem
             // 
             this.closeSessionToolStripMenuItem.Name = "closeSessionToolStripMenuItem";
-            this.closeSessionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.closeSessionToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.closeSessionToolStripMenuItem.Text = "Cerrar Sesion";
             this.closeSessionToolStripMenuItem.Click += new System.EventHandler(this.closeSessionToolStripMenuItem_Click);
             // 
@@ -94,7 +94,7 @@
             // 
             this.exitToolStripMenuItem.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.exitToolStripMenuItem.Text = "&Salir";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -185,6 +185,7 @@
             this.actionsExchangeAdminPointsToolStripMenuItem.Name = "actionsExchangeAdminPointsToolStripMenuItem";
             this.actionsExchangeAdminPointsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.actionsExchangeAdminPointsToolStripMenuItem.Text = "Canje y administración de puntos";
+            this.actionsExchangeAdminPointsToolStripMenuItem.Click += new System.EventHandler(this.actionsExchangeAdminPointsToolStripMenuItem_Click);
             // 
             // watchToolStripMenuItem
             // 
@@ -199,6 +200,7 @@
             this.watchRecordClientToolStripMenuItem.Name = "watchRecordClientToolStripMenuItem";
             this.watchRecordClientToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.watchRecordClientToolStripMenuItem.Text = "Historial del cliente";
+            this.watchRecordClientToolStripMenuItem.Click += new System.EventHandler(this.watchRecordClientToolStripMenuItem_Click);
             // 
             // listToolStripMenuItem
             // 
@@ -212,7 +214,7 @@
             // listStatisticalToolStripMenuItem
             // 
             this.listStatisticalToolStripMenuItem.Name = "listStatisticalToolStripMenuItem";
-            this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.listStatisticalToolStripMenuItem.Text = "Estadístico";
             // 
             // ContainerMain

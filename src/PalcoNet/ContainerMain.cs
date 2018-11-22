@@ -191,6 +191,16 @@ namespace PalcoNet
             openForm(new Abm_Grado.FormGrado());
         }
 
+        private void watchRecordClientToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Historial_Cliente.FormClientHistory(this.roleId, this.id));
+        }
+
+        private void actionsExchangeAdminPointsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Canje_Puntos.FormChangePoints());
+        }
+
     }
 
 }
