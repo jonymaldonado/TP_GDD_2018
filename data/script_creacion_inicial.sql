@@ -128,6 +128,9 @@ IF OBJECT_ID('EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_FACTURAS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_FACTURAS;
+
+IF OBJECT_ID('EL_GROUP_BY.CARGAR_COMPRAS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CARGAR_COMPRAS;
 GO
 
 /****************************************************************
@@ -241,6 +244,9 @@ IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_RUBRO') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_UBICACION_TIPO') IS NOT NULL
 	DROP FUNCTION EL_GROUP_BY.FUNC_ID_UBICACION_TIPO;
+
+IF OBJECT_ID('EL_GROUP_BY.FUNC_ID_CLIENTE') IS NOT NULL
+	DROP FUNCTION EL_GROUP_BY.FUNC_ID_CLIENTE;
 
 GO
 /****************************************************************
@@ -460,9 +466,15 @@ CREATE TABLE EL_GROUP_BY.Ubicacion (
 		Ubicacion_Disponible BIT NOT NULL,
 		Ubicacion_Tipo_ID INT NOT NULL,
 		Ubicacion_Canjeada BIT NOT NULL,
+		Ubicacion_Fecha_Canje DATETIME NULL,
+		Ubicacion_Cliente_Canje INT NULL
 	PRIMARY KEY (Ubicacion_ID),
 	CONSTRAINT FK_Ubicacion_Tipo_ID FOREIGN KEY (Ubicacion_Tipo_ID)     
 		REFERENCES EL_GROUP_BY.Ubicacion_Tipo (Ubicacion_Tipo_ID)     
+	    ON DELETE CASCADE    
+		ON UPDATE CASCADE,
+	CONSTRAINT FK_Ubicacion_Cliente_Canje_ID FOREIGN KEY (Ubicacion_Cliente_Canje)     
+		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
 	    ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
@@ -676,16 +688,33 @@ BEGIN
 END;
 GO
 
+-- ---------------------------------------------
+-- ME DEVUELVE EL ID_CLIENTE
+-- ---------------------------------------------
+CREATE FUNCTION EL_GROUP_BY.FUNC_ID_CLIENTE(@CLIENTE_NOMBRE NVARCHAR(255),@CLIENTE_NUMERO_DOCUMENTO NUMERIC(18,0))
+RETURNS INT
+AS
+BEGIN
+	DECLARE @RESULTADO INT
+	SELECT @RESULTADO = Cliente_ID 
+	FROM EL_GROUP_BY.Cliente 
+	WHERE Cliente_Nombre = @CLIENTE_NOMBRE AND
+		  Cliente_Numero_Documento = @CLIENTE_NUMERO_DOCUMENTO
+	RETURN @RESULTADO
+END;
+GO
+
+
 /****************************************************************
 *					FUNCIONES - FIN								*
 ****************************************************************/
 
 /****************************************************************
-*				SPs DE MIGRACIÓN - COMIENZO						*
+*			SPs DE MIGRACIÓN (SPMigra) - COMIENZO		        *
 ****************************************************************/
 
 -- -----------------------------------------------------
--- Cargar Usuarios
+-- SPMigra-- Cargar Usuarios
 -- -----------------------------------------------------
 
 CREATE PROC EL_GROUP_BY.CARGAR_USUARIOS
@@ -745,7 +774,7 @@ COMMIT
 GO
 
 -- -----------------------------------------------------
--- Cargar Clientes
+-- SPMigra -- Cargar Clientes
 -- -----------------------------------------------------
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_CLIENTES AS
 BEGIN TRANSACTION
@@ -780,7 +809,7 @@ COMMIT
 GO
 
 -- -----------------------------------------------------
--- Cargar Empresas
+-- SPMigra -- Cargar Empresas
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_EMPRESAS AS
@@ -805,7 +834,7 @@ COMMIT
 GO
 
 -- -----------------------------------------------------
--- Cargar Roles
+-- SPMigra -- Cargar Roles
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_ROLES AS
@@ -817,7 +846,7 @@ COMMIT;
 GO
 
 -- -----------------------------------------------------
--- Cargar Funcionalidades
+-- SPMigra -- Cargar Funcionalidades
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_FUNCIONALIDADES AS
@@ -838,7 +867,7 @@ COMMIT;
 GO
 
 -- -----------------------------------------------------
--- Cargar Roles_X_Usuario
+-- SPMigra -- Cargar Roles_X_Usuario
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_ROLES_X_USUARIO AS
@@ -878,7 +907,7 @@ COMMIT;
 GO
 
 -- -----------------------------------------------------
--- Cargar Roles_X_Funcionalidad
+-- SPMigra -- Cargar Roles_X_Funcionalidad
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD AS
@@ -914,7 +943,7 @@ COMMIT TRANSACTION;
 GO
 									      
 -- -----------------------------------------------------
--- Cargar Formas_Pago
+-- SPMigra -- Cargar Formas_Pago
 -- -----------------------------------------------------
 									      
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_FORMAS_PAGO AS
@@ -923,11 +952,14 @@ BEGIN TRANSACTION
 		SELECT DISTINCT Forma_Pago_Desc
 			FROM gd_esquema.Maestra M
 			WHERE M.Forma_Pago_Desc IS NOT NULL
+
+	INSERT INTO EL_GROUP_BY.Forma_Pago VALUES ('Tarjeta de Credito') -- Creamos la forma de pago TC mencionada en la Estrategia
+
 COMMIT TRANSACTION;	
 GO
 
 -- -----------------------------------------------------
--- Cargar Ubicacion_Tipo
+-- SPMigra -- Cargar Ubicacion_Tipo
 -- -----------------------------------------------------
 									      
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_UBICACION_TIPOS AS
@@ -941,7 +973,7 @@ COMMIT TRANSACTION;
 GO
 
 -- -----------------------------------------------------
--- Cargar Rubros
+-- SPMigra -- Cargar Rubros
 -- -----------------------------------------------------
 									      
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_RUBROS AS
@@ -954,7 +986,7 @@ COMMIT TRANSACTION;
 GO	
 									      
 -- -----------------------------------------------------
--- Cargar Estados_Publicacion
+-- SPMigra -- Cargar Estados_Publicacion
 -- -----------------------------------------------------
 									      
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION AS
@@ -966,7 +998,7 @@ COMMIT;
 GO	   
 
 -- -----------------------------------------------------
--- Cargar Grados_Publicacion
+-- SPMigra -- Cargar Grados_Publicacion
 -- -----------------------------------------------------
 									      														 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION AS
@@ -977,7 +1009,7 @@ BEGIN TRANSACTION
 COMMIT;
 GO	
 -- -----------------------------------------------------
--- Cargar Espectaculos
+-- SPMigra -- Cargar Espectaculos
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_ESPECTACULOS AS
@@ -996,7 +1028,7 @@ BEGIN TRANSACTION
 COMMIT TRANSACTION;
 GO
 -- -----------------------------------------------------
--- Cargar Publicaciones
+-- SPMigra -- Cargar Publicaciones
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACIONES AS
@@ -1023,7 +1055,7 @@ COMMIT TRANSACTION;
 GO
 
 -- -----------------------------------------------------
--- Cargar Ubicaciones
+-- SPMigra -- Cargar Ubicaciones
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_UBICACIONES AS
@@ -1036,12 +1068,14 @@ BEGIN TRANSACTION
 						,0 -- Ubicacion_Disponible Migramos como NO por ahora
 						,EL_GROUP_BY.FUNC_ID_UBICACION_TIPO(Ubicacion_Tipo_Codigo)
 						,0 -- NO Canjeada dado que el canje de puntos es una funcionalidad nueva
+						,NULL -- fecha de canje - idem campo anterior
+						,NULL -- Cliente de Canje - idem campo anterior
 		FROM gd_esquema.Maestra
 COMMIT TRANSACTION;
 GO
 
 -- -----------------------------------------------------
--- Crear relacion Publicacion_Ubicacion
+-- SPMigra -- Cargar relacion Publicacion_Ubicacion
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION AS
@@ -1064,7 +1098,7 @@ COMMIT TRANSACTION;
 GO
 
 -- -----------------------------------------------------
--- Cargar Facturas
+-- SPMigra -- Cargar Facturas
 -- -----------------------------------------------------
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_FACTURAS AS
@@ -1079,13 +1113,58 @@ BEGIN TRANSACTION
 COMMIT TRANSACTION;
 GO
 
+-- -----------------------------------------------------
+-- SPMigra -- Cargar Compras
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_COMPRAS AS
+BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Compra
+		SELECT DISTINCT  M.Compra_Fecha
+						,M.Compra_Cantidad
+						,0 -- POR AHORA 0 LUEGO PODEMOS CALCULAR EL MONTO (0, pq no admite NULL la def de la tabla)
+						,RENDIDO = CASE (SELECT COUNT(M2.Factura_Nro)
+										 FROM gd_esquema.Maestra M2
+										 WHERE M.Cli_Dni = M2.Cli_Dni  AND
+											   M.Cli_Nombre = M2.Cli_Nombre AND
+											   M.Compra_Fecha = M2.Compra_Fecha   AND
+											   M.Compra_Cantidad = M2.Compra_Cantidad)
+								   WHEN 0 THEN 0
+								   ELSE 1
+								   END
+						,EL_GROUP_BY.FUNC_ID_CLIENTE(Cli_Nombre, Cli_Dni)
+						,1
+		FROM gd_esquema.Maestra M 
+		GROUP BY M.Cli_Dni, M.Cli_Nombre, M.Compra_Fecha, M.Compra_Cantidad, M.Espectaculo_Cod, 
+				 M.Ubicacion_Asiento, M.Ubicacion_Fila, M.Ubicacion_Precio, M.Ubicacion_Sin_numerar
+		HAVING M.Cli_Dni IS NOT NULL AND M.Cli_Nombre IS NOT NULL AND M.Compra_Fecha IS NOT NULL AND M.Compra_Cantidad IS NOT NULL
+COMMIT TRANSACTION;
+GO
+
+/*-- -----------------------------------------------------
+-- SPMigra -- Cargar Ubicaciones Compradas
+-- -----------------------------------------------------
+													 
+CREATE PROCEDURE EL_GROUP_BY.CARGAR_UBICACIONES_COMPRADAS AS
+BEGIN TRANSACTION
+    DECLARE @CLIENTE_NOMBRE NVARCHAR(255)
+	DECLARE @CLIENTE_NUMERO_DOCUMENTO NUMERIC(18,0)
+	 NVARCHAR(255)
+	 
+	UPDATE EL_GROUP_BY.Publicacion_Ubicacion
+	SET Compra_ID = EL_GROUP_BY.f
+	WHERE 
+				SELECT DISTINCT 
+COMMIT TRANSACTION;
+GO*/			----------------------------------------------CONTINUAR MAÑANA ------------------------------
+
 /****************************************************************
-*					SPs DE MIGRACIÓN - FIN						*
+*				SPs DE MIGRACIÓN (SPMigra) - FIN				*
 ****************************************************************/
 					      
 									      
 /****************************************************************
-*						SPs - COMIENZO							*
+*						SPs (SP) - COMIENZO						*
 ****************************************************************/
 
 
@@ -1694,6 +1773,7 @@ EXEC EL_GROUP_BY.CARGAR_PUBLICACIONES;
 EXEC EL_GROUP_BY.CARGAR_UBICACIONES;
 EXEC EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION;
 EXEC EL_GROUP_BY.CARGAR_FACTURAS;
+EXEC EL_GROUP_BY.CARGAR_COMPRAS;
 
 /****************************************************************
 
