@@ -193,7 +193,7 @@ namespace PalcoNet
 
         private void watchRecordClientToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(new Historial_Cliente.FormClientHistory(this.roleId, this.id));
+            openForm(new Historial_Cliente.FormClientHistory(this.id));
         }
 
         private void actionsExchangeAdminPointsToolStripMenuItem_Click(object sender, EventArgs e)

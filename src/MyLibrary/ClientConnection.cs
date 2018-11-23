@@ -78,7 +78,7 @@ namespace MyLibrary
             parameter.Value = client.User;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@PASSWORD", SqlDbType.VarChar, 50);
+            parameter = new SqlParameter("@PASSWORD", SqlDbType.NVarChar, 50);
             parameter.Value = client.Password;
             parameters.Add(parameter);
 
@@ -185,6 +185,38 @@ namespace MyLibrary
 
             return reader;
         }
+
+        public static int GetClientIdWithUserId(int userId)
+        {
+            return Connection
+                    .queryForInt("SELECT CLIENTE_ID FROM EL_GROUP_BY.Cliente where Usuario_ID = " + Convert.ToString(userId));
+        }
+
+        public static SqlDataReader GetClientData(int clientId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            parameters.Add(new SqlParameter("@CLIENT_ID", clientId));
+            SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_DATOS_CLIENTE_X_ID", Connection.Type.StoredProcedure, parameters);
+
+            return reader;
+        }
+
+
+        public static DataSet GetHistoryDataByClient(int clientId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@CLIENT_ID", SqlDbType.VarChar, 255);
+            parameter.Value = Convert.ToString(clientId);
+            parameters.Add(parameter);
+
+            DataSet ds = Connection.GetDataSet("EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID", Connection.Type.StoredProcedure, parameters);
+
+            return ds;
+        }
+
     }
 
 }

@@ -195,6 +195,12 @@ IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_CLIENTE') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.OBTENER_USER_FOR_MODIFY') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.OBTENER_USER_FOR_MODIFY;
 
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_DATOS_CLIENTE_X_ID') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_DATOS_CLIENTE_X_ID;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID ;
+
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_EMPRESAS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_EMPRESAS;
 
@@ -1526,6 +1532,54 @@ begin
 	ON C.Usuario_ID = U.Usuario_ID and U.Usuario_ID = @USER_ID
 end
 GO
+
+-- -----------------------------------------------------
+-- SP - Obtener Datos del cliente para Cabecera
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_DATOS_CLIENTE_X_ID @CLIENT_ID int
+as
+begin
+	SELECT  
+		C.Cliente_Nombre,
+		C.Cliente_Apellido,
+		U.Usuario_Mail,
+		C.Cliente_Numero_Documento
+	FROM EL_GROUP_BY.USUARIO U INNER JOIN EL_GROUP_BY.Cliente C 
+	ON C.Usuario_ID = U.Usuario_ID and C.Cliente_ID = @CLIENT_ID
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Obtener Datos del historial de Cliente
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID @CLIENT_ID int
+as
+begin
+select 1 from EL_GROUP_BY.Cliente
+/*
+	SELECT	C.Compra_ID,
+			C.Compra_Fecha,
+			F.Forma_Pago_Descripcion,
+			P.Publicacion_Descripcion,
+			P.Publicacion_Fecha,
+			U.Ubicacion_Fila,
+			U.Ubicacion_Asiento,
+			U.Ubicacion_Sin_Numerar,
+			UT.Ubicacion_Tipo_Descripcion,
+			U.Ubicacion_Precio
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
+	INNER JOIN EL_GROUP_BY.Ubicacion U on U.Ubicacion_ID = PU.Ubicacion_ID
+	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Compra C on C.Compra_ID = PU.Compra_ID
+	INNER JOIN EL_GROUP_BY.Forma_Pago F on F.Forma_Pago_ID = C.Forma_Pago_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+	WHERE C.Cliente_ID = @CLIENT_ID
+	*/
+end
+GO
+
+
 
 -- -----------------------------------------------------
 -- SP - Listar Empresas

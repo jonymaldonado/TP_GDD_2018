@@ -98,11 +98,11 @@
     <Compile Include="Abm Rubro\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Canje Puntos\Form1.cs">
+    <Compile Include="Canje Puntos\FormChangePoints.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Canje Puntos\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Canje Puntos\FormChangePoints.Designer.cs">
+      <DependentUpon>FormChangePoints.cs</DependentUpon>
     </Compile>
     <Compile Include="Comprar\Form1.cs">
       <SubType>Form</SubType>
@@ -139,12 +139,6 @@
     </Compile>
     <Compile Include="Historial Cliente\FormClientHistory.Designer.cs">
       <DependentUpon>FormClientHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Historial Cliente\FormClientSearch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Historial Cliente\FormClientSearch.Designer.cs">
-      <DependentUpon>FormClientSearch.cs</DependentUpon>
     </Compile>
     <Compile Include="Listado Estadistico\Form1.cs">
       <SubType>Form</SubType>
@@ -189,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Abm Rol\FormRole.resx">
       <DependentUpon>FormRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Canje Puntos\FormChangePoints.resx">
+      <DependentUpon>FormChangePoints.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ContainerMain.resx">
       <DependentUpon>ContainerMain.cs</DependentUpon>

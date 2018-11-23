@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
 using System.Configuration;
+using System.Windows.Forms;
 
 namespace MyLibrary
 {
@@ -122,7 +123,7 @@ namespace MyLibrary
             command.Connection = GetConnection();
 
             int result = Convert.ToInt32(command.ExecuteScalar());
-
+           
             return result;
         }
 

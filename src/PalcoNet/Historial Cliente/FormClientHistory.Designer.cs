@@ -35,7 +35,6 @@
             this.txt_number_doc = new System.Windows.Forms.TextBox();
             this.txt_clientId = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.btn_select_client = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_email = new System.Windows.Forms.TextBox();
@@ -73,7 +72,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -82,7 +81,6 @@
             this.groupBox1.Controls.Add(this.txt_number_doc);
             this.groupBox1.Controls.Add(this.txt_clientId);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.btn_select_client);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txt_email);
@@ -102,7 +100,7 @@
             this.txt_number_doc.Location = new System.Drawing.Point(397, 50);
             this.txt_number_doc.Name = "txt_number_doc";
             this.txt_number_doc.ReadOnly = true;
-            this.txt_number_doc.Size = new System.Drawing.Size(113, 20);
+            this.txt_number_doc.Size = new System.Drawing.Size(183, 20);
             this.txt_number_doc.TabIndex = 10;
             // 
             // txt_clientId
@@ -121,16 +119,6 @@
             this.label5.Size = new System.Drawing.Size(101, 13);
             this.label5.TabIndex = 9;
             this.label5.Text = "Nro. de documento:";
-            // 
-            // btn_select_client
-            // 
-            this.btn_select_client.Location = new System.Drawing.Point(190, 21);
-            this.btn_select_client.Name = "btn_select_client";
-            this.btn_select_client.Size = new System.Drawing.Size(110, 25);
-            this.btn_select_client.TabIndex = 1;
-            this.btn_select_client.Text = "Seleccionar";
-            this.btn_select_client.UseVisualStyleBackColor = true;
-            this.btn_select_client.Click += new System.EventHandler(this.btn_select_client_Click);
             // 
             // label3
             // 
@@ -155,7 +143,7 @@
             this.txt_email.Location = new System.Drawing.Point(397, 76);
             this.txt_email.Name = "txt_email";
             this.txt_email.ReadOnly = true;
-            this.txt_email.Size = new System.Drawing.Size(113, 20);
+            this.txt_email.Size = new System.Drawing.Size(183, 20);
             this.txt_email.TabIndex = 2;
             // 
             // label2
@@ -172,7 +160,7 @@
             this.txt_name.Location = new System.Drawing.Point(72, 50);
             this.txt_name.Name = "txt_name";
             this.txt_name.ReadOnly = true;
-            this.txt_name.Size = new System.Drawing.Size(113, 20);
+            this.txt_name.Size = new System.Drawing.Size(200, 20);
             this.txt_name.TabIndex = 0;
             // 
             // label4
@@ -189,7 +177,7 @@
             this.txt_surname.Location = new System.Drawing.Point(72, 76);
             this.txt_surname.Name = "txt_surname";
             this.txt_surname.ReadOnly = true;
-            this.txt_surname.Size = new System.Drawing.Size(113, 20);
+            this.txt_surname.Size = new System.Drawing.Size(200, 20);
             this.txt_surname.TabIndex = 3;
             // 
             // label12
@@ -364,7 +352,6 @@
         private System.Windows.Forms.ToolStripMenuItem returnToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txt_clientId;
-        private System.Windows.Forms.Button btn_select_client;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_number_doc;
         private System.Windows.Forms.Label label5;

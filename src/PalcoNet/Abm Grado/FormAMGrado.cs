@@ -30,7 +30,7 @@ namespace PalcoNet.Abm_Grado
             if (!isUpper) //Modificacion
             {
                 this.id = id;
-                //this.LoadFieldsOfGrado();
+                this.LoadFieldsOfGrado();
             }
 
         }
