@@ -1099,12 +1099,12 @@ begin
 	declare @habilitado bit
 	declare @cant_int_fallido int
 
-	select @habilitado = Usuario_Habilitado from EL_GROUP_BY.USUARIO where Usuario_Username =  @Usuario and Usuario_Password = HASHBYTES('SHA2_256',@Password)
+	select @habilitado = Usuario_Habilitado from EL_GROUP_BY.USUARIO where Usuario_Username =  @Usuario and Usuario_Password = HASHBYTES('SHA2_256', @Password)
 	select @cant_int_fallido = Usuario_Intentos from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario
 
 	if not exists(select 1 from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario)
 		select 0 as estado
-	if exists(select 1 from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario and Usuario_Password <> HASHBYTES('SHA2_256',@Password))
+	if exists(select 1 from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario and Usuario_Password <> HASHBYTES('SHA2_256', @Password))
 		if (@cant_int_fallido = 3) 
 			begin
 				update EL_GROUP_BY.USUARIO set Usuario_Habilitado = 0 where Usuario_Username = @Usuario
@@ -1297,7 +1297,7 @@ go
 
 CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @USUARIO VARCHAR(50),
-@PASSWORD VARCHAR(50),
+@PASSWORD NVARCHAR(50),
 @NOMBRE VARCHAR(255),
 @APELLIDO VARCHAR(255),
 @TIPO_DOC VARCHAR(10),
@@ -1331,6 +1331,9 @@ BEGIN TRANSACTION
 										 ,@LOCALIDAD
 										 ,@MAIL)
 
+	DECLARE @USER_ID int
+	SET @USER_ID = SCOPE_IDENTITY()
+
 	INSERT INTO EL_GROUP_BY.Cliente VALUES (@NOMBRE
 										  ,@APELLIDO
 										  ,@TIPO_DOC
@@ -1340,7 +1343,17 @@ BEGIN TRANSACTION
 										  ,@TARJETA_NOMBRE
 										  ,@TARJETA_NRO
 										  ,GETDATE()
-										  ,SCOPE_IDENTITY())
+										  ,@USER_ID) --SCOPE_IDENTITY())
+
+	INSERT INTO EL_GROUP_BY.Rol_Usuario 
+		SELECT	@USER_ID,
+				Rol_ID,
+				1
+	    FROM EL_GROUP_BY.Rol 
+		WHERE Rol_Nombre = 'CLIENTE'
+										
+					
+	
 COMMIT
 GO
 
