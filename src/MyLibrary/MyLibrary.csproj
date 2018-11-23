@@ -45,6 +45,7 @@
     <Compile Include="Connection.cs" />
     <Compile Include="EmpresaConnection.cs" />
     <Compile Include="FunctionConnection.cs" />
+    <Compile Include="GradoConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleConnection.cs" />
     <Compile Include="UserConnection.cs" />

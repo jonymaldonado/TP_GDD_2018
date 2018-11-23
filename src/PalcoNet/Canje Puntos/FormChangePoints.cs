@@ -8,13 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PalcoNet.Historial_Cliente
+namespace PalcoNet.Canje_Puntos
 {
-    public partial class Form1 : Form
+    public partial class FormChangePoints : Form
     {
-        public Form1()
+        public FormChangePoints()
         {
             InitializeComponent();
         }
+
+        private void returnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
     }
 }
