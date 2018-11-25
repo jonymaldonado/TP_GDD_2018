@@ -192,7 +192,7 @@
             this.watchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.watchRecordClientToolStripMenuItem});
             this.watchToolStripMenuItem.Name = "watchToolStripMenuItem";
-            this.watchToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
+            this.watchToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.watchToolStripMenuItem.Text = "Ver";
             // 
             // watchRecordClientToolStripMenuItem
@@ -214,8 +214,9 @@
             // listStatisticalToolStripMenuItem
             // 
             this.listStatisticalToolStripMenuItem.Name = "listStatisticalToolStripMenuItem";
-            this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.listStatisticalToolStripMenuItem.Text = "Estadístico";
+            this.listStatisticalToolStripMenuItem.Click += new System.EventHandler(this.listStatisticalToolStripMenuItem_Click);
             // 
             // ContainerMain
             // 

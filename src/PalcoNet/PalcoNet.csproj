@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -140,11 +141,11 @@
     <Compile Include="Historial Cliente\FormClientHistory.Designer.cs">
       <DependentUpon>FormClientHistory.cs</DependentUpon>
     </Compile>
-    <Compile Include="Listado Estadistico\Form1.cs">
+    <Compile Include="Listado Estadistico\FormStatiscalList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Listado Estadistico\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Listado Estadistico\FormStatiscalList.Designer.cs">
+      <DependentUpon>FormStatiscalList.cs</DependentUpon>
     </Compile>
     <Compile Include="Login\Login.cs">
       <SubType>Form</SubType>
@@ -192,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Historial Cliente\FormClientHistory.resx">
       <DependentUpon>FormClientHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Listado Estadistico\FormStatiscalList.resx">
+      <DependentUpon>FormStatiscalList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
