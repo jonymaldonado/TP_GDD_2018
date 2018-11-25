@@ -202,6 +202,11 @@ namespace PalcoNet
             openForm(new Canje_Puntos.FormChangePoints());
         }
 
+        private void listStatisticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Listado_Estadistico.FormStatiscalList());
+        }
+
     }
 
 }
