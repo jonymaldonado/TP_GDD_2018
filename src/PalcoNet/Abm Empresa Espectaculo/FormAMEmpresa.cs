@@ -115,6 +115,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
                 EmpresaConnection.CreateEmpresa(empresaDAO);
                 MessageBox.Show("La nueva Empresa ha sido creado correctamente.");
+                this.CleanAllFields();
 
             }
             else

@@ -160,8 +160,9 @@ namespace PalcoNet
 
         private void closeSessionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Login.Login fr = new Login.Login(this);
-            fr.Show();
+            //Login.Login fr = new Login.Login(this);
+            //fr.Show();
+            openForm(new Login.Login(this));
         }
 
         private void aBMRoleToolStripMenuItem_Click(object sender, EventArgs e)

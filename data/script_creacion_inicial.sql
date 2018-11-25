@@ -1627,7 +1627,7 @@ GO
 
 CREATE PROCEDURE EL_GROUP_BY.CREAR_EMPRESA
 @USUARIO		VARCHAR(50),
-@PASSWORD		VARCHAR(50),
+@PASSWORD		NVARCHAR(50),
 @RAZON_SOCIAL	VARCHAR(255),
 @EMAIL			VARCHAR(255),
 @TELEFONO		VARCHAR(20), 
@@ -1656,6 +1656,9 @@ BEGIN TRANSACTION
 										 ,@LOCALIDAD
 										 ,@EMAIL)
 
+	DECLARE @USER_ID int
+	SET @USER_ID = SCOPE_IDENTITY()
+
 	INSERT INTO EL_GROUP_BY.Empresa VALUES (@RAZON_SOCIAL
 										  ,@CUIT
 										  ,@CIUDAD
@@ -1665,6 +1668,14 @@ BEGIN TRANSACTION
 												where u.Usuario_Username = @USUARIO 
 												and u.Usuario_Password = HASHBYTES('SHA2_256', @PASSWORD) )
 										   )
+										   										   
+	INSERT INTO EL_GROUP_BY.Rol_Usuario 
+		SELECT	@USER_ID,
+				Rol_ID,
+				1
+	    FROM EL_GROUP_BY.Rol 
+		WHERE Rol_Nombre = 'EMPRESA'
+
 COMMIT
 GO
 
