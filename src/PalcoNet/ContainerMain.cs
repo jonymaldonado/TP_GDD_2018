@@ -207,6 +207,12 @@ namespace PalcoNet
             openForm(new Listado_Estadistico.FormStatiscalList());
         }
 
+        private void aBMCategoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //No implementar ABM rubro está en la consigna y en el grupo google se comentó que redireccione a Form vacío
+            openForm(new Abm_Rubro.Form1());
+        }
+
     }
 
 }

@@ -135,7 +135,8 @@
             // 
             this.aBMCategoryToolStripMenuItem.Name = "aBMCategoryToolStripMenuItem";
             this.aBMCategoryToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.aBMCategoryToolStripMenuItem.Text = "Categoría";
+            this.aBMCategoryToolStripMenuItem.Text = "Rubro";
+            this.aBMCategoryToolStripMenuItem.Click += new System.EventHandler(this.aBMCategoryToolStripMenuItem_Click);
             // 
             // aBMDegreeOfPublicationToolStripMenuItem
             // 
@@ -214,7 +215,7 @@
             // listStatisticalToolStripMenuItem
             // 
             this.listStatisticalToolStripMenuItem.Name = "listStatisticalToolStripMenuItem";
-            this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.listStatisticalToolStripMenuItem.Text = "Estadístico";
             this.listStatisticalToolStripMenuItem.Click += new System.EventHandler(this.listStatisticalToolStripMenuItem_Click);
             // 

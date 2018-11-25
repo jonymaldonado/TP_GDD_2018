@@ -58,12 +58,6 @@ namespace PalcoNet.Historial_Cliente
         
         }
 
-
-        class Record
-        {
-            public int Index { get; set; }
-        }
-
         class PageOffsetList : System.ComponentModel.IListSource
         {
             public bool ContainsListCollection { get; protected set; }
@@ -117,18 +111,6 @@ namespace PalcoNet.Historial_Cliente
         {
             this.Close();
         }
-
-        private void btn_select_client_Click(object sender, EventArgs e)
-        {
-
-            Abm_Cliente.FormClient FormClient = new PalcoNet.Abm_Cliente.FormClient();
-
-            this.Hide();
-            FormClient.ShowDialog();
-            this.Show();            
-
-        }
-
 
     }
 }

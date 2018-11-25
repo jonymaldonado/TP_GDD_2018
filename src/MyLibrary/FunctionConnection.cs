@@ -14,9 +14,9 @@ namespace MyLibrary
         {
             FunctionDAO functionDAO = new FunctionDAO();
 
-            functionDAO.Id = reader.GetInt32(reader.GetOrdinal("FUN_Id"));
-            functionDAO.Name = reader.GetString(reader.GetOrdinal("FUN_Nombre"));
-            functionDAO.Visible = reader.GetBoolean(reader.GetOrdinal("FUN_Visible"));
+            functionDAO.Id = reader.GetInt32(reader.GetOrdinal("Funcionalidad_ID"));
+            functionDAO.Name = reader.GetString(reader.GetOrdinal("Funcionalidad_Nombre"));
+            functionDAO.Visible = reader.GetBoolean(reader.GetOrdinal("Funcionalidad_Visible"));
 
             return functionDAO;
         }
@@ -51,6 +51,7 @@ namespace MyLibrary
                     FunctionDAO function = GetFunction(reader);
                     functions.Add(function);
                 }
+                reader.NextResult();    
             }
 
             reader.Close();
