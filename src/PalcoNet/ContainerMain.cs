@@ -199,7 +199,7 @@ namespace PalcoNet
 
         private void actionsExchangeAdminPointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(new Canje_Puntos.FormChangePoints());
+            openForm(new Canje_Puntos.FormChangePoints(this.id));
         }
 
         private void listStatisticalToolStripMenuItem_Click(object sender, EventArgs e)

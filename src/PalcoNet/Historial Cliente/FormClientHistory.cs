@@ -16,7 +16,7 @@ namespace PalcoNet.Historial_Cliente
     {
         public int clientId { get; set; }
         public int userId { get; set; }
-        private int totalRecords = 43;
+        private int totalRecords;
         private const int pageSize = 10;
         public DataSet ds;
 
