@@ -162,6 +162,7 @@
             this.actionsGeneratePublicationToolStripMenuItem.Name = "actionsGeneratePublicationToolStripMenuItem";
             this.actionsGeneratePublicationToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.actionsGeneratePublicationToolStripMenuItem.Text = "Generar publicación";
+            this.actionsGeneratePublicationToolStripMenuItem.Click += new System.EventHandler(this.actionsGeneratePublicationToolStripMenuItem_Click);
             // 
             // actionsEditPublicationToolStripMenuItem
             // 

@@ -213,6 +213,11 @@ namespace PalcoNet
             openForm(new Abm_Rubro.Form1());
         }
 
+        private void actionsGeneratePublicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Generar_Publicacion.GeneratePublication());
+        }
+
     }
 
 }

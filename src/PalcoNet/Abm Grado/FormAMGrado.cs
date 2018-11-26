@@ -25,7 +25,7 @@ namespace PalcoNet.Abm_Grado
             InitializeComponent();
             this.isUpper = isUpper;
             this.formPrevious = formGrado;
-
+            LoadPriority();
 
             if (!isUpper) //Modificacion
             {
@@ -126,7 +126,7 @@ namespace PalcoNet.Abm_Grado
             {
                 while (reader.Read())
                 {
-                    txt_comision.Text = reader.IsDBNull(0) ? "" : reader.GetString(0);
+                    txt_comision.Text = reader.IsDBNull(0) ? "" : reader.GetDecimal(0).ToString();
                     cmb_priority.SelectedIndex = cmb_priority.FindStringExact(reader.GetString(1));
 
                 }
