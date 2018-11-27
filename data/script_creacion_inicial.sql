@@ -195,6 +195,18 @@ IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_CLIENTE') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.OBTENER_USER_FOR_MODIFY') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.OBTENER_USER_FOR_MODIFY;
 
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_DATOS_CLIENTE_X_ID') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_DATOS_CLIENTE_X_ID;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_CANJE_DISPONIBLE') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_CANJE_DISPONIBLE;
+
+IF OBJECT_ID('EL_GROUP_BY.CANJEAR_UBICACION') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CANJEAR_UBICACION;
+
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_EMPRESAS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_EMPRESAS;
 
@@ -1357,12 +1369,12 @@ begin
 	declare @habilitado bit
 	declare @cant_int_fallido int
 
-	select @habilitado = Usuario_Habilitado from EL_GROUP_BY.USUARIO where Usuario_Username =  @Usuario and Usuario_Password = HASHBYTES('SHA2_256',@Password)
+	select @habilitado = Usuario_Habilitado from EL_GROUP_BY.USUARIO where Usuario_Username =  @Usuario and Usuario_Password = HASHBYTES('SHA2_256', @Password)
 	select @cant_int_fallido = Usuario_Intentos from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario
 
 	if not exists(select 1 from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario)
 		select 0 as estado
-	if exists(select 1 from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario and Usuario_Password <> HASHBYTES('SHA2_256',@Password))
+	if exists(select 1 from EL_GROUP_BY.USUARIO where Usuario_Username = @Usuario and Usuario_Password <> HASHBYTES('SHA2_256', @Password))
 		if (@cant_int_fallido = 3) 
 			begin
 				update EL_GROUP_BY.USUARIO set Usuario_Habilitado = 0 where Usuario_Username = @Usuario
@@ -1555,7 +1567,7 @@ go
 
 CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @USUARIO VARCHAR(50),
-@PASSWORD VARCHAR(50),
+@PASSWORD NVARCHAR(50),
 @NOMBRE VARCHAR(255),
 @APELLIDO VARCHAR(255),
 @TIPO_DOC VARCHAR(10),
@@ -1589,6 +1601,9 @@ BEGIN TRANSACTION
 										 ,@LOCALIDAD
 										 ,@MAIL)
 
+	DECLARE @USER_ID int
+	SET @USER_ID = SCOPE_IDENTITY()
+
 	INSERT INTO EL_GROUP_BY.Cliente VALUES (@NOMBRE
 										  ,@APELLIDO
 										  ,@TIPO_DOC
@@ -1598,7 +1613,17 @@ BEGIN TRANSACTION
 										  ,@TARJETA_NOMBRE
 										  ,@TARJETA_NRO
 										  ,GETDATE()
-										  ,SCOPE_IDENTITY())
+										  ,@USER_ID) --SCOPE_IDENTITY())
+
+	INSERT INTO EL_GROUP_BY.Rol_Usuario 
+		SELECT	@USER_ID,
+				Rol_ID,
+				1
+	    FROM EL_GROUP_BY.Rol 
+		WHERE Rol_Nombre = 'CLIENTE'
+										
+					
+	
 COMMIT
 GO
 
@@ -1694,6 +1719,156 @@ end
 GO
 
 -- -----------------------------------------------------
+-- SP - Obtener Datos del cliente para Cabecera
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_DATOS_CLIENTE_X_ID 
+@CLIENT_ID int,
+@FECHA datetime
+as
+begin
+	SELECT  
+		C.Cliente_Nombre,
+		C.Cliente_Apellido,
+		U.Usuario_Mail,
+		C.Cliente_Numero_Documento,
+		isnull(sum(P.Puntos_Cantidad),0)
+	FROM EL_GROUP_BY.USUARIO U 
+	INNER JOIN EL_GROUP_BY.Cliente C ON C.Usuario_ID = U.Usuario_ID and C.Cliente_ID = @CLIENT_ID
+	LEFT JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
+	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @FECHA, 120) 
+	GROUP BY C.Cliente_Nombre,
+	C.Cliente_Apellido,
+	U.Usuario_Mail,
+	C.Cliente_Numero_Documento
+	
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Obtener Datos del historial de Cliente
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID @CLIENT_ID int
+as
+begin
+select 1 from EL_GROUP_BY.Cliente
+/*
+	SELECT	C.Compra_ID,
+			C.Compra_Fecha,
+			F.Forma_Pago_Descripcion,
+			P.Publicacion_Descripcion,
+			P.Publicacion_Fecha,
+			U.Ubicacion_Fila,
+			U.Ubicacion_Asiento,
+			U.Ubicacion_Sin_Numerar,
+			UT.Ubicacion_Tipo_Descripcion,
+			U.Ubicacion_Precio
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
+	INNER JOIN EL_GROUP_BY.Ubicacion U on U.Ubicacion_ID = PU.Ubicacion_ID
+	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Compra C on C.Compra_ID = PU.Compra_ID
+	INNER JOIN EL_GROUP_BY.Forma_Pago F on F.Forma_Pago_ID = C.Forma_Pago_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+	WHERE C.Cliente_ID = @CLIENT_ID
+	*/
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Obtiene el listado de Ubicaciones canjeables para X puntos
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.LISTAR_CANJE_DISPONIBLE 
+@PUNTOS int,
+@FECHA datetime
+as
+begin
+
+	SELECT	PU.Publicacion_ID, 
+			E.Espectaculo_Descripcion,
+			convert(date, E.Espectaculo_Fecha,120) as Fecha,
+			PU.Ubicacion_ID,
+			U.Ubicacion_Fila,
+			U.Ubicacion_Asiento,
+			U.Ubicacion_Sin_Numerar,
+			UT.Ubicacion_Tipo_Descripcion,
+			(U.Ubicacion_Precio*5) as Puntos
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
+	INNER JOIN EL_GROUP_BY.Ubicacion U on U.Ubicacion_ID = PU.Ubicacion_ID and U.Ubicacion_Canjeada = 0
+	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+	WHERE (U.Ubicacion_Precio*5) < @PUNTOS
+	AND convert(date, E.Espectaculo_Fecha,120) > convert(date, @FECHA,120)
+	order by Fecha, E.Espectaculo_ID, U.Ubicacion_Fila, U.Ubicacion_asiento asc
+	
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Canjear Ubicacion
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.CANJEAR_UBICACION
+@CLIENTE_ID INT,
+@PUNTOS INT,
+@PUBLICACION_ID INT,
+@UBICACION_ID INT,
+@FECHA DATETIME
+AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.Ubicacion
+		SET Ubicacion_Canjeada = 1 
+		WHERE Ubicacion_ID = @UBICACION_ID
+
+	DECLARE CU_PUNTOS CURSOR FOR
+	SELECT	P.Puntos_ID,
+			isnull(P.Puntos_Cantidad,0) 
+	FROM EL_GROUP_BY.USUARIO U 
+	INNER JOIN EL_GROUP_BY.Cliente C ON C.Usuario_ID = U.Usuario_ID and C.Cliente_ID = @CLIENTE_ID 
+	LEFT JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
+	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @FECHA, 120) 
+	
+	DECLARE @ID INT
+	DECLARE @PUNTOS_CU INT
+	DECLARE @PUNTOS_RESTANTES INT
+	
+	SET @PUNTOS_RESTANTES = @PUNTOS
+
+	OPEN CU_PUNTOS
+	FETCH CU_PUNTOS INTO @ID, @PUNTOS_CU 
+	WHILE @@FETCH_STATUS = 0 OR @PUNTOS_RESTANTES > 0
+	BEGIN
+		IF @PUNTOS_RESTANTES < @PUNTOS_CU
+		BEGIN
+			UPDATE EL_GROUP_BY.Puntos
+			SET Puntos_Cantidad = Puntos_Cantidad - @PUNTOS_RESTANTES
+			WHERE Puntos_ID = @ID
+			
+			SET @PUNTOS_RESTANTES = 0
+
+		END 
+		ELSE
+		BEGIN
+			UPDATE EL_GROUP_BY.Puntos
+			SET Puntos_Cantidad = 0
+			WHERE Puntos_ID = @ID
+			
+			SET @PUNTOS_RESTANTES = @PUNTOS_RESTANTES - @PUNTOS_CU
+		END
+	
+		FETCH CU_PUNTOS INTO @ID, @PUNTOS_CU 
+		
+	END
+	
+	CLOSE CU_PUNTOS
+	DEALLOCATE CU_PUNTOS
+
+COMMIT
+GO
+
+
+
+-- -----------------------------------------------------
 -- SP - Listar Empresas
 -- -----------------------------------------------------
 
@@ -1739,7 +1914,7 @@ GO
 
 CREATE PROCEDURE EL_GROUP_BY.CREAR_EMPRESA
 @USUARIO		VARCHAR(50),
-@PASSWORD		VARCHAR(50),
+@PASSWORD		NVARCHAR(50),
 @RAZON_SOCIAL	VARCHAR(255),
 @EMAIL			VARCHAR(255),
 @TELEFONO		VARCHAR(20), 
@@ -1768,6 +1943,9 @@ BEGIN TRANSACTION
 										 ,@LOCALIDAD
 										 ,@EMAIL)
 
+	DECLARE @USER_ID int
+	SET @USER_ID = SCOPE_IDENTITY()
+
 	INSERT INTO EL_GROUP_BY.Empresa VALUES (@RAZON_SOCIAL
 										  ,@CUIT
 										  ,@CIUDAD
@@ -1777,6 +1955,14 @@ BEGIN TRANSACTION
 												where u.Usuario_Username = @USUARIO 
 												and u.Usuario_Password = HASHBYTES('SHA2_256', @PASSWORD) )
 										   )
+										   										   
+	INSERT INTO EL_GROUP_BY.Rol_Usuario 
+		SELECT	@USER_ID,
+				Rol_ID,
+				1
+	    FROM EL_GROUP_BY.Rol 
+		WHERE Rol_Nombre = 'EMPRESA'
+
 COMMIT
 GO
 

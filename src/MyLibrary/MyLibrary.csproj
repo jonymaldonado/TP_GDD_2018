@@ -47,7 +47,9 @@
     <Compile Include="FunctionConnection.cs" />
     <Compile Include="GradoConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicationConnection.cs" />
     <Compile Include="RoleConnection.cs" />
+    <Compile Include="StatiscalListConnection.cs" />
     <Compile Include="UserConnection.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>

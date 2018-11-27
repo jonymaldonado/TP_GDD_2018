@@ -160,8 +160,9 @@ namespace PalcoNet
 
         private void closeSessionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Login.Login fr = new Login.Login(this);
-            fr.Show();
+            //Login.Login fr = new Login.Login(this);
+            //fr.Show();
+            openForm(new Login.Login(this));
         }
 
         private void aBMRoleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -193,12 +194,28 @@ namespace PalcoNet
 
         private void watchRecordClientToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(new Historial_Cliente.FormClientHistory(this.roleId, this.id));
+            openForm(new Historial_Cliente.FormClientHistory(this.id));
         }
 
         private void actionsExchangeAdminPointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(new Canje_Puntos.FormChangePoints());
+            openForm(new Canje_Puntos.FormChangePoints(this.id));
+        }
+
+        private void listStatisticalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Listado_Estadistico.FormStatiscalList());
+        }
+
+        private void aBMCategoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //No implementar ABM rubro está en la consigna y en el grupo google se comentó que redireccione a Form vacío
+            openForm(new Abm_Rubro.Form1());
+        }
+
+        private void actionsGeneratePublicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Generar_Publicacion.GeneratePublication());
         }
 
     }

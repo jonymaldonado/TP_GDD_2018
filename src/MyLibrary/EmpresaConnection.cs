@@ -67,10 +67,10 @@ namespace MyLibrary
             SqlParameter parameter;
 
             parameter = new SqlParameter("@USUARIO", SqlDbType.VarChar, 50);
-            parameter.Value = empresa.UserId;
+            parameter.Value = empresa.User;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@PASSWORD", SqlDbType.VarChar, 50);
+            parameter = new SqlParameter("@PASSWORD", SqlDbType.NVarChar, 50);
             parameter.Value = empresa.Password;
             parameters.Add(parameter);
 

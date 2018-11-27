@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -98,11 +99,11 @@
     <Compile Include="Abm Rubro\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Canje Puntos\Form1.cs">
+    <Compile Include="Canje Puntos\FormChangePoints.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Canje Puntos\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Canje Puntos\FormChangePoints.Designer.cs">
+      <DependentUpon>FormChangePoints.cs</DependentUpon>
     </Compile>
     <Compile Include="Comprar\Form1.cs">
       <SubType>Form</SubType>
@@ -122,11 +123,11 @@
     <Compile Include="ContainerMain.Designer.cs">
       <DependentUpon>ContainerMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generar Publicacion\Form1.cs">
+    <Compile Include="Generar Publicacion\GeneratePublication.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Generar Publicacion\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Generar Publicacion\GeneratePublication.Designer.cs">
+      <DependentUpon>GeneratePublication.cs</DependentUpon>
     </Compile>
     <Compile Include="Generar Rendicion Comisiones\Form1.cs">
       <SubType>Form</SubType>
@@ -140,17 +141,11 @@
     <Compile Include="Historial Cliente\FormClientHistory.Designer.cs">
       <DependentUpon>FormClientHistory.cs</DependentUpon>
     </Compile>
-    <Compile Include="Historial Cliente\FormClientSearch.cs">
+    <Compile Include="Listado Estadistico\FormStatiscalList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Historial Cliente\FormClientSearch.Designer.cs">
-      <DependentUpon>FormClientSearch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Listado Estadistico\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Listado Estadistico\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Listado Estadistico\FormStatiscalList.Designer.cs">
+      <DependentUpon>FormStatiscalList.cs</DependentUpon>
     </Compile>
     <Compile Include="Login\Login.cs">
       <SubType>Form</SubType>
@@ -190,11 +185,20 @@
     <EmbeddedResource Include="Abm Rol\FormRole.resx">
       <DependentUpon>FormRole.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Canje Puntos\FormChangePoints.resx">
+      <DependentUpon>FormChangePoints.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ContainerMain.resx">
       <DependentUpon>ContainerMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Generar Publicacion\GeneratePublication.resx">
+      <DependentUpon>GeneratePublication.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Historial Cliente\FormClientHistory.resx">
       <DependentUpon>FormClientHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Listado Estadistico\FormStatiscalList.resx">
+      <DependentUpon>FormStatiscalList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>

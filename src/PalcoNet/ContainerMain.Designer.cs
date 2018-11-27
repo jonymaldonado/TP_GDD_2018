@@ -135,7 +135,8 @@
             // 
             this.aBMCategoryToolStripMenuItem.Name = "aBMCategoryToolStripMenuItem";
             this.aBMCategoryToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.aBMCategoryToolStripMenuItem.Text = "Categoría";
+            this.aBMCategoryToolStripMenuItem.Text = "Rubro";
+            this.aBMCategoryToolStripMenuItem.Click += new System.EventHandler(this.aBMCategoryToolStripMenuItem_Click);
             // 
             // aBMDegreeOfPublicationToolStripMenuItem
             // 
@@ -161,6 +162,7 @@
             this.actionsGeneratePublicationToolStripMenuItem.Name = "actionsGeneratePublicationToolStripMenuItem";
             this.actionsGeneratePublicationToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.actionsGeneratePublicationToolStripMenuItem.Text = "Generar publicación";
+            this.actionsGeneratePublicationToolStripMenuItem.Click += new System.EventHandler(this.actionsGeneratePublicationToolStripMenuItem_Click);
             // 
             // actionsEditPublicationToolStripMenuItem
             // 
@@ -192,7 +194,7 @@
             this.watchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.watchRecordClientToolStripMenuItem});
             this.watchToolStripMenuItem.Name = "watchToolStripMenuItem";
-            this.watchToolStripMenuItem.Size = new System.Drawing.Size(36, 20);
+            this.watchToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.watchToolStripMenuItem.Text = "Ver";
             // 
             // watchRecordClientToolStripMenuItem
@@ -216,6 +218,7 @@
             this.listStatisticalToolStripMenuItem.Name = "listStatisticalToolStripMenuItem";
             this.listStatisticalToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.listStatisticalToolStripMenuItem.Text = "Estadístico";
+            this.listStatisticalToolStripMenuItem.Click += new System.EventHandler(this.listStatisticalToolStripMenuItem_Click);
             // 
             // ContainerMain
             // 
