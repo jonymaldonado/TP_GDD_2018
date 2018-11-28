@@ -69,11 +69,13 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.aceptarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.returnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dgv_list = new System.Windows.Forms.DataGridView();
             this.gb_publication.SuspendLayout();
             this.gb_grade.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.gb_ubications.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
             this.SuspendLayout();
             // 
             // gb_publication
@@ -208,6 +210,7 @@
             this.btn_grade.TabIndex = 4;
             this.btn_grade.Text = "Seleccionar";
             this.btn_grade.UseVisualStyleBackColor = true;
+            this.btn_grade.Click += new System.EventHandler(this.btn_grade_Click);
             // 
             // txt_comision
             // 
@@ -283,6 +286,7 @@
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(169, 20);
             this.dateTimePicker1.TabIndex = 2;
+            this.dateTimePicker1.Value = new System.DateTime(2018, 1, 1, 0, 0, 0, 0);
             // 
             // label9
             // 
@@ -339,6 +343,7 @@
             this.btn_ubic_add.TabIndex = 5;
             this.btn_ubic_add.Text = "Agregar";
             this.btn_ubic_add.UseVisualStyleBackColor = true;
+            this.btn_ubic_add.Click += new System.EventHandler(this.btn_ubic_add_Click);
             // 
             // lb_ubic
             // 
@@ -357,13 +362,14 @@
             this.cb_no_number.TabIndex = 8;
             this.cb_no_number.Text = "Sin Numerar";
             this.cb_no_number.UseVisualStyleBackColor = true;
+            this.cb_no_number.CheckedChanged += new System.EventHandler(this.cb_no_number_CheckedChanged);
             // 
             // cb_type
             // 
             this.cb_type.FormattingEnabled = true;
             this.cb_type.Location = new System.Drawing.Point(74, 115);
             this.cb_type.Name = "cb_type";
-            this.cb_type.Size = new System.Drawing.Size(84, 21);
+            this.cb_type.Size = new System.Drawing.Size(122, 21);
             this.cb_type.TabIndex = 7;
             // 
             // label13
@@ -379,8 +385,9 @@
             // 
             this.txt_precio.Location = new System.Drawing.Point(74, 84);
             this.txt_precio.Name = "txt_precio";
-            this.txt_precio.Size = new System.Drawing.Size(84, 20);
+            this.txt_precio.Size = new System.Drawing.Size(122, 20);
             this.txt_precio.TabIndex = 5;
+            this.txt_precio.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_numerico_KeyPress);
             // 
             // label12
             // 
@@ -395,8 +402,9 @@
             // 
             this.txt_asientos.Location = new System.Drawing.Point(74, 57);
             this.txt_asientos.Name = "txt_asientos";
-            this.txt_asientos.Size = new System.Drawing.Size(84, 20);
+            this.txt_asientos.Size = new System.Drawing.Size(122, 20);
             this.txt_asientos.TabIndex = 3;
+            this.txt_asientos.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_numerico_KeyPress);
             // 
             // label11
             // 
@@ -411,8 +419,9 @@
             // 
             this.txt_filas.Location = new System.Drawing.Point(74, 29);
             this.txt_filas.Name = "txt_filas";
-            this.txt_filas.Size = new System.Drawing.Size(84, 20);
+            this.txt_filas.Size = new System.Drawing.Size(122, 20);
             this.txt_filas.TabIndex = 1;
+            this.txt_filas.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_numerico_KeyPress);
             // 
             // label10
             // 
@@ -449,11 +458,28 @@
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
+            // dgv_list
+            // 
+            this.dgv_list.AllowUserToAddRows = false;
+            this.dgv_list.AllowUserToDeleteRows = false;
+            this.dgv_list.AllowUserToResizeColumns = false;
+            this.dgv_list.AllowUserToResizeRows = false;
+            this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_list.Location = new System.Drawing.Point(44, 444);
+            this.dgv_list.Name = "dgv_list";
+            this.dgv_list.ReadOnly = true;
+            this.dgv_list.RowHeadersVisible = false;
+            this.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgv_list.Size = new System.Drawing.Size(672, 227);
+            this.dgv_list.TabIndex = 60;
+            // 
             // GeneratePublication
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 462);
+            this.ClientSize = new System.Drawing.Size(808, 745);
+            this.Controls.Add(this.dgv_list);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.gb_ubications);
             this.Controls.Add(this.groupBox1);
@@ -471,6 +497,7 @@
             this.gb_ubications.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -518,5 +545,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem aceptarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem returnToolStripMenuItem;
+        private System.Windows.Forms.DataGridView dgv_list;
     }
 }

@@ -14,10 +14,25 @@ namespace PalcoNet.Abm_Grado
 {
     public partial class FormGrado : Form
     {
+        public Generar_Publicacion.GeneratePublication FormGenerate;
+        
         public FormGrado()
         {
             InitializeComponent();
             this.LoadPriority();
+            this.btn_select.Visible = false;
+        }
+
+        public FormGrado(Generar_Publicacion.GeneratePublication Form)
+        {
+            InitializeComponent();
+            this.LoadPriority();
+            this.FormGenerate = Form;
+
+            this.addToolStripMenuItem.Visible = false;
+            this.deleteToolStripMenuItem.Visible = false;
+            this.updateToolStripMenuItem.Visible = false;
+            this.btn_select.Enabled = true;
         }
 
         private void LoadPriority()
@@ -74,6 +89,18 @@ namespace PalcoNet.Abm_Grado
 
             grado.Prioridad = cmb_priority.GetItemText(cmb_priority);
             dgv_list.DataSource = GradoConnection.ListExistingGrado(grado).Tables[0];
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int selectedrowindex = dgv_list.SelectedCells[0].RowIndex;
+            DataGridViewRow selectedRow = dgv_list.Rows[selectedrowindex];  
+
+            
+            this.FormGenerate.grade = Convert.ToString(selectedRow.Cells["Grado_Publicacion_Prioridad"].Value);
+            this.FormGenerate.commision = Convert.ToString(selectedRow.Cells["Grado_Publicacion_Comision"].Value);
+
+            this.Close();
         }
     }
 }

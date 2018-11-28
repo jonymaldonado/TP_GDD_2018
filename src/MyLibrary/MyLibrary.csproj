@@ -50,6 +50,7 @@
     <Compile Include="PublicationConnection.cs" />
     <Compile Include="RoleConnection.cs" />
     <Compile Include="StatiscalListConnection.cs" />
+    <Compile Include="UbicationConnection.cs" />
     <Compile Include="UserConnection.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>

@@ -41,6 +41,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cmb_priority = new System.Windows.Forms.ComboBox();
             this.btn_search = new System.Windows.Forms.Button();
+            this.btn_select = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
             this.SuspendLayout();
@@ -86,7 +87,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -95,7 +96,7 @@
             this.label10.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(24, 77);
+            this.label10.Location = new System.Drawing.Point(23, 92);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(80, 30);
             this.label10.TabIndex = 57;
@@ -107,7 +108,7 @@
             this.label9.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(102, 77);
+            this.label9.Location = new System.Drawing.Point(101, 92);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(103, 30);
             this.label9.TabIndex = 56;
@@ -119,7 +120,7 @@
             this.label8.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(202, 77);
+            this.label8.Location = new System.Drawing.Point(201, 92);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(99, 30);
             this.label8.TabIndex = 55;
@@ -134,12 +135,12 @@
             this.dgv_list.AllowUserToResizeRows = false;
             this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_list.Location = new System.Drawing.Point(24, 89);
+            this.dgv_list.Location = new System.Drawing.Point(23, 104);
             this.dgv_list.Name = "dgv_list";
             this.dgv_list.ReadOnly = true;
             this.dgv_list.RowHeadersVisible = false;
             this.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_list.Size = new System.Drawing.Size(277, 242);
+            this.dgv_list.Size = new System.Drawing.Size(277, 288);
             this.dgv_list.TabIndex = 52;
             // 
             // label1
@@ -170,11 +171,23 @@
             this.btn_search.UseVisualStyleBackColor = true;
             this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
             // 
+            // btn_select
+            // 
+            this.btn_select.Enabled = false;
+            this.btn_select.Location = new System.Drawing.Point(194, 68);
+            this.btn_select.Name = "btn_select";
+            this.btn_select.Size = new System.Drawing.Size(106, 21);
+            this.btn_select.TabIndex = 61;
+            this.btn_select.Text = "Seleccionar";
+            this.btn_select.UseVisualStyleBackColor = true;
+            this.btn_select.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FormGrado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(327, 343);
+            this.ClientSize = new System.Drawing.Size(327, 404);
+            this.Controls.Add(this.btn_select);
             this.Controls.Add(this.btn_search);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmb_priority);
@@ -207,5 +220,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmb_priority;
         private System.Windows.Forms.Button btn_search;
+        private System.Windows.Forms.Button btn_select;
     }
 }
