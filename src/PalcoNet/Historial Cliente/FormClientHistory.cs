@@ -42,7 +42,6 @@ namespace PalcoNet.Historial_Cliente
 
         private void bindingSource1_CurrentChanged(object sender, EventArgs e)
         {
-            // The desired page has changed, so fetch the page of records using the "Current" offset 
             int offset = (int)bindingSource1.Current;
 
             DataSet ds1 = this.ds; 
@@ -70,7 +69,6 @@ namespace PalcoNet.Historial_Cliente
 
             public System.Collections.IList GetList()
             {
-                // Return a list of page offsets based on "totalRecords" and "pageSize"
                 var pageOffsets = new List<int>();
                 for (int offset = 0; offset < this.totalRecors; offset += pageSize)
                     pageOffsets.Add(offset);
@@ -101,8 +99,8 @@ namespace PalcoNet.Historial_Cliente
 
         private DataSet setHistoryData(int clientId)
         {
-            //DataSet ds = ClientConnection.GetHistoryDataByClient(clientId); //.Tables[0];
-            DataSet ds = ClientConnection.ListExistingClients(null, null, null, null);
+            DataSet ds = ClientConnection.GetHistoryDataByClient(clientId); //.Tables[0];
+            //DataSet ds = ClientConnection.ListExistingClients(null, null, null, null);
 
             return ds;
         }

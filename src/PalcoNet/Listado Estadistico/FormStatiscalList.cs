@@ -154,6 +154,11 @@ namespace PalcoNet.Listado_Estadistico
 
             if (dgv_list.RowCount == 0) MessageBox.Show("La filtros ingresados no han generado estadísticas.");
         }
+
+        private void returnToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
     }
 
 }

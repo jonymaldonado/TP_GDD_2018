@@ -67,6 +67,7 @@
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
             this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.returnToolStripMenuItem.Text = "Volver";
+            this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click_1);
             // 
             // groupBox1
             // 

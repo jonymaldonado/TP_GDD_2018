@@ -240,6 +240,17 @@ IF OBJECT_ID('EL_GROUP_BY.ACTUALIZAR_GRADO') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION_COMPRADA') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION_COMPRADA;
 
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_CLIENTES_MAYORES_PUNTOS_VENCIDOS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_CLIENTES_MAYORES_PUNTOS_VENCIDOS;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_CLIENTES_MAYOR_CANTIDAD_COMPRAS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_CLIENTES_MAYOR_CANTIDAD_COMPRAS;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDIDAS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDIDAS;
+
+
+
 /****************************************************************
 *					DROP DE SPs - FIN							*
 ****************************************************************/
@@ -1028,15 +1039,14 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_ESPECTACULOS AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Espectaculo
-		SELECT DISTINCT Espectaculo_Cod
-		            ,Espectaculo_Descripcion
+		SELECT DISTINCT M.Espectaculo_Cod
+		            ,M.Espectaculo_Descripcion
 					,null
-					,Espectaculo_Fecha
-					,Espectaculo_Fecha_Venc
-					,Espectaculo_Estado
-					,EL_GROUP_BY.FUNC_ID_RUBRO(Espectaculo_Rubro_Descripcion)
-					,EL_GROUP_BY.FUNC_ID_EMPRESA(Espec_Empresa_Razon_Social, Espec_Empresa_Cuit)
-		FROM gd_esquema.Maestra 
+					,M.Espectaculo_Fecha
+					,M.Espectaculo_Fecha_Venc
+					,EL_GROUP_BY.FUNC_ID_RUBRO(M.Espectaculo_Rubro_Descripcion)
+					,EL_GROUP_BY.FUNC_ID_EMPRESA(M.Espec_Empresa_Razon_Social, M.Espec_Empresa_Cuit)
+		FROM gd_esquema.Maestra M
 		WHERE Espec_Empresa_Cuit IS NOT NULL
 COMMIT TRANSACTION;
 GO
@@ -1132,10 +1142,25 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_COMPRAS 
 AS
 BEGIN TRANSACTION  
-/*DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES;
+/*
+IF OBJECT_ID('EL_GROUP_BY.##COMPRAS_UBICACIONES') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES;
+
+IF OBJECT_ID('EL_GROUP_BY.##COMPRAS_UBICACIONES2') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES2;
+
+IF OBJECT_ID('EL_GROUP_BY.##compra') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.##compra;
+
+IF OBJECT_ID('EL_GROUP_BY.##TMP') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.##TMP;
+
+DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES;
 DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES2;
 DROP table EL_GROUP_BY.##compra;
-DROP TABLE ##TMP*/;
+DROP TABLE ##TMP;
+*/
+
 /*CREACION DE TABLA AUXILIAR ##COMPRAS_UBICACIONES*/  
 CREATE TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES (Compras_Ubicaciones_ID INT IDENTITY(1,1)
 												   ,Compra_Fecha DATETIME
@@ -1343,9 +1368,10 @@ UPDATE EL_GROUP_BY.Publicacion_Ubicacion SET EL_GROUP_BY.Publicacion_Ubicacion.C
 																	 WHERE EL_GROUP_BY.Publicacion_Ubicacion.Publicacion_ID = A.Publicacion_ID AND
 																		   EL_GROUP_BY.Publicacion_Ubicacion.Ubicacion_ID = A.Ubicacion_ID);
 
- DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES;
---DROP TABLE SELECT * FROM EL_GROUP_BY.##COMPRAS_UBICACIONES2;
---DROP table EL_GROUP_BY.##compra;
+DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES;
+DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES2;
+DROP table EL_GROUP_BY.##compra;
+--DROP TABLE ##TMP;
 COMMIT TRANSACTION;
 GO
 
@@ -1751,26 +1777,26 @@ GO
 create procedure EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID @CLIENT_ID int
 as
 begin
-select 1 from EL_GROUP_BY.Cliente
-/*
+
 	SELECT	C.Compra_ID,
-			C.Compra_Fecha,
+			convert(date,C.Compra_Fecha,120) as FechaCompra, 
 			F.Forma_Pago_Descripcion,
-			P.Publicacion_Descripcion,
-			P.Publicacion_Fecha,
+			E.Espectaculo_Descripcion,
+			convert(date,E.Espectaculo_Fecha,120) as FechaEspectaculo,
 			U.Ubicacion_Fila,
 			U.Ubicacion_Asiento,
 			U.Ubicacion_Sin_Numerar,
 			UT.Ubicacion_Tipo_Descripcion,
 			U.Ubicacion_Precio
-	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
-	INNER JOIN EL_GROUP_BY.Ubicacion U on U.Ubicacion_ID = PU.Ubicacion_ID
-	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
-	INNER JOIN EL_GROUP_BY.Compra C on C.Compra_ID = PU.Compra_ID
-	INNER JOIN EL_GROUP_BY.Forma_Pago F on F.Forma_Pago_ID = C.Forma_Pago_ID
-	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
-	WHERE C.Cliente_ID = @CLIENT_ID
-	*/
+		FROM EL_GROUP_BY.Publicacion_Ubicacion PU
+		INNER JOIN EL_GROUP_BY.Ubicacion U on U.Ubicacion_ID = PU.Ubicacion_ID
+		INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
+		INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
+		INNER JOIN EL_GROUP_BY.Compra C on C.Compra_ID = PU.Compra_ID
+		INNER JOIN EL_GROUP_BY.Forma_Pago F on F.Forma_Pago_ID = C.Forma_Pago_ID
+		INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+		WHERE C.Cliente_ID = @CLIENT_ID
+		ORDER BY FechaCompra ASC
 end
 GO
 
@@ -2113,6 +2139,30 @@ BEGIN TRANSACTION
 COMMIT
 GO
 
+
+-- -----------------------------------------------------
+-- SP - Listado Clientes con mayores puntos vencidos
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.LISTAR_CLIENTES_MAYORES_PUNTOS_VENCIDOS
+@fecha_desde datetime,
+@fecha_hasta datetime
+as
+begin
+
+	SELECT TOP 5 
+		C.Cliente_ID,
+		C.Cliente_Nombre,
+		c.Cliente_Apellido,
+		isnull(sum(P.Puntos_Cantidad),0) as PuntosVencidos
+	FROM EL_GROUP_BY.Cliente C
+	LEFT JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
+	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @fecha_desde, 120) 
+	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) < convert(date, @fecha_hasta, 120) 
+	GROUP BY C.Cliente_ID, C.Cliente_Nombre, c.Cliente_Apellido
+	ORDER BY PuntosVencidos DESC
+
+end
+GO
 
 /****************************************************************
 *							SPs - FIN							*
