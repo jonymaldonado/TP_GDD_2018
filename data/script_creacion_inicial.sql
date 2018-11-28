@@ -506,13 +506,15 @@ CREATE TABLE EL_GROUP_BY.Ubicacion (
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Grado_Publicacion
 -- -----------------------------------------------------
-
+ 
 CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 		Grado_Publicacion_ID INT IDENTITY(1,1),
-		Grado_Publicacion_Comision NUMERIC(3,3) NOT NULL,
+		Grado_Publicacion_Comision NUMERIC(3,2) NOT NULL,
 		Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
 		Grado_Publicacion_Habilitado BIT NOT NULL,
-	PRIMARY KEY (Grado_Publicacion_ID))
+	PRIMARY KEY (Grado_Publicacion_ID))--,
+	--CONSTRAINT CHK_Porc_Comision_entre_0y100   
+		--CHECK ( Grado_Publicacion_Comision > 0 AND Grado_Publicacion_Comision <= 1))
 ;
 
 -- -----------------------------------------------------
@@ -767,7 +769,7 @@ BEGIN TRAN
 					,'EMPRESA'
 					,1
 					,0
-					,0
+					,1
 					,null
 					,Espec_Empresa_Dom_Calle
 					,Espec_Empresa_Nro_Calle
@@ -1027,6 +1029,7 @@ GO
 									      														 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION AS
 BEGIN TRANSACTION
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'MIGRADA',0)
 	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'BAJA',1)
 	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'MEDIA',1)
 	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'ALTA',1)
@@ -1070,7 +1073,7 @@ BEGIN TRANSACTION
 						,0
 						,'MIGRA'
 						,@ESPEC_ID
-						,1 --Migro directamente Grado_Publicacion_ID = 1
+						,1 --Migro directamente Grado_Publicacion_ID = 1 - 'MIGRADA'
 						,2)  -- Migramos como 2 - Publicada ya que en la Maestra todos los Espectaculo_Estado son 'Publicada'
 		SET @ESPEC_ID = @ESPEC_ID + 1
 	END
@@ -1177,7 +1180,7 @@ CREATE TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS (Compras_Ubicaciones_ID INT
 												   ,Item_Monto NUMERIC(18,2)
 												   ,Item_Cantidad NUMERIC(18,0)
 												   ,Item_Descripcion NVARCHAR(60)
-												   ,Factura_Numero NUMERIC(18,0));
+												   ,Factura_Nro NUMERIC(18,0));
 
 			
 /* CARGA DE DATOS TABLA AUXILIAR ##COMPRAS_UBICACIONES_ITEMS*/  
@@ -1221,7 +1224,7 @@ CREATE TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS2 (Compras_Ubicaciones_ID IN
 												   ,Item_Monto NUMERIC(18,2)
 												   ,Item_Cantidad NUMERIC(18,0)
 												   ,Item_Descripcion NVARCHAR(60)
-												   ,Factura_Numero NUMERIC(18,0)
+												   ,Factura_Nro NUMERIC(18,0)
 												   ,Compra_Fecha_ANT DATETIME
 												   ,Cli_Dni_ANT NUMERIC(18,0)
 												   ,Cli_Nombre_ANT NVARCHAR(255)
@@ -1241,8 +1244,8 @@ CREATE TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS2 (Compras_Ubicaciones_ID IN
 												   ,Compra_ID INT);
 
 /*CARGA DE DATOS TABLA AUXILIAR ##COMPRAS_UBICACIONES_ITEMS2*/   
-INSERT INTO EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS
-        SELECT   A.Compra_Fecha
+INSERT INTO EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS2
+        SELECT DISTINCT  A.Compra_Fecha
 				,A.Cli_Dni
 				,A.Cli_Nombre
 				,A.Compra_Cantidad
@@ -1254,7 +1257,7 @@ INSERT INTO EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS
 				,A.Item_Monto
 				,A.Item_Cantidad
 				,A.Item_Descripcion
-				,A.Factura_Numero
+				,A.Factura_Nro
 			    ,B.Compra_Fecha
 				,B.Cli_Dni
 				,B.Cli_Nombre
@@ -2125,7 +2128,7 @@ GO
 -- SP - Nuevo Grado
 -- -----------------------------------------------------
 CREATE PROCEDURE EL_GROUP_BY.CREAR_GRADO
-@COMISION		NUMERIC(3,3),
+@COMISION		NUMERIC(3,2),
 @PRIORIDAD		VARCHAR(10)
 AS
 BEGIN TRANSACTION
@@ -2159,7 +2162,7 @@ GO
 
 CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_GRADO
 @ID				INT,
-@COMISION		NUMERIC(3,3),
+@COMISION		NUMERIC(3,2),
 @PRIORIDAD		VARCHAR(10)
 AS
 BEGIN TRANSACTION
@@ -2319,3 +2322,7 @@ select * from EL_GROUP_BY.Publicacion_Ubicacion order by Compra_ID desc;
 
 select count(*) from  EL_GROUP_BY.Publicacion_Ubicacion where Compra_ID is not NULL;
 */
+
+select * from EL_GROUP_BY.Item
+use GD2C2018
+select * from gd_esquema.Maestra
