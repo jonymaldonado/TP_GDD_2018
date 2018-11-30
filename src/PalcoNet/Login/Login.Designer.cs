@@ -40,6 +40,7 @@
             this.txt_pass = new System.Windows.Forms.TextBox();
             this.lbl_user = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -67,6 +68,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.linkLabel1);
             this.groupBox1.Controls.Add(this.btn_init);
             this.groupBox1.Controls.Add(this.lbl_rol);
             this.groupBox1.Controls.Add(this.cmb_rol);
@@ -96,7 +98,7 @@
             // 
             this.lbl_rol.AutoSize = true;
             this.lbl_rol.ForeColor = System.Drawing.Color.Black;
-            this.lbl_rol.Location = new System.Drawing.Point(134, 158);
+            this.lbl_rol.Location = new System.Drawing.Point(18, 181);
             this.lbl_rol.Name = "lbl_rol";
             this.lbl_rol.Size = new System.Drawing.Size(26, 13);
             this.lbl_rol.TabIndex = 8;
@@ -108,7 +110,7 @@
             this.cmb_rol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmb_rol.FormattingEnabled = true;
             this.cmb_rol.ItemHeight = 13;
-            this.cmb_rol.Location = new System.Drawing.Point(50, 174);
+            this.cmb_rol.Location = new System.Drawing.Point(50, 178);
             this.cmb_rol.Name = "cmb_rol";
             this.cmb_rol.Size = new System.Drawing.Size(189, 21);
             this.cmb_rol.Sorted = true;
@@ -164,6 +166,17 @@
             this.label1.TabIndex = 15;
             this.label1.Text = "FRBA - PalcoNet";
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(119, 148);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(57, 13);
+            this.linkLabel1.TabIndex = 9;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Regístrate";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -197,5 +210,6 @@
         private System.Windows.Forms.Label lbl_user;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btn_init;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

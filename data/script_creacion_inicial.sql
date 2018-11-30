@@ -1789,6 +1789,36 @@ end
 GO
 
 -- -----------------------------------------------------
+-- SP - Actualizar Password
+-- -----------------------------------------------------
+
+create proc EL_GROUP_BY.ACTUALIZAR_PASSWORD
+@USUARIO_ID INT,
+@PASSWORD NVARCHAR(50)
+as
+begin
+	update EL_GROUP_BY.Usuario set Usuario_Password = HASHBYTES('SHA2_256', @PASSWORD),
+									Usuario_Primer_Login = 1
+		where Usuario_ID = @USUARIO_ID
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Consultar si hay algún usuario con el mismo username
+-- -----------------------------------------------------
+
+create proc EL_GROUP_BY.ES_UNICO_USERNAME
+@USUARIO_NOMBRE NVARCHAR(50)
+as
+begin
+	if exists(select 1 from EL_GROUP_BY.Usuario where Usuario_Username = @USUARIO_NOMBRE)
+		select  1
+	else
+		select 0
+end
+go
+
+-- -----------------------------------------------------
 -- SP - Obtener Datos del cliente para Cabecera
 -- -----------------------------------------------------
 
