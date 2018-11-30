@@ -426,7 +426,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormAMClient";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FormAMClient";
+            this.Text = "Cliente";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox3.ResumeLayout(false);

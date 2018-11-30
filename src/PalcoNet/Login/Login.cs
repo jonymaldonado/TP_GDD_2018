@@ -16,7 +16,7 @@ namespace PalcoNet.Login
     public partial class Login : Form
     {
         int userId;
-        string user;
+        string userName;
         ContainerMain container;
 
         public Login(ContainerMain container)
@@ -56,20 +56,49 @@ namespace PalcoNet.Login
 
         private void InitSesion(int countRoles) 
         {
-            this.userId = UserConnection.GetUserId(user);
+            this.userId = UserConnection.GetUserId(userName);
 
-            if (countRoles == 1)
-            {
-                Int32 roleId = UserConnection.getUniqueRolId(this.userId);
-                this.openContainer(roleId);
-            }
+            int isFirstLogin = UserConnection.GetFirstLogin(userId);
 
-            if (countRoles > 1)
+            if (isFirstLogin == 0)
             {
-                btn_init.Enabled = false;
-                EnableRoleSelection(false);
-                this.LoadCombo(userId);
+                if (ConfirmChangePassword()) 
+                {
+                    this.ChangePassword();
+                    return;
+                }
+                else
+                {
+                    return;
+                }
             }
+            else
+            {
+                if (countRoles == 1)
+                {
+                    Int32 roleId = UserConnection.GetUniqueRolId(this.userId);
+                    this.OpenContainer(roleId);
+                }
+
+                if (countRoles > 1)
+                {
+                    btn_init.Enabled = false;
+                    EnableRoleSelection(false);
+                    this.LoadCombo(userId);
+                }
+            }
+        }
+
+        private Boolean ConfirmChangePassword()
+        {
+            DialogResult result = MessageBox.Show("El sistema necesita que actualice su contraseña ¿Desea hacerlo ahora?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            return result == DialogResult.Yes;
+        }
+
+        private void ChangePassword()
+        {
+            Registro_de_Usuario.FormChangePassword formChangePassword = new Registro_de_Usuario.FormChangePassword(userId, userName);
+            formChangePassword.ShowDialog();
         }
 
         private void LoadCombo(Int32 userId)
@@ -90,11 +119,11 @@ namespace PalcoNet.Login
             reader.Close();
         }
 
-        private void openContainer(Int32 roleId)
+        private void OpenContainer(Int32 roleId)
         {
             if (this.container == null)
             {
-                ContainerMain otherContainer = new ContainerMain(this.userId, this.user, roleId);
+                ContainerMain otherContainer = new ContainerMain(this.userId, this.userName, roleId);
                 this.Hide();
                 otherContainer.ShowDialog();
                 this.Close();
@@ -103,9 +132,9 @@ namespace PalcoNet.Login
             {
                 this.Hide();
                 this.container.id = this.userId;
-                this.container.user = this.user;
+                this.container.user = this.userName;
                 this.container.roleId = roleId;
-                this.container.init(this.userId, this.user, roleId);
+                this.container.init(this.userId, this.userName, roleId);
                 this.container.Show();
                 this.Close();
             }
@@ -121,22 +150,21 @@ namespace PalcoNet.Login
                 return;
             }
 
-            this.user = txt_user.Text.Trim();
+            this.userName = txt_user.Text.Trim();
             string pass = txt_pass.Text.Trim();
             int countRoles;
 
-            int result = UserConnection.Authenticate(user, pass);
+            int result = UserConnection.Authenticate(userName, pass);
 
             switch (result)
             {
-
                 case 0: MessageBox.Show("Usuario Inexistente");
                     ClearFields();
                     txt_user.Focus();
                     break;
 
                 case 1: MessageBox.Show("Login incorrecto");
-                    UserConnection.RegisterFailedAttempt(user);
+                    UserConnection.RegisterFailedAttempt(userName);
                     ClearFields();
                     txt_user.Focus();
                     break;
@@ -145,7 +173,7 @@ namespace PalcoNet.Login
                     this.Close();
                     break;
 
-                case 3: countRoles = UserConnection.CountRoles(user);
+                case 3: countRoles = UserConnection.CountRoles(userName);
 
                     if (countRoles == 0)
                     {
@@ -169,12 +197,18 @@ namespace PalcoNet.Login
             RoleDAO role = new RoleDAO();
             role = (RoleDAO) cmb_rol.SelectedItem;
 
-            this.openContainer(role.Id);
+            this.OpenContainer(role.Id);
         }
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Registro_de_Usuario.FormUserRegister form = new Registro_de_Usuario.FormUserRegister();
+            form.ShowDialog();
         }
     }
 

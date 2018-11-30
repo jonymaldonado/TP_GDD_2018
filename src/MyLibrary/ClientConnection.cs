@@ -154,7 +154,11 @@ namespace MyLibrary
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@DEPARTAMENTO", SqlDbType.VarChar, 255);
-            parameter.Value = client.Department;
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(client.Department))
+            {
+                parameter.Value = client.Department;
+            }
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@LOCALIDAD", SqlDbType.VarChar, 255);

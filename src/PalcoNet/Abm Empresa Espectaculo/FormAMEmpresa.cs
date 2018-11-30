@@ -19,6 +19,10 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         bool isUpper = false;
         Form formPrevious;
 
+        string user = null;
+        string password = null;
+        bool isRegisterUser = false;
+
         public FormAMEmpresa(FormEmpresa formAMEmpresa, bool isUpper, string userId)
         {
             InitializeComponent();
@@ -31,6 +35,15 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 this.userId = userId;
                 this.LoadFieldsOfEmpresa();
             }
+        }
+
+        public FormAMEmpresa(Registro_de_Usuario.FormUserRegister formUserRegister, string user, string password)
+        {
+            InitializeComponent();
+            this.user = user;
+            this.password = password;
+            formPrevious = formUserRegister;
+            isRegisterUser = true;
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
@@ -94,7 +107,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         {
             if (this.checkMandatoryFields())
             {
-                EmpresaDAO empresa = GetEmpresaDAO();
+                EmpresaDAO empresa = GetEmpresaDAO(null, null);
 
                 EmpresaConnection.UpdateEmpresa(empresa, this.userId, this.chk_active.Checked);
                 MessageBox.Show("La modificación de la empresa ha sido realizada correctamente.");
@@ -111,11 +124,18 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         {
             if (this.checkMandatoryFields())
             {
-                EmpresaDAO empresaDAO = GetEmpresaDAO();
+                EmpresaDAO empresaDAO = GetEmpresaDAO(this.user, this.password);
 
                 EmpresaConnection.CreateEmpresa(empresaDAO);
                 MessageBox.Show("La nueva Empresa ha sido creado correctamente.");
                 this.CleanAllFields();
+
+                if (isRegisterUser)
+                {
+                    this.Close();
+                    this.formPrevious.Close();
+                    return;
+                }
 
             }
             else
@@ -132,21 +152,18 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                     && !string.IsNullOrEmpty(txt_cuit.Text)
                     && !string.IsNullOrEmpty(txt_street.Text)
                     && !string.IsNullOrEmpty(txt_number_street.Text)
-                    && !string.IsNullOrEmpty(txt_floor.Text)
-                    && !string.IsNullOrEmpty(txt_department.Text)
                     && !string.IsNullOrEmpty(txt_location.Text)
                     && !string.IsNullOrEmpty(txt_postal_code.Text)
                     && !string.IsNullOrEmpty(txt_city.Text));
 
         }
 
-
-        private EmpresaDAO GetEmpresaDAO()
+        private EmpresaDAO GetEmpresaDAO(string user, string password)
         {
             EmpresaDAO empresa = new EmpresaDAO();
 
-            empresa.User = txt_razon_social.Text + txt_cuit.Text;
-            empresa.Password = txt_cuit.Text;
+            empresa.User = (string.IsNullOrEmpty(user)) ? txt_razon_social.Text + txt_cuit.Text : user;
+            empresa.Password = (string.IsNullOrEmpty(password)) ? txt_cuit.Text : password;
             empresa.RazonSocial = txt_razon_social.Text;
             empresa.Cuit = txt_cuit.Text;
             empresa.Email = txt_email.Text;
@@ -166,7 +183,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         {
             try
             {
-                if (this.isUpper)
+                if (this.isUpper || this.isRegisterUser)
                     this.CreateEmpresa();
                 else
                     this.UpdateEmpresa();
@@ -177,7 +194,6 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                 //if (ex.Message.Contains("UniqueConstraint"))
                     //throw new UniqueConstraintException();
                     MessageBox.Show(ex.Message.ToString());
-
                 //throw;
 
             }
