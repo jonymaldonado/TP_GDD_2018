@@ -1008,6 +1008,14 @@ BEGIN TRANSACTION
 		SELECT DISTINCT Espectaculo_Rubro_Descripcion
 			FROM gd_esquema.Maestra M
 			WHERE M.Espectaculo_Rubro_Descripcion IS NOT NULL
+
+
+	--Cargo rubros genéricos para no implementar el ABM
+	INSERT EL_GROUP_BY.Rubro VALUES('Musical')
+	INSERT EL_GROUP_BY.Rubro VALUES('Teatro')
+	INSERT EL_GROUP_BY.Rubro VALUES('Opera')
+	INSERT EL_GROUP_BY.Rubro VALUES('Cine')
+	
 COMMIT TRANSACTION;	
 GO	
 									      
