@@ -24,6 +24,9 @@ IF OBJECT_ID('EL_GROUP_BY.Puntos') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.Ubicacion') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Ubicacion;
 
+IF OBJECT_ID('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
+	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
+
 IF OBJECT_ID('EL_GROUP_BY.Cliente') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Cliente;
 
@@ -249,6 +252,18 @@ IF OBJECT_ID('EL_GROUP_BY.LISTAR_CLIENTES_MAYOR_CANTIDAD_COMPRAS') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDIDAS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDIDAS;
 
+IF OBJECT_ID('EL_GROUP_BY.ACTUALIZAR_PASSWORD') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ACTUALIZAR_PASSWORD;
+
+IF OBJECT_ID('EL_GROUP_BY.ES_UNICO_USERNAME') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ES_UNICO_USERNAME;
+
+IF OBJECT_ID('EL_GROUP_BY.CREAR_ESPECTACULO_PUBLICACION') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_ESPECTACULO_PUBLICACION;
+
+IF OBJECT_ID('EL_GROUP_BY.CREAR_UBICACIONES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_UBICACIONES;
+
 
 
 /****************************************************************
@@ -448,7 +463,7 @@ CREATE TABLE EL_GROUP_BY.Rubro (
 
 CREATE TABLE EL_GROUP_BY.Espectaculo (
 		Espectaculo_ID INT IDENTITY(1,1),
-		Espectaculo_Codigo NUMERIC(18,0) NOT NULL,
+		Espectaculo_Codigo NUMERIC(18,0),
 		Espectaculo_Descripcion NVARCHAR(255) NOT NULL,
 		Espectaculo_Direccion NVARCHAR(255),
 		Espectaculo_Fecha DATETIME NOT NULL,
@@ -502,6 +517,22 @@ CREATE TABLE EL_GROUP_BY.Ubicacion (
 	    ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
+
+-- -----------------------------------------------------
+-- Creación de TIPO Tabla para Ubicación
+-- -----------------------------------------------------
+CREATE TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA As Table
+(
+	Ubicacion_Fila VARCHAR(3) NULL,
+	Ubicacion_Asiento NUMERIC(18,0) NULL,
+	Ubicacion_Sin_Numerar BIT NOT NULL,
+	Ubicacion_Precio NUMERIC(18,0) NOT NULL,
+	Ubicacion_Disponible BIT NOT NULL,
+	Ubicacion_Tipo_ID INT NOT NULL,
+	Ubicacion_Canjeada BIT NOT NULL,
+	Ubicacion_Fecha_Canje DATETIME NULL,
+	Ubicacion_Cliente_Canje INT NULL
+)
 
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Grado_Publicacion
@@ -1415,7 +1446,7 @@ INSERT INTO EL_GROUP_BY.Item
 DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS;
 DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS2;
 DROP table EL_GROUP_BY.##compra;
-DROP TABLE ##TMP;
+--DROP TABLE ##TMP;
 COMMIT TRANSACTION;
 GO
 
@@ -2213,6 +2244,72 @@ BEGIN TRANSACTION
 COMMIT
 GO
 
+-- -----------------------------------------------------
+-- SP - Crear Espectaculo y Publicacion (1 a 1)
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.CREAR_ESPECTACULO_PUBLICACION
+@DESCRIPCION  NVarChar(255),
+@DIRECCION NVarChar(255),
+@FECHA_ESPEC DateTime,
+@FECHA_VENCIMIENTO  DateTime,
+@RUBRO_ID Int,
+@EMPRESA_ID Int,
+@FECHA_PUBLI DateTime,
+@CANT_LOC INT,
+@USERNAME NVARCHAR(50),
+@GRADO_ID INT,
+@ESTADO_ID INT,
+@PUBLI_ID INT OUTPUT
+as
+begin
+
+	INSERT EL_GROUP_BY.Espectaculo VALUES(
+		NULL, --El codigo es un campo de la migracion
+		@DESCRIPCION,
+		@DIRECCION,
+		@FECHA_ESPEC,
+		@FECHA_VENCIMIENTO,
+		@RUBRO_ID,
+		@EMPRESA_ID)
+
+	INSERT EL_GROUP_BY.Publicacion VALUES(
+		@DESCRIPCION,
+		@FECHA_PUBLI,
+		@FECHA_ESPEC,
+		@CANT_LOC,
+		@USERNAME,
+		SCOPE_IDENTITY(),
+		@GRADO_ID,
+		@ESTADO_ID)
+	
+	SET @PUBLI_ID = SCOPE_IDENTITY();
+	 
+
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Crear ubicaciones
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.CREAR_UBICACIONES
+@UBICACIONES AS UBICACION_TIPO_TABLA READONLY,
+@PUBLI_ID INT 
+AS
+BEGIN TRANSACTION
+
+	DECLARE @output_id TABLE (id int)
+
+	INSERT INTO EL_GROUP_BY.Ubicacion 
+	OUTPUT inserted.Ubicacion_ID INTO @output_id
+	SELECT * FROM  @UBICACIONES
+
+	INSERT INTO EL_GROUP_BY.Publicacion_Ubicacion
+	SELECT id, @PUBLI_ID, null
+	FROM @output_id 
+
+COMMIT TRANSACTION
+GO
+
 
 -- -----------------------------------------------------
 -- SP - Listado Clientes con mayores puntos vencidos
@@ -2359,8 +2456,9 @@ select * from EL_GROUP_BY.Compra;
 select * from EL_GROUP_BY.Publicacion_Ubicacion order by Compra_ID desc;
 
 select count(*) from  EL_GROUP_BY.Publicacion_Ubicacion where Compra_ID is not NULL;
-*/
+
 
 select * from EL_GROUP_BY.Item
 use GD2C2018
 select * from gd_esquema.Maestra
+*/

@@ -12,7 +12,16 @@ namespace DAO
         public Int32 Asiento { get; set; }
         public bool SinNumerar { get; set; }
         public Int32 Precio { get; set; }
-        public UbicationTypeDAO type { get; set; }    
+        public UbicationTypeDAO TipoDAO { get; set; }
+        public String Tipo
+        {
+            get
+            {
+                return TipoDAO.desc;
+            }
+
+        }
+        
     }
 
     public class UbicationTypeDAO

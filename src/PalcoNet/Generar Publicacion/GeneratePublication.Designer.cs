@@ -36,7 +36,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.txt_direction = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.dtp_date = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.txt_description = new System.Windows.Forms.TextBox();
@@ -56,7 +55,6 @@
             this.gb_ubications = new System.Windows.Forms.GroupBox();
             this.btn_ubic_remove = new System.Windows.Forms.Button();
             this.btn_ubic_add = new System.Windows.Forms.Button();
-            this.lb_ubic = new System.Windows.Forms.ListBox();
             this.cb_no_number = new System.Windows.Forms.CheckBox();
             this.cb_type = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -86,7 +84,6 @@
             this.gb_publication.Controls.Add(this.label5);
             this.gb_publication.Controls.Add(this.txt_direction);
             this.gb_publication.Controls.Add(this.label4);
-            this.gb_publication.Controls.Add(this.label3);
             this.gb_publication.Controls.Add(this.dtp_date);
             this.gb_publication.Controls.Add(this.label2);
             this.gb_publication.Controls.Add(this.txt_description);
@@ -148,20 +145,13 @@
             this.label4.TabIndex = 7;
             this.label4.Text = "Dirección:";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(25, 86);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(0, 13);
-            this.label3.TabIndex = 6;
-            // 
             // dtp_date
             // 
             this.dtp_date.Location = new System.Drawing.Point(91, 51);
             this.dtp_date.Name = "dtp_date";
             this.dtp_date.Size = new System.Drawing.Size(202, 20);
             this.dtp_date.TabIndex = 5;
+            this.dtp_date.Value = new System.DateTime(2018, 1, 1, 0, 0, 0, 0);
             // 
             // label2
             // 
@@ -197,14 +187,14 @@
             this.gb_grade.Controls.Add(this.label7);
             this.gb_grade.Location = new System.Drawing.Point(21, 224);
             this.gb_grade.Name = "gb_grade";
-            this.gb_grade.Size = new System.Drawing.Size(320, 104);
+            this.gb_grade.Size = new System.Drawing.Size(255, 104);
             this.gb_grade.TabIndex = 4;
             this.gb_grade.TabStop = false;
             this.gb_grade.Text = "Grado";
             // 
             // btn_grade
             // 
-            this.btn_grade.Location = new System.Drawing.Point(218, 23);
+            this.btn_grade.Location = new System.Drawing.Point(166, 22);
             this.btn_grade.Name = "btn_grade";
             this.btn_grade.Size = new System.Drawing.Size(75, 23);
             this.btn_grade.TabIndex = 4;
@@ -217,7 +207,7 @@
             this.txt_comision.Location = new System.Drawing.Point(91, 57);
             this.txt_comision.Name = "txt_comision";
             this.txt_comision.ReadOnly = true;
-            this.txt_comision.Size = new System.Drawing.Size(110, 20);
+            this.txt_comision.Size = new System.Drawing.Size(69, 20);
             this.txt_comision.TabIndex = 3;
             // 
             // label8
@@ -234,7 +224,7 @@
             this.txt_grade.Location = new System.Drawing.Point(91, 24);
             this.txt_grade.Name = "txt_grade";
             this.txt_grade.ReadOnly = true;
-            this.txt_grade.Size = new System.Drawing.Size(110, 20);
+            this.txt_grade.Size = new System.Drawing.Size(69, 20);
             this.txt_grade.TabIndex = 1;
             // 
             // label7
@@ -253,9 +243,9 @@
             this.groupBox1.Controls.Add(this.dateTimePicker1);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.lb_batch);
-            this.groupBox1.Location = new System.Drawing.Point(361, 37);
+            this.groupBox1.Location = new System.Drawing.Point(348, 37);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(435, 181);
+            this.groupBox1.Size = new System.Drawing.Size(448, 181);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Fecha Espectáculo";
@@ -302,14 +292,14 @@
             this.lb_batch.FormattingEnabled = true;
             this.lb_batch.Location = new System.Drawing.Point(239, 25);
             this.lb_batch.Name = "lb_batch";
-            this.lb_batch.Size = new System.Drawing.Size(179, 134);
+            this.lb_batch.Size = new System.Drawing.Size(203, 134);
             this.lb_batch.TabIndex = 0;
             // 
             // gb_ubications
             // 
+            this.gb_ubications.Controls.Add(this.dgv_list);
             this.gb_ubications.Controls.Add(this.btn_ubic_remove);
             this.gb_ubications.Controls.Add(this.btn_ubic_add);
-            this.gb_ubications.Controls.Add(this.lb_ubic);
             this.gb_ubications.Controls.Add(this.cb_no_number);
             this.gb_ubications.Controls.Add(this.cb_type);
             this.gb_ubications.Controls.Add(this.label13);
@@ -319,9 +309,9 @@
             this.gb_ubications.Controls.Add(this.label11);
             this.gb_ubications.Controls.Add(this.txt_filas);
             this.gb_ubications.Controls.Add(this.label10);
-            this.gb_ubications.Location = new System.Drawing.Point(361, 224);
+            this.gb_ubications.Location = new System.Drawing.Point(282, 224);
             this.gb_ubications.Name = "gb_ubications";
-            this.gb_ubications.Size = new System.Drawing.Size(434, 214);
+            this.gb_ubications.Size = new System.Drawing.Size(513, 214);
             this.gb_ubications.TabIndex = 6;
             this.gb_ubications.TabStop = false;
             this.gb_ubications.Text = "Ubicaciones:";
@@ -331,27 +321,20 @@
             this.btn_ubic_remove.Location = new System.Drawing.Point(121, 165);
             this.btn_ubic_remove.Name = "btn_ubic_remove";
             this.btn_ubic_remove.Size = new System.Drawing.Size(75, 23);
-            this.btn_ubic_remove.TabIndex = 6;
+            this.btn_ubic_remove.TabIndex = 11;
             this.btn_ubic_remove.Text = "Quitar";
             this.btn_ubic_remove.UseVisualStyleBackColor = true;
+            this.btn_ubic_remove.Click += new System.EventHandler(this.btn_ubic_remove_Click);
             // 
             // btn_ubic_add
             // 
             this.btn_ubic_add.Location = new System.Drawing.Point(27, 165);
             this.btn_ubic_add.Name = "btn_ubic_add";
             this.btn_ubic_add.Size = new System.Drawing.Size(75, 23);
-            this.btn_ubic_add.TabIndex = 5;
+            this.btn_ubic_add.TabIndex = 10;
             this.btn_ubic_add.Text = "Agregar";
             this.btn_ubic_add.UseVisualStyleBackColor = true;
             this.btn_ubic_add.Click += new System.EventHandler(this.btn_ubic_add_Click);
-            // 
-            // lb_ubic
-            // 
-            this.lb_ubic.FormattingEnabled = true;
-            this.lb_ubic.Location = new System.Drawing.Point(202, 23);
-            this.lb_ubic.Name = "lb_ubic";
-            this.lb_ubic.Size = new System.Drawing.Size(215, 160);
-            this.lb_ubic.TabIndex = 9;
             // 
             // cb_no_number
             // 
@@ -449,6 +432,7 @@
             this.aceptarToolStripMenuItem.Name = "aceptarToolStripMenuItem";
             this.aceptarToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
             this.aceptarToolStripMenuItem.Text = "Aceptar";
+            this.aceptarToolStripMenuItem.Click += new System.EventHandler(this.aceptarToolStripMenuItem_Click);
             // 
             // returnToolStripMenuItem
             // 
@@ -466,20 +450,19 @@
             this.dgv_list.AllowUserToResizeRows = false;
             this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_list.Location = new System.Drawing.Point(44, 444);
+            this.dgv_list.Location = new System.Drawing.Point(209, 19);
             this.dgv_list.Name = "dgv_list";
             this.dgv_list.ReadOnly = true;
             this.dgv_list.RowHeadersVisible = false;
             this.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_list.Size = new System.Drawing.Size(672, 227);
+            this.dgv_list.Size = new System.Drawing.Size(298, 169);
             this.dgv_list.TabIndex = 60;
             // 
             // GeneratePublication
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 745);
-            this.Controls.Add(this.dgv_list);
+            this.ClientSize = new System.Drawing.Size(808, 445);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.gb_ubications);
             this.Controls.Add(this.groupBox1);
@@ -508,7 +491,6 @@
         private System.Windows.Forms.GroupBox gb_publication;
         private System.Windows.Forms.TextBox txt_description;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker dtp_date;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cb_state;
@@ -538,7 +520,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button btn_ubic_remove;
         private System.Windows.Forms.Button btn_ubic_add;
-        private System.Windows.Forms.ListBox lb_ubic;
         private System.Windows.Forms.CheckBox cb_no_number;
         private System.Windows.Forms.ComboBox cb_type;
         private System.Windows.Forms.Label label13;
