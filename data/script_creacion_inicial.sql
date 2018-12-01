@@ -1197,16 +1197,12 @@ BEGIN TRANSACTION
 /*
 IF OBJECT_ID('EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS;
-
 IF OBJECT_ID('EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS2') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS2;
-
 IF OBJECT_ID('EL_GROUP_BY.##compra') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.##compra;
-
 IF OBJECT_ID('EL_GROUP_BY.##TMP') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.##TMP;
-
 DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS;
 DROP TABLE EL_GROUP_BY.##COMPRAS_UBICACIONES_ITEMS2;
 DROP table EL_GROUP_BY.##compra;
@@ -2512,7 +2508,6 @@ EXEC EL_GROUP_BY.CARGAR_FACTURAS;
 EXEC EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
 
 /****************************************************************
-
 *			EJECUCIÓN DE MIGRACIÓN - FIN						*
 ****************************************************************/
 /* COMENTE TODO PARA CORRER LA MIGRACION
@@ -2522,92 +2517,54 @@ EXEC EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
 select Cli_Dni from gd_esquema.Maestra where Cli_Dni is not null;
 drop table EL_GROUP_BY.Usuario;
 drop proc EL_GROUP_BY.CARGAR_USUARIOS;
-
 exec EL_GROUP_BY.CARGAR_USUARIOS;
-
 select * from EL_GROUP_BY.Usuario where Usuario_Id = 784;
 select * from EL_GROUP_BY.Cliente where Usuario_ID = 523;
-
 exec EL_GROUP_BY.CARGAR_CLIENTES;
-
 drop table EL_GROUP_BY.Cliente;
 drop proc EL_GROUP_BY.CARGAR_CLIENTES;
-
 select * from EL_GROUP_BY.Cliente where Cliente_Tipo_Documento is null;
-
 drop table EL_GROUP_BY.Empresa;
 drop proc EL_GROUP_BY.CARGAR_EMPRESAS;
-
 exec EL_GROUP_BY.CARGAR_EMPRESAS;
-
 select * from EL_GROUP_BY.Empresa;
-
 exec EL_GROUP_BY.CARGAR_ROLES;
-
 select * from EL_GROUP_BY.Rol;
-
 exec EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
 drop table EL_GROUP_BY.Funcionalidad;
 drop proc EL_GROUP_BY.CARGAR_FUNCIONALIDADES;
-
 select * from EL_GROUP_BY.Funcionalidad;
-
 exec EL_GROUP_BY.CARGAR_ROLES_X_USUARIO;
-
 select * from EL_GROUP_BY.ROL_USUARIO;
-
 exec EL_GROUP_BY.CARGAR_ROLES_X_FUNCIONALIDAD;
 drop table EL_GROUP_BY.Rol_Funcionalidad;
-
-
 exec EL_GROUP_BY.CARGAR_FORMAS_PAGO;
 drop table EL_GROUP_BY.Forma_Pago;
-
-
 exec EL_GROUP_BY.CARGAR_UBICACION_TIPOS;
 drop table EL_GROUP_BY.Ubicacion_Tipo;
-
-
 exec EL_GROUP_BY.CARGAR_RUBROS;
 drop table EL_GROUP_BY.Rubro;
-
-
 exec EL_GROUP_BY.CARGAR_ESTADOS_PUBLICACION;
 drop table EL_GROUP_BY.Estado_Publicacion;
-
 select * from EL_GROUP_BY.Rol_Funcionalidad;
-
 select Espectaculo_Cod, Espectaculo_Descripcion, Ubicacion_Fila, Ubicacion_Asiento from gd_esquema.Maestra where Ubicacion_Fila = 'A';
-
 select Espectaculo_Estado from gd_esquema.Maestra;
-
 select * from gd_esquema.Maestra;
 drop proc el_group_by.OBTENER_HISTORIAL_CLIENTE_ID
 select distinct A.Cli_Nombre, A.Cli_Dni 
 from gd_esquema.Maestra A
 join gd_esquema.Maestra B ON  a.cli_dni = b.cli_dni
 where a.cli_nombre != b.cli_nombre;
-
 select * from El_group_by.Rubro;
-
-
 SELECT * FROM EL_GROUP_BY.Compra;
 SELECT * FROM EL_GROUP_BY.Publicacion_Ubicacion WHERE COMPRA_ID > 90879 ORDER BY COMPRA_ID;
 TABLE SELECT * FROM EL_GROUP_BY.##COMPRAS_UBICACIONES2 WHERE compras_ubicaciones_id >90990;
-
 SELECT * FROM EL_GROUP_BY.Publicacion_Ubicacion order by compra_id;
-
 select * from gd_esquema.maestra;
-
 select * from EL_GROUP_BY.Empresa;
-
 select * from EL_GROUP_BY.Compra;
-
 select * from EL_GROUP_BY.Publicacion_Ubicacion order by Compra_ID desc;
-
 select count(*) from  EL_GROUP_BY.Publicacion_Ubicacion where Compra_ID is not NULL;
-
-
 select * from EL_GROUP_BY.Item
 use GD2C2018
 select * from gd_esquema.Maestra
