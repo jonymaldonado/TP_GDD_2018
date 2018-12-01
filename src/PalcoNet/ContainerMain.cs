@@ -215,7 +215,9 @@ namespace PalcoNet
 
         private void actionsGeneratePublicationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(new Generar_Publicacion.GeneratePublication());
+            int idEmpresa = Connection.queryForInt("SELECT Empresa_ID FROM EL_GROUP_BY.Empresa WHERE Usuario_ID ="+this.id);
+            
+            openForm(new Generar_Publicacion.GeneratePublication(this.user, idEmpresa));
         }
 
     }

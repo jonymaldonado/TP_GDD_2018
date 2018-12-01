@@ -127,15 +127,27 @@ namespace MyLibrary
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@NUMERO", SqlDbType.Int, 18);
-            parameter.Value = empresa.NumberStreet;
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(empresa.NumberStreet))
+            {
+                parameter.Value = Convert.ToInt32(empresa.NumberStreet);
+            }
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@PISO", SqlDbType.Int, 18);
-            parameter.Value = empresa.Floor;
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(empresa.Floor))
+            {
+                parameter.Value = Convert.ToInt32(empresa.Floor);
+            }
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@DEPTO", SqlDbType.NVarChar, 50);
-            parameter.Value = empresa.Department;
+            parameter = new SqlParameter("@DEPTO", SqlDbType.VarChar, 50);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(empresa.Department))
+            {
+                parameter.Value = empresa.Department;
+            }
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@LOCALIDAD", SqlDbType.NVarChar, 50);

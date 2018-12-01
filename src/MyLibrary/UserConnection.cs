@@ -51,10 +51,38 @@ namespace MyLibrary
             return Connection.GetDataReader("EL_GROUP_BY.OBTENER_ROLES_ACTIVOS", Connection.Type.StoredProcedure, parameters);
         }
 
-        public static int getUniqueRolId(Int32 userId)
+        public static int GetUniqueRolId(Int32 userId)
         {
             return Connection
                     .queryForInt("SELECT ROL_ID FROM EL_GROUP_BY.ROL_USUARIO WHERE USUARIO_ID = " + userId);
+        }
+
+        public static int GetFirstLogin(Int32 userId)
+        {
+            return Connection   
+                        .queryForInt("SELECT Usuario_Primer_Login FROM EL_GROUP_BY.USUARIO WHERE USUARIO_ID = " + userId);
+        }
+
+        public static void UpdatePassword(int userId, string newPassword)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@USUARIO_ID", SqlDbType.Int, 50);
+            parameter.Value = userId;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@PASSWORD", SqlDbType.NVarChar, 50);
+            parameter.Value = newPassword;
+            parameters.Add(parameter);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.ACTUALIZAR_PASSWORD", Connection.Type.StoredProcedure, parameters);
+        }
+
+        public static int ExistsUserName(string userName)
+        {
+            return Connection.queryForInt("EXEC EL_GROUP_BY.ES_UNICO_USERNAME '" +userName+ "'");
         }
     }
 

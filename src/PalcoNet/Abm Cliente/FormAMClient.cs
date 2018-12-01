@@ -19,11 +19,15 @@ namespace PalcoNet.Abm_Cliente
         bool isUpper = false;
         Form formPrevious;
 
-        public FormAMClient(FormClient formAMCliente, bool isUpper, string userId)
+        string user = null;
+        string password = null;
+        bool isRegisterUser = false;
+
+        public FormAMClient(FormClient formClient, bool isUpper, string userId)
         {
             InitializeComponent();
             this.isUpper = isUpper;
-            this.formPrevious = formAMCliente;
+            this.formPrevious = formClient;
             this.LoadDocs();
 
             if (!isUpper) // is modification
@@ -31,6 +35,16 @@ namespace PalcoNet.Abm_Cliente
                 this.userId = userId;
                 this.LoadFieldsOfClient();
             }
+        }
+
+        public FormAMClient(Registro_de_Usuario.FormUserRegister formRegisterUser, string user, string password)
+        {
+            InitializeComponent();
+            this.isRegisterUser = true;
+            this.user = user;
+            this.password = password;
+            this.formPrevious = formRegisterUser;
+            this.LoadDocs();
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
@@ -86,10 +100,18 @@ namespace PalcoNet.Abm_Cliente
         {
             if (this.AreAllTheDataCompleted())
             {
-                ClientDAO clientDAO = GetClientDAO();
+                ClientDAO clientDAO = GetClientDAO(this.user, this.password);
 
                 ClientConnection.CreateClient(clientDAO);
                 MessageBox.Show("El nuevo cliente ha sido creado correctamente.");
+
+                if (isRegisterUser)
+                {
+                    this.Close();
+                    formPrevious.Close();
+                    return;
+                }
+
                 this.AskIfYouWantToAddAnotherClient();
             }
             else
@@ -98,11 +120,11 @@ namespace PalcoNet.Abm_Cliente
             }
         }
 
-        private ClientDAO GetClientDAO() 
+        private ClientDAO GetClientDAO(string user, string password) 
         {
             ClientDAO clientDAO = new ClientDAO();
-            clientDAO.User = txt_name.Text + txt_number_doc.Text;
-            clientDAO.Password = txt_number_doc.Text;
+            clientDAO.User = (string.IsNullOrEmpty(user)) ? txt_name.Text + txt_number_doc.Text : user;
+            clientDAO.Password = (string.IsNullOrEmpty(password)) ? txt_number_doc.Text : password;
             clientDAO.FirstName = txt_name.Text;
             clientDAO.LastName = txt_surname.Text;
             clientDAO.TypeDoc = cmb_type_doc.Text;
@@ -116,7 +138,7 @@ namespace PalcoNet.Abm_Cliente
             clientDAO.Department = txt_department.Text;
             clientDAO.Location = txt_location.Text;
             clientDAO.PostalCode = txt_postal_code.Text;
-            clientDAO.BirthDate = Convert.ToDateTime(dtp_birthdate.Value.Date.ToString()); ;
+            clientDAO.BirthDate = Convert.ToDateTime(dtp_birthdate.Value.Date.ToString());
             clientDAO.CardName = txt_name_card.Text;
             clientDAO.CardNumber = Convert.ToInt64(txt_number_card.Text);
 
@@ -174,7 +196,7 @@ namespace PalcoNet.Abm_Cliente
 
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.isUpper)
+            if (this.isUpper || this.isRegisterUser)
                 this.CreateClient();
             else
                 this.UpdateClient();
@@ -190,7 +212,7 @@ namespace PalcoNet.Abm_Cliente
         {
             if (this.AreAllTheDataCompleted())
             {
-                ClientDAO clientDAO = GetClientDAO();
+                ClientDAO clientDAO = GetClientDAO(null, null);
 
                 ClientConnection.UpdateClient(clientDAO, this.userId);
                 MessageBox.Show("La modificación del cliente ha sido realizada correctamente.");

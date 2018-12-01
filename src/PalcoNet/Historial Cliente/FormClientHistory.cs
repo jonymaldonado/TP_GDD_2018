@@ -99,9 +99,8 @@ namespace PalcoNet.Historial_Cliente
 
         private DataSet setHistoryData(int clientId)
         {
-            DataSet ds = ClientConnection.GetHistoryDataByClient(clientId); //.Tables[0];
-            //DataSet ds = ClientConnection.ListExistingClients(null, null, null, null);
-
+            DataSet ds = ClientConnection.GetHistoryDataByClient(clientId); 
+            
             return ds;
         }
 

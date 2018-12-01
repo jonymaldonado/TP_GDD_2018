@@ -99,6 +99,7 @@ namespace PalcoNet.Abm_Grado
             
             this.FormGenerate.grade = Convert.ToString(selectedRow.Cells["Grado_Publicacion_Prioridad"].Value);
             this.FormGenerate.commision = Convert.ToString(selectedRow.Cells["Grado_Publicacion_Comision"].Value);
+            this.FormGenerate.IdGrado = Convert.ToInt32(selectedRow.Cells["Grado_Publicacion_ID"].Value);
 
             this.Close();
         }
