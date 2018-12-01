@@ -378,10 +378,10 @@ CREATE TABLE EL_GROUP_BY.Usuario (
 		Usuario_Codigo_Postal NVARCHAR(50),
 		Usuario_Localidad NVARCHAR(50),
 		Usuario_Mail NVARCHAR(255)
-	PRIMARY KEY (Usuario_ID))
+	PRIMARY KEY (Usuario_ID),
+	CONSTRAINT UQ_Usuario_Username UNIQUE(Usuario_Username))
 ;
 
-CREATE UNIQUE INDEX Usuario_Username_UNIQUE ON EL_GROUP_BY.Usuario (Usuario_Username ASC);
 
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Rol_Usuario
@@ -422,10 +422,11 @@ CREATE TABLE EL_GROUP_BY.Cliente (
 	CONSTRAINT FK_Cliente_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
 		ON DELETE CASCADE    
-		ON UPDATE CASCADE)
+		ON UPDATE CASCADE,
+	CONSTRAINT UQ_Tipo_Num_Doc UNIQUE (Cliente_Tipo_Documento, Cliente_Numero_Documento))
 ;
 
-CREATE UNIQUE INDEX Cliente_Numero_Documento_UNIQUE ON EL_GROUP_BY.Cliente (Cliente_Numero_Documento ASC);
+
 
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Empresa
@@ -442,10 +443,12 @@ CREATE TABLE EL_GROUP_BY.Empresa (
 	CONSTRAINT FK_Empresa_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
 		ON DELETE CASCADE    
-		ON UPDATE CASCADE)
+				ON UPDATE CASCADE,
+	CONSTRAINT UQ_Empresa_Cuit UNIQUE (Empresa_Cuit))
 ;
 
-CREATE UNIQUE INDEX Empresa_Cuit_UNIQUE ON EL_GROUP_BY.Empresa (Empresa_Cuit ASC);
+
+
 
 -- -----------------------------------------------------
 -- Creación de Tabla EL_GROUP_BY.Rubro
