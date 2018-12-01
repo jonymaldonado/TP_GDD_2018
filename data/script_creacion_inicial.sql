@@ -23,10 +23,7 @@ IF OBJECT_ID('EL_GROUP_BY.Puntos') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.Ubicacion') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Ubicacion;
-
-IF OBJECT_ID('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
-	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
-
+	
 IF OBJECT_ID('EL_GROUP_BY.Cliente') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Cliente;
 
@@ -264,7 +261,20 @@ IF OBJECT_ID('EL_GROUP_BY.CREAR_ESPECTACULO_PUBLICACION') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CREAR_UBICACIONES') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CREAR_UBICACIONES;
 
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_PUBLICACIONES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_PUBLICACIONES;
 
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_PUBLICACION_FOR_MODIFY') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_PUBLICACION_FOR_MODIFY;
+
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_UBICACIONES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_UBICACIONES;
+
+IF OBJECT_ID('EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION;
+
+IF OBJECT_ID('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
+	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
 
 /****************************************************************
 *					DROP DE SPs - FIN							*
@@ -2308,6 +2318,146 @@ BEGIN TRANSACTION
 	FROM @output_id 
 
 COMMIT TRANSACTION
+GO
+
+-- -----------------------------------------------------
+-- SP - Listar Publicaciones a editar
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.LISTAR_PUBLICACIONES
+@DESCRIPCION NVARCHAR(255),
+@FECHA_PUBLI DATETIME,
+@USERNAME NVARCHAR(50)
+as
+begin
+	select  p.Publicacion_ID,
+			p.Publicacion_Descripcion,
+			p.Publicacion_Fecha,
+			E.Espectaculo_Fecha,
+			g.Grado_Publicacion_Prioridad,
+			g.Grado_Publicacion_Comision,
+			ES.Estado_Publicacion_Descripcion,
+			r.Rubro_Descripcion
+	from EL_GROUP_BY.Publicacion P 
+	inner join EL_GROUP_BY.Espectaculo E on p.Espectaculo_ID = e.Espectaculo_ID
+	inner join EL_GROUP_BY.Grado_Publicacion G on p.Grado_Publicacion_ID = g.Grado_Publicacion_ID
+	inner join EL_GROUP_BY.Estado_Publicacion ES on ES.Estado_Publicacion_ID = p.Estado_Publicacion_ID
+	inner join EL_GROUP_BY.Rubro R on r.Rubro_ID = e.Rubro_ID
+	WHERE P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
+	AND p.Publicacion_Usuario = @USERNAME
+    AND convert(date, p.Publicacion_Fecha, 120) = convert(date, @FECHA_PUBLI, 120) 
+	          
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Obtiene Publicacion/Espectaculo para modificar
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_PUBLICACION_FOR_MODIFY
+@PUBLI_ID int
+as
+begin
+
+	SELECT	P.Publicacion_ID,
+			p.Publicacion_Descripcion,
+			p.Publicacion_Fecha,
+			p.Publicacion_FechaHora,
+			p.Publicacion_Cantidad_Localidades,
+			p.Publicacion_Usuario,
+			p.Espectaculo_ID,
+			p.Grado_Publicacion_ID,
+			p.Estado_Publicacion_ID,
+			E.Espectaculo_ID,
+			E.Espectaculo_Codigo,
+			E.Espectaculo_Descripcion,
+			E.Espectaculo_Direccion,
+			E.Espectaculo_Fecha,
+			E.Espectaculo_Fecha_Vencimiento,
+			E.Rubro_ID,
+			E.Empresa_ID,
+			G.Grado_Publicacion_ID,
+			G.Grado_Publicacion_Comision,
+			G.Grado_Publicacion_Prioridad,
+			ES.Estado_Publicacion_ID,
+			ES.Estado_Publicacion_Descripcion,
+			ES.Estado_Publicacion_Modificable
+	FROM EL_GROUP_BY.Publicacion P
+	INNER JOIN EL_GROUP_BY.Espectaculo E ON P.Espectaculo_ID = E.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Grado_Publicacion G ON G.Grado_Publicacion_ID = P.Grado_Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Estado_Publicacion ES ON ES.Estado_Publicacion_ID = P.Estado_Publicacion_ID
+	WHERE P.Publicacion_ID = @PUBLI_ID
+
+end
+go
+
+
+-- -----------------------------------------------------
+-- SP - Obtiene ubicaciones de la publicacion a modificar
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_UBICACIONES
+@PUBLI_ID int
+as
+begin
+
+	SELECT	PU.Publicacion_ID,
+			PU.Ubicacion_ID,
+			U.Ubicacion_Fila,
+			U.Ubicacion_Asiento,
+			u.Ubicacion_Sin_Numerar,
+			u.Ubicacion_Precio,
+			u.Ubicacion_Tipo_ID,
+			T.Ubicacion_Tipo_ID,
+			T.Ubicacion_Tipo_Codigo,
+			T.Ubicacion_Tipo_Descripcion
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
+	INNER JOIN EL_GROUP_BY.Ubicacion U ON U.Ubicacion_ID = PU.Ubicacion_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo T ON T.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+	WHERE PU.Publicacion_ID = @PUBLI_ID
+
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Edita publicacion y espectaculo
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION
+@PUBLI_ID INT,
+@ESPEC_ID INT,
+@DESCRIPCION  NVarChar(255),
+@DIRECCION NVarChar(255),
+@FECHA_ESPEC DateTime,
+@FECHA_VENCIMIENTO  DateTime,
+@RUBRO_ID Int,
+@FECHA_PUBLI DateTime,
+@CANT_LOC INT,
+@GRADO_ID INT,
+@ESTADO_ID INT
+as
+begin transaction
+
+	
+	UPDATE EL_GROUP_BY.Espectaculo 
+		SET Espectaculo_Descripcion = @DESCRIPCION,
+			Espectaculo_Direccion = @DIRECCION,
+			Espectaculo_Fecha = @FECHA_ESPEC,
+			Espectaculo_Fecha_Vencimiento =  @FECHA_VENCIMIENTO,
+			Rubro_ID = @RUBRO_ID
+		WHERE Espectaculo_ID = @ESPEC_ID
+		
+
+	UPDATE EL_GROUP_BY.Publicacion 
+		SET Publicacion_Descripcion = @DESCRIPCION,
+			Publicacion_Fecha =  @FECHA_PUBLI,
+			Publicacion_FechaHora =  @FECHA_ESPEC,
+			Publicacion_Cantidad_Localidades =  @CANT_LOC,
+			Grado_Publicacion_ID = @GRADO_ID,
+			Estado_Publicacion_ID = @ESTADO_ID
+		WHERE Publicacion_ID = @PUBLI_ID	
+
+
+commit transaction
 GO
 
 
