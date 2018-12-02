@@ -169,6 +169,7 @@
             this.actionsEditPublicationToolStripMenuItem.Name = "actionsEditPublicationToolStripMenuItem";
             this.actionsEditPublicationToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.actionsEditPublicationToolStripMenuItem.Text = "Editar publicación";
+            this.actionsEditPublicationToolStripMenuItem.Click += new System.EventHandler(this.actionsEditPublicationToolStripMenuItem_Click);
             // 
             // actionsBuyToolStripMenuItem
             // 

@@ -8,6 +8,7 @@ namespace DAO
 {
     public class PublicationDAO : EspectaculoDAO
     {
+        public Int32 PubliID { get; set; }
         public String Description { get; set; }
         public DateTime PublicDate { get; set; } //Fecha en que se publica
         public DateTime EspecDate { get; set; }  // Fecha que se lleva a cabo el espectaculo
