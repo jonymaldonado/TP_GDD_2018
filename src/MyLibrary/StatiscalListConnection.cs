@@ -10,14 +10,14 @@ namespace MyLibrary
 {
     public class StatiscalListConnection
     {
-        public static DataSet GenerateSelectedList(String selectedList, DateTime dateFrom, DateTime dateTo, String gradeVisibility, String month)
+        public static DataSet GenerateSelectedList(String selectedList, DateTime dateFrom, DateTime dateTo, int gradeVisibility, int month)
         {
             List<SqlParameter> parameters = PrepareParameters(dateFrom, dateTo, gradeVisibility, month);
 
             return Connection.GetDataSet(selectedList, Connection.Type.StoredProcedure, parameters);
         }
 
-        private static List<SqlParameter> PrepareParameters(DateTime dateFrom, DateTime dateTo, String gradeVisibility, String month)
+        private static List<SqlParameter> PrepareParameters(DateTime dateFrom, DateTime dateTo, int gradeVisibility, int month)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -31,16 +31,17 @@ namespace MyLibrary
             parameter.Value = dateTo;
             parameters.Add(parameter);
 
-            if (!string.IsNullOrEmpty(gradeVisibility))
+            if (gradeVisibility != 0)
             {
-                parameter = new SqlParameter("@prioridad", SqlDbType.VarChar, 50);
+                parameter = new SqlParameter("@prioridad", SqlDbType.Int);
                 parameter.Value = gradeVisibility;
                 parameters.Add(parameter);
             }
 
-            if (!string.IsNullOrEmpty(month))
+            //if (!string.IsNullOrEmpty(month))
+            if(month != 0)
             {
-                parameter = new SqlParameter("@mes", SqlDbType.VarChar, 50);
+                parameter = new SqlParameter("@mes", SqlDbType.Int);
                 parameter.Value = month;
                 parameters.Add(parameter);
             }
@@ -50,7 +51,7 @@ namespace MyLibrary
 
         public static SqlDataReader GetPriorities()
         {
-            return Connection.GetDataReader("SELECT GRADO_PUBLICACION_PRIORIDAD FROM EL_GROUP_BY.GRADO_PUBLICACION");
+            return Connection.GetDataReader("SELECT GRADO_PUBLICACION_ID, GRADO_PUBLICACION_PRIORIDAD FROM EL_GROUP_BY.GRADO_PUBLICACION");
         }
     }
 }

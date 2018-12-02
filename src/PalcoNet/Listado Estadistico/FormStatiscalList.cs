@@ -93,7 +93,12 @@ namespace PalcoNet.Listado_Estadistico
             {
                 while (reader.Read())
                 {
-                    cmb_grade_visibility.Items.Add(reader.GetString(0));
+                    //cmb_grade_visibility.Items.Add(reader.GetString(0));
+                    ComboboxItem item = new ComboboxItem();
+                    item.Text = reader.GetString(1);
+                    item.Value = reader.GetInt32(0);
+                    cmb_grade_visibility.Items.Add(item);
+
                 }
             }
 
@@ -104,26 +109,41 @@ namespace PalcoNet.Listado_Estadistico
         {
             switch (cmb_trimester.SelectedIndex)
             {
-                case 0: cmb_month.Items.Clear(); LoadComboMonths("Enero", "Febrero", "Marzo"); break;
-                case 1: cmb_month.Items.Clear();  LoadComboMonths("Abril", "Mayo", "Junio"); break;
-                case 2: cmb_month.Items.Clear();  LoadComboMonths("Julio", "Agosto", "Septiembre"); break;
-                case 3: cmb_month.Items.Clear();  LoadComboMonths("Octubre", "Noviembre", "Diciembre"); break;
+                case 0: cmb_month.Items.Clear(); LoadComboMonths("Enero", 1,"Febrero",2, "Marzo",3); break;
+                case 1: cmb_month.Items.Clear();  LoadComboMonths("Abril", 4,"Mayo",5, "Junio",6); break;
+                case 2: cmb_month.Items.Clear();  LoadComboMonths("Julio",7, "Agosto", 8, "Septiembre",9); break;
+                case 3: cmb_month.Items.Clear();  LoadComboMonths("Octubre",10, "Noviembre",11, "Diciembre",12); break;
             }
         }
 
-        private void LoadComboMonths(String month1, String month2, String month3)
+        private void LoadComboMonths(String month1, int m1, String month2, int m2, String month3, int m3)
         {
-            cmb_month.Items.Add(month1);
-            cmb_month.Items.Add(month2);
-            cmb_month.Items.Add(month3);
+
+            ComboboxItem item = new ComboboxItem();
+
+            item.Text = month1;
+            item.Value = m1;
+            cmb_month.Items.Add(item);
+
+            item = new ComboboxItem();
+            item.Text = month2;
+            item.Value = m2;
+            cmb_month.Items.Add(item);
+
+            item = new ComboboxItem();
+            item.Text = month3;
+            item.Value = m3;
+            cmb_month.Items.Add(item);
 
             cmb_month.SelectedIndex = 0;
         }
 
         private void btn_to_list_Click(object sender, EventArgs e)
         {
-            String gradeVisibility = "";
-            String month = "";
+            //String gradeVisibility = "";
+            //String month = "";
+            int gradeVisibility = 0;
+            int month = 0;
 
             int year = int.Parse(cmb_year.Text);
             int monthFrom = cmb_trimester.SelectedIndex * 3 + 1;
@@ -144,8 +164,17 @@ namespace PalcoNet.Listado_Estadistico
                 case 2:
                     {
                         selectedList = "EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDIDAS";
-                        gradeVisibility = cmb_grade_visibility.Text;
-                        month = cmb_month.Text;
+
+                        ComboboxItem item = new ComboboxItem();
+                        item = (ComboboxItem)cmb_grade_visibility.SelectedItem;
+                        gradeVisibility = (int)item.Value; 
+                        //gradeVisibility = cmb_grade_visibility.Text;
+
+                        item = new ComboboxItem();
+                        item = (ComboboxItem)cmb_month.SelectedItem;
+                        month = (int)item.Value; 
+                        //month = cmb_month.Text;
+
                         break;
                     }
             }

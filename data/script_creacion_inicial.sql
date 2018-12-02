@@ -2538,19 +2538,81 @@ as
 begin
 
 	SELECT TOP 5 
-		C.Cliente_ID,
-		C.Cliente_Nombre,
-		c.Cliente_Apellido,
-		isnull(sum(P.Puntos_Cantidad),0) as PuntosVencidos
+		C.Cliente_ID as 'ID del Cliente',
+		C.Cliente_Nombre as 'Nombre',
+		c.Cliente_Apellido as 'Apellido',
+		isnull(sum(P.Puntos_Cantidad),0) as 'Puntos Vencidos'
 	FROM EL_GROUP_BY.Cliente C
 	LEFT JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @fecha_desde, 120) 
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) < convert(date, @fecha_hasta, 120) 
 	GROUP BY C.Cliente_ID, C.Cliente_Nombre, c.Cliente_Apellido
-	ORDER BY PuntosVencidos DESC
+	ORDER BY 'Puntos Vencidos' DESC
 
 end
 GO
+
+-- -----------------------------------------------------
+-- SP - Listado Clientes con mayor cantidad de compras
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.LISTAR_CLIENTES_MAYOR_CANTIDAD_COMPRAS
+@fecha_desde datetime,
+@fecha_hasta datetime
+as
+begin
+
+	SELECT TOP 5 
+				 CL.Cliente_ID as 'ID del Cliente',
+				 CL.Cliente_Nombre as 'Nombre',
+				 CL.Cliente_Apellido as 'Apellido', 
+				 EM.Empresa_ID as 'ID de la empresa',
+				 EM.Empresa_Razon_Social as 'Razón Social',
+				 count(CO.Compra_ID) as 'Cantidad de Compras'  
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU 
+	INNER JOIN EL_GROUP_BY.Compra CO on CO.Compra_ID = PU.Compra_ID
+	AND convert(date, CO.Compra_Fecha, 120) > convert(date, @fecha_desde, 120) 
+	AND convert(date, CO.Compra_Fecha, 120) < convert(date, @fecha_hasta, 120) 
+	INNER JOIN EL_GROUP_BY.Cliente CL on CL.Cliente_ID = CO.Cliente_ID
+	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Espectaculo ES on ES.Espectaculo_ID = P.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Empresa EM on EM.Empresa_ID = ES.Empresa_ID
+	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, CL.Cliente_ID, CL.Cliente_Nombre, CL.Cliente_Apellido
+	ORDER BY 'Cantidad de Compras' desc
+
+end
+GO
+
+
+-- -----------------------------------------------------
+-- SP - Listado empresas mayor cant localidades no vendidas
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDIDAS
+@fecha_desde datetime,
+@fecha_hasta datetime,
+@PRIORIDAD int,
+@MES int
+as
+begin
+
+	SELECT TOP 5 
+				 EM.Empresa_ID  as 'ID de la Empresa', 
+				 EM.Empresa_Razon_Social as 'Razon Social', 
+				 COUNT(PU.Publicacion_ID) AS 'Localidades no vendidas', 
+				 g.Grado_Publicacion_Prioridad as 'Grado de Prioridad'
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU  
+	INNER JOIN EL_GROUP_BY.Publicacion P ON PU.Publicacion_ID = P.Publicacion_ID
+	AND P.Grado_Publicacion_ID = @PRIORIDAD
+	AND month(P.Publicacion_Fecha) = @MES
+	INNER JOIN EL_GROUP_BY.Espectaculo ES ON P.Espectaculo_ID = ES.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Empresa EM ON ES.Empresa_ID = EM.Empresa_ID
+	INNER JOIN EL_GROUP_BY.Grado_Publicacion g on g.Grado_Publicacion_ID = p.Grado_Publicacion_ID
+	WHERE PU.Compra_ID IS NULL
+	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, g.Grado_Publicacion_Prioridad
+
+
+end
+GO
+
 
 /****************************************************************
 *							SPs - FIN							*

@@ -39,6 +39,8 @@ namespace PalcoNet.Canje_Puntos
         {
             SqlDataReader reader = ClientConnection.GetClientData(clientId);
 
+            txt_points.Text = "0";
+
             if (reader.HasRows)
             {
                 while (reader.Read())
@@ -47,12 +49,12 @@ namespace PalcoNet.Canje_Puntos
                     txt_surname.Text = reader.IsDBNull(1) ? "" : reader.GetString(1);
                     txt_email.Text = reader.IsDBNull(2) ? "" : reader.GetString(2);
                     txt_number_doc.Text = reader.IsDBNull(3) ? "" : reader.GetDecimal(3).ToString();
-                    txt_points.Text = reader.IsDBNull(4) ? "" : reader.GetDecimal(4).ToString(); 
-
+                    txt_points.Text = reader.IsDBNull(4) ? "0" : reader.GetDecimal(4).ToString();    
                 }
             }
 
             reader.Close();
+
             return (Convert.ToInt32(txt_points.Text));
         }
 
