@@ -111,11 +111,11 @@
     <Compile Include="Comprar\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editar Publicacion\Form1.cs">
+    <Compile Include="Editar Publicacion\EditPublication.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editar Publicacion\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Editar Publicacion\EditPublication.Designer.cs">
+      <DependentUpon>EditPublication.cs</DependentUpon>
     </Compile>
     <Compile Include="ContainerMain.cs">
       <SubType>Form</SubType>
@@ -196,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ContainerMain.resx">
       <DependentUpon>ContainerMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editar Publicacion\EditPublication.resx">
+      <DependentUpon>EditPublication.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Generar Publicacion\GeneratePublication.resx">
       <DependentUpon>GeneratePublication.cs</DependentUpon>

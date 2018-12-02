@@ -217,8 +217,17 @@ namespace PalcoNet
         {
             int idEmpresa = Connection.queryForInt("SELECT Empresa_ID FROM EL_GROUP_BY.Empresa WHERE Usuario_ID ="+this.id);
             
-            openForm(new Generar_Publicacion.GeneratePublication(this.user, idEmpresa));
+            openForm(new Generar_Publicacion.GeneratePublication(this, this.user, idEmpresa, 0, false));
         }
+
+        private void actionsEditPublicationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int idEmpresa = Connection.queryForInt("SELECT Empresa_ID FROM EL_GROUP_BY.Empresa WHERE Usuario_ID =" + this.id);
+
+            openForm(new Editar_Publicacion.EditPublication(this.user, idEmpresa));
+
+        }
+
 
     }
 

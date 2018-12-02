@@ -9,7 +9,7 @@ namespace DAO
     public class GradoDAO
     {
         public Int32 Id { get; set; }
-        public Int32 Comision { get; set; }
+        public Decimal Comision { get; set; }
         public String Prioridad { get; set; }
 
     }

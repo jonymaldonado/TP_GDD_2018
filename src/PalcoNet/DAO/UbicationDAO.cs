@@ -8,6 +8,7 @@ namespace DAO
 {
     public class UbicationDAO
     {
+        public Int32 UbicacionId { get; set; }
         public String Fila { get; set; }
         public Int32 Asiento { get; set; }
         public bool SinNumerar { get; set; }

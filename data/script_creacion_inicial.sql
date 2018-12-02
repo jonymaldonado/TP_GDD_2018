@@ -273,8 +273,16 @@ IF OBJECT_ID('EL_GROUP_BY.OBTENER_UBICACIONES') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION;
 
+IF OBJECT_ID('EL_GROUP_BY.BORRAR_UBICACIONES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.BORRAR_UBICACIONES;
+
 IF OBJECT_ID('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
+
+IF OBJECT_ID('EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ') IS NOT NULL
+	DROP TYPE EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ;
+
+	
 
 /****************************************************************
 *					DROP DE SPs - FIN							*
@@ -545,6 +553,15 @@ CREATE TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA As Table
 	Ubicacion_Canjeada BIT NOT NULL,
 	Ubicacion_Fecha_Canje DATETIME NULL,
 	Ubicacion_Cliente_Canje INT NULL
+)
+
+-- -----------------------------------------------------
+-- Creación de TIPO Tabla para Publicacion_Ubicacion
+-- -----------------------------------------------------
+CREATE TYPE EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA As Table
+(
+	Ubicacion_ID INT NULL,
+	Publicacion_ID INT NULL
 )
 
 -- -----------------------------------------------------
@@ -2270,7 +2287,7 @@ CREATE PROCEDURE EL_GROUP_BY.CREAR_ESPECTACULO_PUBLICACION
 @ESTADO_ID INT,
 @PUBLI_ID INT OUTPUT
 as
-begin
+begin transaction
 
 	INSERT EL_GROUP_BY.Espectaculo VALUES(
 		NULL, --El codigo es un campo de la migracion
@@ -2294,7 +2311,7 @@ begin
 	SET @PUBLI_ID = SCOPE_IDENTITY();
 	 
 
-end
+commit transaction
 GO
 
 -- -----------------------------------------------------
@@ -2320,6 +2337,26 @@ COMMIT TRANSACTION
 GO
 
 -- -----------------------------------------------------
+-- SP - Borrar ubicaciones
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.BORRAR_UBICACIONES
+@UBICACIONES AS PUBLICACION_UBICACION_TIPO_TABLA READONLY
+AS
+BEGIN TRANSACTION
+
+	DELETE EL_GROUP_BY.Publicacion_Ubicacion
+	WHERE Ubicacion_ID IN (SELECT Ubicacion_ID FROM  @UBICACIONES)
+	AND Publicacion_ID IN (SELECT Publicacion_ID FROM  @UBICACIONES)
+
+	DELETE EL_GROUP_BY.Ubicacion 
+	WHERE Ubicacion_ID IN (SELECT Ubicacion_ID FROM  @UBICACIONES)
+
+	
+COMMIT TRANSACTION
+GO
+
+
+-- -----------------------------------------------------
 -- SP - Listar Publicaciones a editar
 -- -----------------------------------------------------
 
@@ -2329,18 +2366,20 @@ create procedure EL_GROUP_BY.LISTAR_PUBLICACIONES
 @USERNAME NVARCHAR(50)
 as
 begin
-	select  p.Publicacion_ID,
-			p.Publicacion_Descripcion,
-			p.Publicacion_Fecha,
-			E.Espectaculo_Fecha,
-			g.Grado_Publicacion_Prioridad,
-			g.Grado_Publicacion_Comision,
-			ES.Estado_Publicacion_Descripcion,
-			r.Rubro_Descripcion
+	select  p.Publicacion_ID as 'ID',
+			p.Publicacion_Descripcion as 'Descripcion',
+			p.Publicacion_Fecha as 'Fecha Publicación',
+			E.Espectaculo_Direccion as 'Dirección',
+			E.Espectaculo_Fecha as 'Fecha Espectáculo',
+			g.Grado_Publicacion_Prioridad as 'Prioridad',
+			g.Grado_Publicacion_Comision as 'Comision',
+			ES.Estado_Publicacion_Descripcion as 'Estado',
+			r.Rubro_Descripcion as 'Rubro'
 	from EL_GROUP_BY.Publicacion P 
 	inner join EL_GROUP_BY.Espectaculo E on p.Espectaculo_ID = e.Espectaculo_ID
 	inner join EL_GROUP_BY.Grado_Publicacion G on p.Grado_Publicacion_ID = g.Grado_Publicacion_ID
 	inner join EL_GROUP_BY.Estado_Publicacion ES on ES.Estado_Publicacion_ID = p.Estado_Publicacion_ID
+	AND ES.Estado_Publicacion_ID != 3 --No debe traer las finalizadas
 	inner join EL_GROUP_BY.Rubro R on r.Rubro_ID = e.Rubro_ID
 	WHERE P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
 	AND p.Publicacion_Usuario = @USERNAME
@@ -2459,6 +2498,38 @@ begin transaction
 commit transaction
 GO
 
+-- -----------------------------------------------------
+-- SP - Busca publicacion con los mismos datos
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION
+@PUBLI_ID INT,
+@DESCRIPCION  NVarChar(255),
+@FECHA_PUBLI DateTime,
+@FECHA_ESPEC DateTime,
+@DIRECCION NVarChar(255),
+@RUBRO_ID Int,
+@GRADO_ID INT,
+@EXISTE BIT OUTPUT
+as
+begin
+
+	SET @EXISTE = 0;
+
+	SELECT @EXISTE = 1 
+	WHERE exists(
+		Select 1 FROM  EL_GROUP_BY.Publicacion P
+		INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
+		WHERE p.Publicacion_Descripcion = @DESCRIPCION 
+		AND p.Publicacion_Fecha =  @FECHA_PUBLI 
+		AND e.Espectaculo_Fecha = @FECHA_ESPEC
+		AND E.Espectaculo_Direccion = @DIRECCION 
+		AND E.Rubro_ID = @RUBRO_ID 
+		AND P.Grado_Publicacion_ID = @GRADO_ID 
+		AND P.Publicacion_ID != @PUBLI_ID)
+		
+end
+GO
+
 
 -- -----------------------------------------------------
 -- SP - Listado Clientes con mayores puntos vencidos
@@ -2470,19 +2541,81 @@ as
 begin
 
 	SELECT TOP 5 
-		C.Cliente_ID,
-		C.Cliente_Nombre,
-		c.Cliente_Apellido,
-		isnull(sum(P.Puntos_Cantidad),0) as PuntosVencidos
+		C.Cliente_ID as 'ID del Cliente',
+		C.Cliente_Nombre as 'Nombre',
+		c.Cliente_Apellido as 'Apellido',
+		isnull(sum(P.Puntos_Cantidad),0) as 'Puntos Vencidos'
 	FROM EL_GROUP_BY.Cliente C
 	LEFT JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @fecha_desde, 120) 
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) < convert(date, @fecha_hasta, 120) 
 	GROUP BY C.Cliente_ID, C.Cliente_Nombre, c.Cliente_Apellido
-	ORDER BY PuntosVencidos DESC
+	ORDER BY 'Puntos Vencidos' DESC
 
 end
 GO
+
+-- -----------------------------------------------------
+-- SP - Listado Clientes con mayor cantidad de compras
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.LISTAR_CLIENTES_MAYOR_CANTIDAD_COMPRAS
+@fecha_desde datetime,
+@fecha_hasta datetime
+as
+begin
+
+	SELECT TOP 5 
+				 CL.Cliente_ID as 'ID del Cliente',
+				 CL.Cliente_Nombre as 'Nombre',
+				 CL.Cliente_Apellido as 'Apellido', 
+				 EM.Empresa_ID as 'ID de la empresa',
+				 EM.Empresa_Razon_Social as 'Razón Social',
+				 count(CO.Compra_ID) as 'Cantidad de Compras'  
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU 
+	INNER JOIN EL_GROUP_BY.Compra CO on CO.Compra_ID = PU.Compra_ID
+	AND convert(date, CO.Compra_Fecha, 120) > convert(date, @fecha_desde, 120) 
+	AND convert(date, CO.Compra_Fecha, 120) < convert(date, @fecha_hasta, 120) 
+	INNER JOIN EL_GROUP_BY.Cliente CL on CL.Cliente_ID = CO.Cliente_ID
+	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Espectaculo ES on ES.Espectaculo_ID = P.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Empresa EM on EM.Empresa_ID = ES.Empresa_ID
+	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, CL.Cliente_ID, CL.Cliente_Nombre, CL.Cliente_Apellido
+	ORDER BY 'Cantidad de Compras' desc
+
+end
+GO
+
+
+-- -----------------------------------------------------
+-- SP - Listado empresas mayor cant localidades no vendidas
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDIDAS
+@fecha_desde datetime,
+@fecha_hasta datetime,
+@PRIORIDAD int,
+@MES int
+as
+begin
+
+	SELECT TOP 5 
+				 EM.Empresa_ID  as 'ID de la Empresa', 
+				 EM.Empresa_Razon_Social as 'Razon Social', 
+				 COUNT(PU.Publicacion_ID) AS 'Localidades no vendidas', 
+				 g.Grado_Publicacion_Prioridad as 'Grado de Prioridad'
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU  
+	INNER JOIN EL_GROUP_BY.Publicacion P ON PU.Publicacion_ID = P.Publicacion_ID
+	AND P.Grado_Publicacion_ID = @PRIORIDAD
+	AND month(P.Publicacion_Fecha) = @MES
+	INNER JOIN EL_GROUP_BY.Espectaculo ES ON P.Espectaculo_ID = ES.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Empresa EM ON ES.Empresa_ID = EM.Empresa_ID
+	INNER JOIN EL_GROUP_BY.Grado_Publicacion g on g.Grado_Publicacion_ID = p.Grado_Publicacion_ID
+	WHERE PU.Compra_ID IS NULL
+	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, g.Grado_Publicacion_Prioridad
+
+
+end
+GO
+
 
 /****************************************************************
 *							SPs - FIN							*

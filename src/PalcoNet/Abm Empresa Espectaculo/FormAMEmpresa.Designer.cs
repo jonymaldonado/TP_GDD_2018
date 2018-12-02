@@ -288,6 +288,7 @@
             this.txt_cuit.Name = "txt_cuit";
             this.txt_cuit.Size = new System.Drawing.Size(184, 20);
             this.txt_cuit.TabIndex = 6;
+            this.txt_cuit.Validating += txt_cuit_Validating;        
             // 
             // label3
             // 

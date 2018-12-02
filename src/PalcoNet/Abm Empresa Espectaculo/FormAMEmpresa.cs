@@ -246,7 +246,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void txt_cuit_Validating(object sender, CancelEventArgs e)
         {
-
+            MessageBox.Show("Pasa");
             if (!Utilities.IsValidCuit(txt_cuit.Text))
             {
                 MessageBox.Show("El CUIT es inválido");

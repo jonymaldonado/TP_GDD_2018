@@ -46,13 +46,14 @@
             this.label8 = new System.Windows.Forms.Label();
             this.txt_grade = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gb_date = new System.Windows.Forms.GroupBox();
             this.btn_date_remove = new System.Windows.Forms.Button();
             this.btn_date_add = new System.Windows.Forms.Button();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label9 = new System.Windows.Forms.Label();
             this.lb_batch = new System.Windows.Forms.ListBox();
             this.gb_ubications = new System.Windows.Forms.GroupBox();
+            this.dgv_list = new System.Windows.Forms.DataGridView();
             this.btn_ubic_remove = new System.Windows.Forms.Button();
             this.btn_ubic_add = new System.Windows.Forms.Button();
             this.cb_no_number = new System.Windows.Forms.CheckBox();
@@ -67,13 +68,12 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.aceptarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.returnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dgv_list = new System.Windows.Forms.DataGridView();
             this.gb_publication.SuspendLayout();
             this.gb_grade.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.gb_date.SuspendLayout();
             this.gb_ubications.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // gb_publication
@@ -236,19 +236,19 @@
             this.label7.TabIndex = 0;
             this.label7.Text = "Grado:";
             // 
-            // groupBox1
+            // gb_date
             // 
-            this.groupBox1.Controls.Add(this.btn_date_remove);
-            this.groupBox1.Controls.Add(this.btn_date_add);
-            this.groupBox1.Controls.Add(this.dateTimePicker1);
-            this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.lb_batch);
-            this.groupBox1.Location = new System.Drawing.Point(348, 37);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(448, 181);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Fecha Espectáculo";
+            this.gb_date.Controls.Add(this.btn_date_remove);
+            this.gb_date.Controls.Add(this.btn_date_add);
+            this.gb_date.Controls.Add(this.dateTimePicker1);
+            this.gb_date.Controls.Add(this.label9);
+            this.gb_date.Controls.Add(this.lb_batch);
+            this.gb_date.Location = new System.Drawing.Point(348, 37);
+            this.gb_date.Name = "gb_date";
+            this.gb_date.Size = new System.Drawing.Size(448, 181);
+            this.gb_date.TabIndex = 5;
+            this.gb_date.TabStop = false;
+            this.gb_date.Text = "Fecha Espectáculo";
             // 
             // btn_date_remove
             // 
@@ -315,6 +315,22 @@
             this.gb_ubications.TabIndex = 6;
             this.gb_ubications.TabStop = false;
             this.gb_ubications.Text = "Ubicaciones:";
+            // 
+            // dgv_list
+            // 
+            this.dgv_list.AllowUserToAddRows = false;
+            this.dgv_list.AllowUserToDeleteRows = false;
+            this.dgv_list.AllowUserToResizeColumns = false;
+            this.dgv_list.AllowUserToResizeRows = false;
+            this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_list.Location = new System.Drawing.Point(209, 19);
+            this.dgv_list.Name = "dgv_list";
+            this.dgv_list.ReadOnly = true;
+            this.dgv_list.RowHeadersVisible = false;
+            this.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgv_list.Size = new System.Drawing.Size(298, 169);
+            this.dgv_list.TabIndex = 60;
             // 
             // btn_ubic_remove
             // 
@@ -404,7 +420,6 @@
             this.txt_filas.Name = "txt_filas";
             this.txt_filas.Size = new System.Drawing.Size(122, 20);
             this.txt_filas.TabIndex = 1;
-            this.txt_filas.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_numerico_KeyPress);
             // 
             // label10
             // 
@@ -442,22 +457,6 @@
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
-            // dgv_list
-            // 
-            this.dgv_list.AllowUserToAddRows = false;
-            this.dgv_list.AllowUserToDeleteRows = false;
-            this.dgv_list.AllowUserToResizeColumns = false;
-            this.dgv_list.AllowUserToResizeRows = false;
-            this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_list.Location = new System.Drawing.Point(209, 19);
-            this.dgv_list.Name = "dgv_list";
-            this.dgv_list.ReadOnly = true;
-            this.dgv_list.RowHeadersVisible = false;
-            this.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_list.Size = new System.Drawing.Size(298, 169);
-            this.dgv_list.TabIndex = 60;
-            // 
             // GeneratePublication
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -465,7 +464,7 @@
             this.ClientSize = new System.Drawing.Size(808, 445);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.gb_ubications);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gb_date);
             this.Controls.Add(this.gb_grade);
             this.Controls.Add(this.gb_publication);
             this.Name = "GeneratePublication";
@@ -474,13 +473,13 @@
             this.gb_publication.PerformLayout();
             this.gb_grade.ResumeLayout(false);
             this.gb_grade.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.gb_date.ResumeLayout(false);
+            this.gb_date.PerformLayout();
             this.gb_ubications.ResumeLayout(false);
             this.gb_ubications.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -505,7 +504,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txt_grade;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gb_date;
         private System.Windows.Forms.Button btn_date_remove;
         private System.Windows.Forms.Button btn_date_add;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
