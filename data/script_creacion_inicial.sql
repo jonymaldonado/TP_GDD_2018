@@ -399,8 +399,7 @@ CREATE TABLE EL_GROUP_BY.Usuario (
 		Usuario_Codigo_Postal NVARCHAR(50),
 		Usuario_Localidad NVARCHAR(50),
 		Usuario_Mail NVARCHAR(255)
-	PRIMARY KEY (Usuario_ID),
-	CONSTRAINT UQ_Usuario_Username UNIQUE(Usuario_Username))
+	PRIMARY KEY (Usuario_ID))
 ;
 
 
@@ -443,8 +442,7 @@ CREATE TABLE EL_GROUP_BY.Cliente (
 	CONSTRAINT FK_Cliente_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
 		ON DELETE CASCADE    
-		ON UPDATE CASCADE,
-	CONSTRAINT UQ_Tipo_Num_Doc UNIQUE (Cliente_Tipo_Documento, Cliente_Numero_Documento))
+		ON UPDATE CASCADE)
 ;
 
 
@@ -464,8 +462,7 @@ CREATE TABLE EL_GROUP_BY.Empresa (
 	CONSTRAINT FK_Empresa_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
 		ON DELETE CASCADE    
-				ON UPDATE CASCADE,
-	CONSTRAINT UQ_Empresa_Cuit UNIQUE (Empresa_Cuit))
+				ON UPDATE CASCADE)
 ;
 
 
@@ -576,9 +573,7 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 		Grado_Publicacion_Comision NUMERIC(3,2) NOT NULL,
 		Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
 		Grado_Publicacion_Habilitado BIT NOT NULL,
-	PRIMARY KEY (Grado_Publicacion_ID))--,
-	--CONSTRAINT CHK_Porc_Comision_entre_0y100   
-		--CHECK ( Grado_Publicacion_Comision > 0 AND Grado_Publicacion_Comision <= 1))
+	PRIMARY KEY (Grado_Publicacion_ID))
 ;
 
 -- -----------------------------------------------------
@@ -1217,20 +1212,6 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS
 AS
 BEGIN TRANSACTION  
-/*
-IF OBJECT_ID('EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS;
-IF OBJECT_ID('EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2;
-IF OBJECT_ID('EL_GROUP_BY.#compra') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.#compra;
-IF OBJECT_ID('EL_GROUP_BY.#TMP') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.#TMP;
-DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS;
-DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2;
-DROP table EL_GROUP_BY.#compra;
-DROP TABLE #TMP;
-*/
 
 /*CREACION DE TABLA AUXILIAR #COMPRAS_UBICACIONES_ITEMS*/  
 CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS (Compras_Ubicaciones_ID INT IDENTITY(1,1)
@@ -1250,9 +1231,7 @@ CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS (Compras_Ubicaciones_ID INT 
 												   ,Item_Descripcion NVARCHAR(60)
 												   ,Factura_Nro NUMERIC(18,0));
 
-			
 /* CARGA DE DATOS TABLA AUXILIAR #COMPRAS_UBICACIONES_ITEMS*/  
-
 INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS
 	SELECT DISTINCT M.Compra_Fecha
 				,M.Cli_Dni
@@ -1348,7 +1327,6 @@ INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2
 		    ON A.Compras_Ubicaciones_ID - 1  = B.Compras_Ubicaciones_ID;
 		
 /* MARCA EN #COMPRAS_UBICACIONES_ITEMS2 DE COMPRAS CON MAS DE UNA UBICACION */  
-
 UPDATE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 SET MISMA_COMPRA = 1
 WHERE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Compra_Fecha = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Compra_Fecha_ANT AND
    EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Cli_Dni = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Cli_Dni_ANT AND
@@ -1356,7 +1334,6 @@ WHERE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Compra_Fecha = EL_GROUP_BY.#COMPRA
    EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espectaculo_Cod = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espectaculo_Cod_ANT;
 
 /* CARGA DE Ubicacion_ID, Publicacion_ID, Factura_ID EN TABLA #COMPRAS_UBICACIONES_ITEMS2 */ 
-
 UPDATE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 SET Ubicacion_ID = U.Ubicacion_ID,
 													Publicacion_ID = P.Publicacion_ID,
 													Factura_ID = F.Factura_ID
@@ -1373,9 +1350,7 @@ UPDATE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 SET Ubicacion_ID = U.Ubicacion_ID
 												  F.Factura_Nro = M.Factura_Nro AND
 												  P.Espectaculo_ID = E.Espectaculo_ID;
 
-
 /*CREACION DE TABLA AUXILIAR DE COMPRAS #Compra*/
-
 CREATE TABLE EL_GROUP_BY.#Compra (
 		Compra_ID INT IDENTITY(1,1),
 		Compra_Fecha DATETIME  ,
@@ -1472,10 +1447,6 @@ INSERT INTO EL_GROUP_BY.Item
 					,Compra_ID
 	FROM #COMPRAS_UBICACIONES_ITEMS2;
 
-DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS;
-DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2;
-DROP table EL_GROUP_BY.#compra;
---DROP TABLE #TMP;
 COMMIT TRANSACTION;
 GO
 
@@ -2648,6 +2619,51 @@ EXEC EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
 
 /****************************************************************
 *			EJECUCIÓN DE MIGRACIÓN - FIN						*
+****************************************************************/
+
+/*
+/****************************************************************
+*			CONSTRAINTS UNIQUE, CHECK - INICIO					*
+****************************************************************/
+-- VALIDAMOS USERNAME ÚNICO --
+ALTER TABLE EL_GROUP_BY.Usuario 
+ADD CONSTRAINT UQ_Usuario_Username 
+	UNIQUE(Usuario_Username); 
+
+-- VALIDAMOS TIPO Y NUMERO DE DNI ÚNICO --
+ALTER TABLE EL_GROUP_BY.Cliente 
+ADD CONSTRAINT UQ_Tipo_Num_Doc 
+	UNIQUE (Cliente_Tipo_Documento, Cliente_Numero_Documento) 
+
+-- VALIDAMOS CUIT ÚNICO --
+ALTER TABLE EL_GROUP_BY.Empresa 
+ADD CONSTRAINT UQ_Empresa_Cuit 
+	UNIQUE (Empresa_Cuit);
+
+-- VALIDAMOS RAZÓN SOCIAL ÚNICA --	
+ALTER TABLE EL_GROUP_BY.Empresa 
+ADD CONSTRAINT UQ_Empresa_Razon 
+UNIQUE (Empresa_Razon_Social);
+
+-- VALIDAMOS COMISIÓN ENTRE 0 Y 100 % --
+ALTER TABLE EL_GROUP_BY.Grado_Publicacion 
+ADD CONSTRAINT CHK_Porc_Comision_entre_0y100 
+	CHECK ( Grado_Publicacion_Comision >= 0.00 AND Grado_Publicacion_Comision <= 1.00);
+
+-- VALIDAMOS COMPRAS NO NEGATIVAS --
+ALTER TABLE EL_GROUP_BY.Compra
+ADD CONSTRAINT CHK_Monto_No_Negativo 
+	CHECK ( Compra_Monto_Total >= 0.00);
+/****************************************************************
+*			CONSTRAINTS UNIQUE, CHECK - FIN						*
+****************************************************************/*/
+
+/****************************************************************
+*						INDICES - INICIO						*
+****************************************************************/
+
+/****************************************************************
+*						INDICES - FIN							*
 ****************************************************************/
 /* COMENTE TODO PARA CORRER LA MIGRACION
 --------------------------------------------------------
