@@ -844,7 +844,7 @@ BEGIN TRAN
 		(CONVERT(NVARCHAR(50),'admin')
 		,HASHBYTES('SHA2_256', CONVERT(NVARCHAR(50),'w23e'))
 		,'ADMINISTRADOR'
-		,1
+		,1	
 		,0
 		,0
 		,'42612123'
@@ -1669,6 +1669,7 @@ go
 CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @USUARIO VARCHAR(50),
 @PASSWORD NVARCHAR(50),
+@PRIMER_LOGIN BIT,
 @NOMBRE VARCHAR(255),
 @APELLIDO VARCHAR(255),
 @TIPO_DOC VARCHAR(10),
@@ -1692,7 +1693,7 @@ BEGIN TRANSACTION
 										 ,'CLIENTE'
 										 ,1
 										 ,0
-										 ,1
+										 ,@PRIMER_LOGIN
 										 ,@TELEFONO
 										 ,@CALLE
 										 ,@NRO_CALLE
@@ -2046,6 +2047,7 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.CREAR_EMPRESA
 @USUARIO		VARCHAR(50),
 @PASSWORD		NVARCHAR(50),
+@PRIMER_LOGIN   BIT,
 @RAZON_SOCIAL	VARCHAR(255),
 @EMAIL			VARCHAR(255),
 @TELEFONO		VARCHAR(20), 
@@ -2064,7 +2066,7 @@ BEGIN TRANSACTION
 										 ,'Empresa'		--Tipo
 										 ,1				--Habilitado
 										 ,0				--Intentos
-										 ,1				--Primer login
+										 ,@PRIMER_LOGIN --Primer login
 										 ,@TELEFONO
 										 ,@CALLE
 										 ,@NUMERO

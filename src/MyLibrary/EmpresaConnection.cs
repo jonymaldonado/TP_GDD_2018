@@ -74,6 +74,10 @@ namespace MyLibrary
             parameter.Value = empresa.Password;
             parameters.Add(parameter);
 
+            parameter = new SqlParameter("@PRIMER_LOGIN", SqlDbType.Bit);
+            parameter.Value = empresa.FirstLogin;
+            parameters.Add(parameter);
+
             LoadMoreParameters(empresa, parameters);
 
             Connection.WriteInTheBase("EL_GROUP_BY.CREAR_EMPRESA", Connection.Type.StoredProcedure, parameters);

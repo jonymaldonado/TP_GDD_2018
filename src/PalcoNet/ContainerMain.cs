@@ -228,6 +228,11 @@ namespace PalcoNet
 
         }
 
+        private void actionsGeneratePayCommissionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Generar_Rendicion_Comisiones.GenerateComision());
+        }
+
 
     }
 

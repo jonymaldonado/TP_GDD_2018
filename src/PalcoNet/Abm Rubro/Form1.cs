@@ -16,5 +16,10 @@ namespace PalcoNet.Abm_Rubro
         {
             InitializeComponent();
         }
+
+        private void returnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
     }
 }

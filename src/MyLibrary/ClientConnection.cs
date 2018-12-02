@@ -83,6 +83,10 @@ namespace MyLibrary
             parameter.Value = client.Password;
             parameters.Add(parameter);
 
+            parameter = new SqlParameter("@PRIMER_LOGIN", SqlDbType.Bit);
+            parameter.Value = client.FirstLogin;
+            parameters.Add(parameter);
+
             LoadMoreParameters(client, parameters);
             Connection.WriteInTheBase("EL_GROUP_BY.CREAR_CLIENTE", Connection.Type.StoredProcedure, parameters);
         }

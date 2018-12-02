@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace PalcoNet.Generar_Rendicion_Comisiones
 {
-    public partial class Form1 : Form
+    public partial class GenerateComision : Form
     {
-        public Form1()
+        public GenerateComision()
         {
             InitializeComponent();
+        }
+
+        private void returnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
         }
     }
 }
