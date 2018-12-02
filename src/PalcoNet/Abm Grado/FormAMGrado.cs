@@ -16,6 +16,7 @@ namespace PalcoNet.Abm_Grado
 {
     public partial class FormAMGrado : Form
     {
+        GradoDAO grado = new GradoDAO();
         Int32 id;
         bool isUpper = false;
         Form formPrevious;
@@ -73,8 +74,8 @@ namespace PalcoNet.Abm_Grado
         {
             if (this.checkMandatoryFields())
             {
-                GradoDAO grado = GetGradoDAO();
-
+                grado = GetGradoDAO();
+                //MessageBox.Show("grado "+grado.Comision+" des"+grado.Prioridad);
                 GradoConnection.CreateGrado(grado);
                 MessageBox.Show("El Grado ha sido creado correctamente.");
 
@@ -90,8 +91,7 @@ namespace PalcoNet.Abm_Grado
         {
             if (this.checkMandatoryFields())
             {
-                GradoDAO grado = GetGradoDAO();
-
+                grado = GetGradoDAO();
                 GradoConnection.UpdateGrado(grado, this.id);
                 MessageBox.Show("La modificación del grado ha sido realizado correctamente.");
                 formPrevious.Show();
@@ -110,10 +110,9 @@ namespace PalcoNet.Abm_Grado
 
         private GradoDAO GetGradoDAO()
         {
-            GradoDAO grado = new GradoDAO();
 
-            grado.Comision = Convert.ToInt32(txt_comision.Text);
-            grado.Prioridad = cmb_priority.GetItemText(cmb_priority);
+            grado.Comision = Convert.ToDecimal(txt_comision.Text) / 100;
+            grado.Prioridad = cmb_priority.Text;
 
             return grado;
         }
@@ -126,7 +125,10 @@ namespace PalcoNet.Abm_Grado
             {
                 while (reader.Read())
                 {
-                    txt_comision.Text = reader.IsDBNull(0) ? "" : reader.GetDecimal(0).ToString();
+                    Decimal value = reader.GetDecimal(0) * 100;
+                    Int32 valueInt = Convert.ToInt32(value);
+                    txt_comision.Text = valueInt.ToString();
+
                     cmb_priority.SelectedIndex = cmb_priority.FindStringExact(reader.GetString(1));
 
                 }
@@ -149,6 +151,25 @@ namespace PalcoNet.Abm_Grado
             }
 
         }
+
+        private void txt_comision_Validating(object sender, CancelEventArgs e)
+        {
+            Int32 value = 0;
+            
+            if(!String.IsNullOrEmpty(txt_comision.Text))
+                value = Convert.ToInt32(txt_comision.Text);
+
+            if (value < 0 || value > 100)
+            {
+                MessageBox.Show("El Porcentaje de comision debe estar entre 0 y 100");
+                e.Cancel = true;
+            }
+            else
+                e.Cancel = false;
+
+        }
+
+
 
 
     }

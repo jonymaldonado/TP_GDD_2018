@@ -50,6 +50,7 @@
             this.txt_razon_social = new System.Windows.Forms.TextBox();
             this.txt_email = new System.Windows.Forms.TextBox();
             this.txt_cuit = new System.Windows.Forms.TextBox();
+            this.btn_select = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -271,11 +272,23 @@
             this.txt_cuit.Size = new System.Drawing.Size(149, 20);
             this.txt_cuit.TabIndex = 3;
             // 
+            // btn_select
+            // 
+            this.btn_select.Enabled = false;
+            this.btn_select.Location = new System.Drawing.Point(249, 131);
+            this.btn_select.Name = "btn_select";
+            this.btn_select.Size = new System.Drawing.Size(111, 22);
+            this.btn_select.TabIndex = 51;
+            this.btn_select.Text = "Seleccionar";
+            this.btn_select.UseVisualStyleBackColor = true;
+            this.btn_select.Click += new System.EventHandler(this.btn_select_Click);
+            // 
             // FormEmpresa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(612, 478);
+            this.Controls.Add(this.btn_select);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
@@ -322,6 +335,7 @@
         private System.Windows.Forms.TextBox txt_razon_social;
         private System.Windows.Forms.TextBox txt_email;
         private System.Windows.Forms.TextBox txt_cuit;
+        private System.Windows.Forms.Button btn_select;
 
     }
 }

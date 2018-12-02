@@ -57,11 +57,11 @@ namespace MyLibrary
         {
             SqlParameter parameter;
 
-            parameter = new SqlParameter("@COMISION", SqlDbType.VarChar, 255);
+            parameter = new SqlParameter("@COMISION", SqlDbType.Decimal);
             parameter.Value = grado.Comision;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@PRIORIDAD", SqlDbType.VarChar, 255);
+            parameter = new SqlParameter("@PRIORIDAD", SqlDbType.VarChar, 10);
             parameter.Value = grado.Prioridad;
             parameters.Add(parameter);
 

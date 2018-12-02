@@ -14,10 +14,26 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 {
     public partial class FormEmpresa : Form
     {
+        public Generar_Rendicion_Comisiones.GenerateComision previusForm;
+
         public FormEmpresa()
         {
             InitializeComponent();
             dgv_list.DataSource = EmpresaConnection.ListExistingEmpresa(null).Tables[0];
+        }
+
+        public FormEmpresa(Generar_Rendicion_Comisiones.GenerateComision previusForm)
+        {           
+
+            InitializeComponent();
+            dgv_list.DataSource = EmpresaConnection.ListExistingEmpresa(null).Tables[0];
+            this.previusForm = previusForm;
+
+            this.addToolStripMenuItem.Visible = false;
+            this.deleteToolStripMenuItem.Visible = false;
+            this.updateToolStripMenuItem.Visible = false;
+            this.btn_select.Enabled = true;
+       
         }
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
@@ -79,6 +95,19 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             FormAMEmpresa form = new FormAMEmpresa(this, false, userId);
             this.Hide();
             form.ShowDialog();
+        }
+
+        private void btn_select_Click(object sender, EventArgs e)
+        {
+            int selectedrowindex = dgv_list.SelectedCells[0].RowIndex;
+            DataGridViewRow selectedRow = dgv_list.Rows[selectedrowindex];
+
+            this.previusForm.IdEmpresa = Convert.ToInt32(selectedRow.Cells["Empresa_ID"].Value);
+            this.previusForm.RazonSocial = Convert.ToString(selectedRow.Cells["Empresa_Razon_Social"].Value); 
+            this.previusForm.Cuit = Convert.ToString(selectedRow.Cells["Empresa_Cuit"].Value);
+            this.previusForm.Email = Convert.ToString(selectedRow.Cells["Usuario_Mail"].Value); 
+
+            this.Close();
         }
 
     }

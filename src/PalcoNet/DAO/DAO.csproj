@@ -42,8 +42,10 @@
     <Compile Include="ClientDAO.cs" />
     <Compile Include="EmpresaDAO.cs" />
     <Compile Include="EspectaculoDAO.cs" />
+    <Compile Include="FacturaDAO.cs" />
     <Compile Include="FunctionDAO.cs" />
     <Compile Include="GradoDAO.cs" />
+    <Compile Include="ItemDAO.cs" />
     <Compile Include="PublicarionStateDAO.cs" />
     <Compile Include="PublicationDAO.cs" />
     <Compile Include="RoleDAO.cs" />

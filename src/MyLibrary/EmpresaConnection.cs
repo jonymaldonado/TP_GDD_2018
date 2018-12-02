@@ -172,7 +172,25 @@ namespace MyLibrary
 
         }
 
+        public static DataSet ListComprasByEmpresa(Int32 IdEmpresa, DateTime FechaHasta)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
 
+            SqlParameter parameter;
 
+            parameter = new SqlParameter("@ID_EMPRESA", SqlDbType.Int);
+            parameter.Value = IdEmpresa;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@FECHA", SqlDbType.DateTime);
+            parameter.Value = FechaHasta;
+            parameters.Add(parameter);
+            
+            DataSet ds = Connection.GetDataSet("EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA", Connection.Type.StoredProcedure, parameters);
+
+            return ds;
+        }
     }
+
+
 }

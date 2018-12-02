@@ -65,10 +65,11 @@ namespace PalcoNet.Abm_Grado
                 GradoDAO grado = new GradoDAO();
 
                 grado.Id = Convert.ToInt32(dgv_list.CurrentRow.Cells[0].Value.ToString());
+                grado.Prioridad = cmb_priority.Text;
                 GradoConnection.DeleteGrado(grado);
                 MessageBox.Show("El Grado ha sido dado de baja correctamente.");
 
-                dgv_list.DataSource = GradoConnection.ListExistingGrado(null).Tables[0];
+                dgv_list.DataSource = GradoConnection.ListExistingGrado(grado).Tables[0];
             }
         }
 
@@ -87,7 +88,7 @@ namespace PalcoNet.Abm_Grado
         {
             GradoDAO grado = new GradoDAO();
 
-            grado.Prioridad = cmb_priority.GetItemText(cmb_priority);
+            grado.Prioridad = cmb_priority.Text;
             dgv_list.DataSource = GradoConnection.ListExistingGrado(grado).Tables[0];
         }
 

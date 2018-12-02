@@ -279,6 +279,9 @@ IF OBJECT_ID('EL_GROUP_BY.BORRAR_UBICACIONES') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION;
 
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA;
+
 IF type_id('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
 
@@ -1097,9 +1100,9 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'MIGRADA',0)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'BAJA',1)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'MEDIA',1)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'ALTA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'BAJA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.15,'MEDIA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.20,'ALTA',1)
 COMMIT;
 GO	
 -- -----------------------------------------------------
@@ -2506,6 +2509,48 @@ begin
 end
 GO
 
+
+
+-- -----------------------------------------------------
+-- SP - Listar Compras de una Empresa para Rendir
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA
+@ID_EMPRESA INT,
+@FECHA DATETIME
+as
+begin
+
+	SELECT	C.Compra_ID AS 'Id Compra',
+			C.Compra_Fecha as 'Fecha de Compra',
+			PU.Publicacion_ID,
+			U.Ubicacion_ID,
+			ES.Espectaculo_Descripcion as 'Espectáculo',
+			ES.Espectaculo_Fecha as 'Fecha Espectáculo',
+			U.Ubicacion_Fila as 'Fila',
+			U.Ubicacion_Asiento as 'Asiento',
+			U.Ubicacion_Sin_Numerar as 'Sin Numerar',
+			UT.Ubicacion_Tipo_Descripcion AS 'Tipo de Ubicación',
+			u.Ubicacion_Precio as 'Precio',
+			G.Grado_Publicacion_Comision as 'Comision de compra',
+			FP.Forma_Pago_Descripcion AS 'Forma de Pago',
+			P.Grado_Publicacion_ID
+	FROM EL_GROUP_BY.Compra C
+	INNER JOIN EL_GROUP_BY.Publicacion_Ubicacion PU on C.Compra_ID = PU.Compra_ID
+	INNER JOIN EL_GROUP_BY.Forma_Pago FP ON FP.Forma_Pago_ID = C.Forma_Pago_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion U on PU.Ubicacion_ID = U.Ubicacion_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT ON UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+	INNER JOIN EL_GROUP_BY.Publicacion p ON P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Espectaculo ES ON ES.Espectaculo_ID = P.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Empresa EM ON EM.Empresa_ID = ES.Empresa_ID
+	AND EM.Empresa_ID = @ID_EMPRESA
+	INNER JOIN EL_GROUP_BY.Grado_Publicacion G on G.Grado_Publicacion_ID = P.Grado_Publicacion_ID
+	WHERE C.Compra_Fecha < @FECHA
+	AND C.Compra_Rendida = 0
+	ORDER BY C.Compra_ID, pu.Publicacion_ID, u.Ubicacion_ID
+
+end
+go
 
 -- -----------------------------------------------------
 -- SP - Listado Clientes con mayores puntos vencidos
