@@ -176,6 +176,7 @@
             this.actionsBuyToolStripMenuItem.Name = "actionsBuyToolStripMenuItem";
             this.actionsBuyToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.actionsBuyToolStripMenuItem.Text = "Comprar";
+            this.actionsBuyToolStripMenuItem.Click += new System.EventHandler(this.actionsBuyToolStripMenuItem_Click);
             // 
             // actionsGeneratePayCommissionsToolStripMenuItem
             // 
