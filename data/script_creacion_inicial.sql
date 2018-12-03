@@ -1252,7 +1252,7 @@ INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS
 				,M.Item_Factura_Descripcion
 				,M.Factura_Nro -- Se insertan las Facturas ya que según pudimos observar en la maestra, todas las ubicaciones compradas fueron rendidas --
 			FROM gd_esquema.Maestra M
-		    GROUP BY  M.Compra_Fecha, M.Cli_Dni, M.Cli_Nombre, Compra_Cantidad, M.Espectaculo_Cod, 
+		    GROUP BY  M.Espec_Empresa_Razon_Social, M.Espec_Empresa_Cuit, Compra_Fecha, M.Cli_Dni, M.Cli_Nombre, Compra_Cantidad, M.Espectaculo_Cod, 
 					  M.Ubicacion_Asiento, M.Ubicacion_Fila, M.Ubicacion_Precio, M.Ubicacion_Sin_numerar, 
 					  M.Ubicacion_Sin_numerar,M.Item_Factura_Monto, M.Item_Factura_Cantidad,
 					  M.Item_Factura_Descripcion, M.Factura_Nro
