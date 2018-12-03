@@ -84,24 +84,46 @@ namespace PalcoNet.Comprar
             {
                 while (reader.Read())
                 {
-                    cmb_1.Items.Add(reader.GetSqlInt32(0) + "- " + reader.GetSqlString(1));
-                    cmb_2.Items.Add(reader.GetSqlInt32(0) + "- " + reader.GetSqlString(1));
-                    cmb_3.Items.Add(reader.GetSqlInt32(0) + "- " + reader.GetSqlString(1));
+                    ComboboxItem item = new ComboboxItem();
+                    item.Text = Convert.ToString(reader.GetSqlString(1));
+                    item.Value = reader.GetInt32(0); // reader.GetSqlInt32(0);
+                    
+                    cmb_1.Items.Add(item);
+                    cmb_2.Items.Add(item);
+                    cmb_3.Items.Add(item);
                 }
             }
 
             reader.Close();
+
+            cmb_1.SelectedIndex = 0;
+            cmb_2.SelectedIndex = 0;
+            cmb_3.SelectedIndex = 0;
         }
 
         private void btn_search_Click(object sender, EventArgs e)
         {
+            int grade1 = 0;
+            int grade2 = 0;
+            int grade3 = 0;
+
+            ComboboxItem item = new ComboboxItem();
+            item = (ComboboxItem)cmb_1.SelectedItem;
+            grade1 = (int)item.Value;
+
+            item = (ComboboxItem)cmb_2.SelectedItem;
+            grade2 = (int)item.Value;
+
+            item = (ComboboxItem)cmb_3.SelectedItem;
+            grade3 = (int)item.Value;
+
             DataSet ds = BuyConnection.ListExistingPublications(dtp_date_from.Value.Date
                                                                        , dtp_date_to.Value.Date
                                                                        , txt_desc.Text
-                                                                       , (cmb_1.Text != "") ? cmb_1.Text.Substring(0,1) : null
-                                                                       , (cmb_2.Text != "") ? cmb_2.Text.Substring(0,1) : null
-                                                                       , (cmb_3.Text != "") ? cmb_3.Text.Substring(0,1) : null);
-
+                                                                       , grade1 //(cmb_1.Text != "") ? cmb_1.Text.Substring(0,1) : null
+                                                                       , grade2 //(cmb_2.Text != "") ? cmb_2.Text.Substring(0,1) : null
+                                                                       , grade3); //(cmb_3.Text != "") ? cmb_3.Text.Substring(0,1) : null);
+            ds = EmpresaConnection.ListExistingEmpresa(null);
             this.ds = ds;
             dgv_list.DataSource = this.ds.Tables[0];
             this.totalRecords = dgv_list.Rows.Count;

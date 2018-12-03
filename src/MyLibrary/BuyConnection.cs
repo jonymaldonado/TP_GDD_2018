@@ -15,7 +15,7 @@ namespace MyLibrary
             return Connection.GetDataReader("SELECT RUBRO_ID, RUBRO_DESCRIPCION FROM EL_GROUP_BY.RUBRO");
         }
 
-        public static DataSet ListExistingPublications(DateTime dateFrom, DateTime dateTo, string desc, string categoryOne, string categoryTwo, string categoryThree)
+        public static DataSet ListExistingPublications(DateTime dateFrom, DateTime dateTo, string desc, Int32 categoryOne, Int32 categoryTwo, Int32 categoryThree)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -37,28 +37,16 @@ namespace MyLibrary
             }
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@RUBRO_UNO", SqlDbType.VarChar, 100);
-            parameter.Value = DBNull.Value;
-            if (!String.IsNullOrEmpty(categoryOne))
-            {
-                parameter.Value = categoryOne;
-            }
+            parameter = new SqlParameter("@RUBRO_UNO", SqlDbType.Int);
+            parameter.Value = categoryOne;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@RUBRO_DOS", SqlDbType.VarChar, 100);
-            parameter.Value = DBNull.Value;
-            if (!String.IsNullOrEmpty(categoryTwo))
-            {
-                parameter.Value = categoryTwo;
-            }
+            parameter = new SqlParameter("@RUBRO_DOS", SqlDbType.Int);
+            parameter.Value = categoryTwo;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@RUBRO_TRES", SqlDbType.VarChar, 100);
-            parameter.Value = DBNull.Value;
-            if (!String.IsNullOrEmpty(categoryThree))
-            {
-                parameter.Value = categoryThree;
-            }
+            parameter = new SqlParameter("@RUBRO_TRES", SqlDbType.Int);
+            parameter.Value = categoryThree;
             parameters.Add(parameter);
 
             return Connection.GetDataSet("EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES_COMPRA", Connection.Type.StoredProcedure, parameters);
