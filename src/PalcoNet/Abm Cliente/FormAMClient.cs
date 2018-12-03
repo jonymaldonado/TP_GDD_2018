@@ -225,6 +225,30 @@ namespace PalcoNet.Abm_Cliente
                 MessageBox.Show("Debe completar todos los campos obligatorios.");
             }
         }
+        private void txt_email_Validating(object sender, CancelEventArgs e)
+        {
+
+            if (!Utilities.IsValidEmail(txt_email.Text))
+            {
+                MessageBox.Show("El Email es inválido");
+                e.Cancel = true;
+            }
+            else
+                e.Cancel = false;
+
+        }
+
+        private void txt_cuil_Validating(object sender, CancelEventArgs e)
+        {
+            if (!Utilities.IsValidCuit(txt_cuil.Text))
+            {
+                MessageBox.Show("El CUIL es inválido");
+                e.Cancel = true;
+            }
+            else
+                e.Cancel = false;
+
+        }
     }
 
 }

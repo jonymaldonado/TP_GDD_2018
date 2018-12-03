@@ -323,6 +323,7 @@
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(184, 20);
             this.txt_email.TabIndex = 2;
+            this.txt_email.Validating += txt_email_Validating; 
             // 
             // label1
             // 

@@ -223,6 +223,7 @@
             this.txt_cuil.Name = "txt_cuil";
             this.txt_cuil.Size = new System.Drawing.Size(163, 20);
             this.txt_cuil.TabIndex = 55;
+            this.txt_cuil.Validating += txt_cuil_Validating;   
             // 
             // label1
             // 
@@ -346,6 +347,7 @@
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(162, 20);
             this.txt_email.TabIndex = 7;
+            this.txt_email.Validating += txt_email_Validating; 
             // 
             // label7
             // 
