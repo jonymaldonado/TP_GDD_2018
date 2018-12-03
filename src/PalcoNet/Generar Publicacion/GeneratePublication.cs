@@ -163,7 +163,7 @@ namespace PalcoNet.Generar_Publicacion
                     //Grado
                     this.gradeEdit.Id = reader.GetInt32(17);
                     this.IdGrado = this.gradeEdit.Id;
-                    this.gradeEdit.Comision = Convert.ToInt32(reader.GetDecimal(18));
+                    this.gradeEdit.Comision = reader.GetDecimal(18);
                     this.gradeEdit.Prioridad = reader.IsDBNull(19) ? "" : reader.GetString(19);
                     
                     //Estado
