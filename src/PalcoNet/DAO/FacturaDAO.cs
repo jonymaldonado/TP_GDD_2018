@@ -11,7 +11,7 @@ namespace DAO
         public Int32 Factura_ID { get; set; }
 		public Int32 Factura_Nro { get; set; }
 		public DateTime Factura_Fecha { get; set; }
-		public Int32 Factura_Total { get; set; }
-        public String Factura_Empresa_ID { get; set; }
+		public Decimal Factura_Total { get; set; }
+        public Int32 Factura_Empresa_ID { get; set; }
     }
 }

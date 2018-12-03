@@ -282,11 +282,20 @@ IF OBJECT_ID('EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA;
 
+IF OBJECT_ID('EL_GROUP_BY.CREAR_FACTURA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_FACTURA;
+
+IF OBJECT_ID('EL_GROUP_BY.CREAR_ITEMS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_ITEMS;
+
 IF type_id('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
 
 IF type_id('EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ;
+
+IF type_id('EL_GROUP_BY.ITEM_TIPO_TABLA') IS NOT NULL
+	DROP TYPE EL_GROUP_BY.ITEM_TIPO_TABLA;
 
 	
 
@@ -670,7 +679,7 @@ CREATE TABLE EL_GROUP_BY.Item (
 		Item_ID INT IDENTITY(1,1),
 		Item_Monto NUMERIC(18,2) NOT NULL,
 		Item_Cantidad NUMERIC(18,0) NOT NULL,
-		Item_Descripcion NVARCHAR(60) NOT NULL,
+		Item_Descripcion NVARCHAR(255) NOT NULL,
 		Factura_ID INT NOT NULL,
 		Compra_ID INT NOT NULL,
 	PRIMARY KEY (Item_ID),
@@ -678,6 +687,18 @@ CREATE TABLE EL_GROUP_BY.Item (
 		REFERENCES EL_GROUP_BY.Factura (Factura_ID)     
 		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
+
+-- -----------------------------------------------------
+-- Creación de TIPO Tabla para ITEMS
+-- -----------------------------------------------------
+CREATE TYPE EL_GROUP_BY.ITEM_TIPO_TABLA As Table
+(
+		Item_Monto DECIMAL NOT NULL,
+		Item_Cantidad DECIMAL NOT NULL,
+		Item_Descripcion NVARCHAR(255) NOT NULL,
+		Factura_ID INT NOT NULL,
+		Compra_ID INT NOT NULL
+)
 ;
 
 -- -----------------------------------------------------
@@ -2551,6 +2572,49 @@ begin
 
 end
 go
+
+
+-- -----------------------------------------------------
+-- SP - Crear Factura
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.CREAR_FACTURA
+@FECHA DATETIME,
+@TOTAL NUMERIC(18,2),
+@EMPRESA_ID INT,
+@FACTURA_ID INT OUTPUT
+as
+begin transaction
+
+	INSERT EL_GROUP_BY.Factura VALUES(
+		(SELECT MAX(F.Factura_Nro) FROM EL_GROUP_BY.Factura F)+1,
+		@FECHA,
+		@TOTAL,
+		@EMPRESA_ID)
+
+	SET @FACTURA_ID  = SCOPE_IDENTITY();
+	 
+
+commit transaction
+GO
+
+
+-- -----------------------------------------------------
+-- SP - Crear ITEMS
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.CREAR_ITEMS
+@ITEMS AS ITEM_TIPO_TABLA READONLY
+AS
+BEGIN TRANSACTION
+
+	INSERT INTO EL_GROUP_BY.Item 
+		SELECT * FROM  @ITEMS
+
+	UPDATE EL_GROUP_BY.Compra SET Compra_Rendida = 1
+	WHERE Compra_ID in (SELECT Compra_ID FROM @ITEMS)
+
+COMMIT TRANSACTION
+GO
+
 
 -- -----------------------------------------------------
 -- SP - Listado Clientes con mayores puntos vencidos

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DAO;
 using MyLibrary;
+using System.Configuration;
 
 namespace PalcoNet.Generar_Rendicion_Comisiones
 {
@@ -97,7 +98,75 @@ namespace PalcoNet.Generar_Rendicion_Comisiones
 
         private void RendirCompras()
         {
+            FacturaDAO factura = new FacturaDAO();
+            List<ItemDAO> items = new List<ItemDAO>();
+            Decimal total = 0;
+            Decimal pago = 0;
 
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                ItemDAO item = new ItemDAO();
+
+                Int32 precio = Convert.ToInt32(row["Precio"]); 
+                Decimal comision = Convert.ToDecimal(row["Comision de compra"]); 
+                item.Item_Monto = precio * comision;
+                item.Item_Cantidad = 1;
+                total += item.Item_Monto;
+                pago = pago + (precio - item.Item_Monto);
+
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+                sb.Append("Comisión por ");
+                sb.Append(Convert.ToString(row["Espectáculo"])+" ");
+                sb.Append("Ubicación: ");
+                if (!Convert.ToBoolean(row["Sin Numerar"]))
+                {
+                    sb.Append(Convert.ToString(row["Tipo de Ubicación"]) + " ");
+                    sb.Append("Fila: ");
+                    sb.Append(Convert.ToString(row["Fila"]) + " ");
+                    sb.Append("Asiento: ");
+                    sb.Append(Convert.ToString(row["Asiento"]));
+                }
+                else
+                {
+                    sb.Append("Sin numerar");
+                }
+
+                item.Item_Descripcion = sb.ToString();
+                item.Compra_ID = Convert.ToInt32(row["Id Compra"]); 
+                	
+                items.Add(item);
+
+            }
+
+            factura.Factura_Fecha = Convert.ToDateTime(ConfigurationManager.AppSettings["FechaSistema"]);
+            factura.Factura_Total = total;
+            factura.Factura_Empresa_ID = Convert.ToInt32(txt_id_empresa.Text);
+
+            Int32 IDFactura = FacturaConnection.CreateFactura(factura);
+
+            System.Text.StringBuilder info = new System.Text.StringBuilder();
+
+            info.Append("Se generó la factura ID "+IDFactura);
+            info.Append(Environment.NewLine);
+            info.Append(Environment.NewLine);
+            info.Append("Total Factura " + total);
+            info.Append(Environment.NewLine);
+            info.Append("Total a pagar a la empresa " + pago);
+            info.Append(Environment.NewLine);
+            info.Append("Se crearon " + items.Count + " items");
+            MessageBox.Show(info.ToString(), "Información");
+
+            foreach( ItemDAO item in items)
+            {
+                item.Factura_ID = IDFactura;
+            }
+            
+            FacturaConnection.CreateItems(items);
+
+            //Actualiza la pantalla
+            this.ds = EmpresaConnection.ListComprasByEmpresa(Empresa.IdEmpresa, dtp_date.Value);
+            dgv_list.DataSource = ds.Tables[0];
         }
     }
 }
