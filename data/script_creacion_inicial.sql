@@ -279,6 +279,9 @@ IF OBJECT_ID('EL_GROUP_BY.BORRAR_UBICACIONES') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION;
 
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES') IS NOT NULL
+	DROP PROC EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES;
+
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA;
 
@@ -2701,6 +2704,34 @@ begin
 end
 GO
 
+-- -----------------------------------------------------
+-- SP - Listado publicaciones
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES
+@FECHA_DESDE DATETIME, 
+@FECHA_HASTA DATETIME,
+@DESCRIPCION VARCHAR(255),
+@RUBRO_UNO INT,
+@RUBRO_DOS INT,
+@RUBRO_TRES INT
+as
+begin
+	select P.Publicacion_ID,
+			P.Publicacion_Descripcion,
+			P.Publicacion_FechaHora,
+			P.Publicacion_Cantidad_Localidades
+	from EL_GROUP_BY.Publicacion P join EL_GROUP_BY.Espectaculo E
+	on P.Espectaculo_ID = E.Espectaculo_ID join EL_GROUP_BY.Rubro R
+	on E.Rubro_ID = R.Rubro_ID join EL_GROUP_BY.Grado_Publicacion G
+	on P.Grado_Publicacion_ID = G.Grado_Publicacion_ID
+	where P.Publicacion_FechaHora between @FECHA_DESDE and @FECHA_HASTA
+		  and p.Estado_Publicacion_ID = 2 
+		  and P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
+		  or (R.Rubro_ID = @RUBRO_UNO or R.Rubro_ID = @RUBRO_DOS or R.Rubro_ID = @RUBRO_TRES)
+	order by G.Grado_Publicacion_ID desc
+end
+go
 
 /****************************************************************
 *							SPs - FIN							*

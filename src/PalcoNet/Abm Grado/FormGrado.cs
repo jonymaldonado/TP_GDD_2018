@@ -94,6 +94,11 @@ namespace PalcoNet.Abm_Grado
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (dgv_list.RowCount == 0) {
+                MessageBox.Show("Antes debe buscar un grado para poder seleccionarlo.");
+                return;
+            }
+
             int selectedrowindex = dgv_list.SelectedCells[0].RowIndex;
             DataGridViewRow selectedRow = dgv_list.Rows[selectedrowindex];  
 
