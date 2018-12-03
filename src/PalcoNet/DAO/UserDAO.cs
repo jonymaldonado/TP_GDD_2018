@@ -20,5 +20,6 @@ namespace DAO
         public String Location { get; set; }
         public String Email { get; set; }
         public Int32 Active { get; set; }
+        public Boolean FirstLogin { get; set; }
     }
 }

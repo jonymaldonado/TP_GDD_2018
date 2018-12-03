@@ -129,11 +129,11 @@
     <Compile Include="Generar Publicacion\GeneratePublication.Designer.cs">
       <DependentUpon>GeneratePublication.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generar Rendicion Comisiones\Form1.cs">
+    <Compile Include="Generar Rendicion Comisiones\GenerateComision.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Generar Rendicion Comisiones\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Generar Rendicion Comisiones\GenerateComision.Designer.cs">
+      <DependentUpon>GenerateComision.cs</DependentUpon>
     </Compile>
     <Compile Include="Historial Cliente\FormClientHistory.cs">
       <SubType>Form</SubType>
@@ -191,6 +191,9 @@
     <EmbeddedResource Include="Abm Rol\FormRole.resx">
       <DependentUpon>FormRole.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Abm Rubro\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Canje Puntos\FormChangePoints.resx">
       <DependentUpon>FormChangePoints.cs</DependentUpon>
     </EmbeddedResource>
@@ -205,6 +208,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Generar Publicacion\GeneratePublication.resx">
       <DependentUpon>GeneratePublication.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Rendicion Comisiones\GenerateComision.resx">
+      <DependentUpon>GenerateComision.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Historial Cliente\FormClientHistory.resx">
       <DependentUpon>FormClientHistory.cs</DependentUpon>

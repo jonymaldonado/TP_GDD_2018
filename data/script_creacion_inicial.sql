@@ -282,11 +282,23 @@ IF OBJECT_ID('EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES') IS NOT NULL
 	DROP PROC EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES;
 
-IF OBJECT_ID('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA;
+
+IF OBJECT_ID('EL_GROUP_BY.CREAR_FACTURA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_FACTURA;
+
+IF OBJECT_ID('EL_GROUP_BY.CREAR_ITEMS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.CREAR_ITEMS;
+
+IF type_id('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
 
-IF OBJECT_ID('EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ') IS NOT NULL
+IF type_id('EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ;
+
+IF type_id('EL_GROUP_BY.ITEM_TIPO_TABLA') IS NOT NULL
+	DROP TYPE EL_GROUP_BY.ITEM_TIPO_TABLA;
 
 	
 
@@ -402,8 +414,7 @@ CREATE TABLE EL_GROUP_BY.Usuario (
 		Usuario_Codigo_Postal NVARCHAR(50),
 		Usuario_Localidad NVARCHAR(50),
 		Usuario_Mail NVARCHAR(255)
-	PRIMARY KEY (Usuario_ID),
-	CONSTRAINT UQ_Usuario_Username UNIQUE(Usuario_Username))
+	PRIMARY KEY (Usuario_ID))
 ;
 
 
@@ -446,8 +457,7 @@ CREATE TABLE EL_GROUP_BY.Cliente (
 	CONSTRAINT FK_Cliente_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
 		ON DELETE CASCADE    
-		ON UPDATE CASCADE,
-	CONSTRAINT UQ_Tipo_Num_Doc UNIQUE (Cliente_Tipo_Documento, Cliente_Numero_Documento))
+		ON UPDATE CASCADE)
 ;
 
 
@@ -467,8 +477,7 @@ CREATE TABLE EL_GROUP_BY.Empresa (
 	CONSTRAINT FK_Empresa_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
 		ON DELETE CASCADE    
-				ON UPDATE CASCADE,
-	CONSTRAINT UQ_Empresa_Cuit UNIQUE (Empresa_Cuit))
+				ON UPDATE CASCADE)
 ;
 
 
@@ -579,9 +588,7 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 		Grado_Publicacion_Comision NUMERIC(3,2) NOT NULL,
 		Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
 		Grado_Publicacion_Habilitado BIT NOT NULL,
-	PRIMARY KEY (Grado_Publicacion_ID))--,
-	--CONSTRAINT CHK_Porc_Comision_entre_0y100   
-		--CHECK ( Grado_Publicacion_Comision > 0 AND Grado_Publicacion_Comision <= 1))
+	PRIMARY KEY (Grado_Publicacion_ID))
 ;
 
 -- -----------------------------------------------------
@@ -675,7 +682,7 @@ CREATE TABLE EL_GROUP_BY.Item (
 		Item_ID INT IDENTITY(1,1),
 		Item_Monto NUMERIC(18,2) NOT NULL,
 		Item_Cantidad NUMERIC(18,0) NOT NULL,
-		Item_Descripcion NVARCHAR(60) NOT NULL,
+		Item_Descripcion NVARCHAR(255) NOT NULL,
 		Factura_ID INT NOT NULL,
 		Compra_ID INT NOT NULL,
 	PRIMARY KEY (Item_ID),
@@ -683,6 +690,18 @@ CREATE TABLE EL_GROUP_BY.Item (
 		REFERENCES EL_GROUP_BY.Factura (Factura_ID)     
 		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
+
+-- -----------------------------------------------------
+-- Creación de TIPO Tabla para ITEMS
+-- -----------------------------------------------------
+CREATE TYPE EL_GROUP_BY.ITEM_TIPO_TABLA As Table
+(
+		Item_Monto DECIMAL NOT NULL,
+		Item_Cantidad DECIMAL NOT NULL,
+		Item_Descripcion NVARCHAR(255) NOT NULL,
+		Factura_ID INT NOT NULL,
+		Compra_ID INT NOT NULL
+)
 ;
 
 -- -----------------------------------------------------
@@ -852,7 +871,7 @@ BEGIN TRAN
 		(CONVERT(NVARCHAR(50),'admin')
 		,HASHBYTES('SHA2_256', CONVERT(NVARCHAR(50),'w23e'))
 		,'ADMINISTRADOR'
-		,1
+		,1	
 		,0
 		,0
 		,'42612123'
@@ -1012,7 +1031,8 @@ BEGIN TRANSACTION
 			WHERE R.Rol_Nombre = 'ADMINISTRADOR' AND
 					(F.Funcionalidad_ID = 1 OR
 					F.Funcionalidad_ID = 2 OR
-					F.Funcionalidad_ID = 3)
+					F.Funcionalidad_ID = 3 OR
+					F.Funcionalidad_ID = 11)
 	UNION
 		SELECT Rol_ID,
 				Funcionalidad_ID
@@ -1030,8 +1050,7 @@ BEGIN TRANSACTION
 					(F.Funcionalidad_ID = 4 OR
 						F.Funcionalidad_ID = 5 OR
 						F.Funcionalidad_ID = 6 OR
-						F.Funcionalidad_ID = 7 OR
-						F.Funcionalidad_ID = 11)
+						F.Funcionalidad_ID = 7)
 COMMIT TRANSACTION;
 GO
 									      
@@ -1105,9 +1124,9 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'MIGRADA',0)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'BAJA',1)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'MEDIA',1)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0,'ALTA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'BAJA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.15,'MEDIA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.20,'ALTA',1)
 COMMIT;
 GO	
 -- -----------------------------------------------------
@@ -1220,20 +1239,6 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS
 AS
 BEGIN TRANSACTION  
-/*
-IF OBJECT_ID('EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS;
-IF OBJECT_ID('EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2;
-IF OBJECT_ID('EL_GROUP_BY.#compra') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.#compra;
-IF OBJECT_ID('EL_GROUP_BY.#TMP') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.#TMP;
-DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS;
-DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2;
-DROP table EL_GROUP_BY.#compra;
-DROP TABLE #TMP;
-*/
 
 /*CREACION DE TABLA AUXILIAR #COMPRAS_UBICACIONES_ITEMS*/  
 CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS (Compras_Ubicaciones_ID INT IDENTITY(1,1)
@@ -1253,9 +1258,7 @@ CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS (Compras_Ubicaciones_ID INT 
 												   ,Item_Descripcion NVARCHAR(60)
 												   ,Factura_Nro NUMERIC(18,0));
 
-			
 /* CARGA DE DATOS TABLA AUXILIAR #COMPRAS_UBICACIONES_ITEMS*/  
-
 INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS
 	SELECT DISTINCT M.Compra_Fecha
 				,M.Cli_Dni
@@ -1273,7 +1276,7 @@ INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS
 				,M.Item_Factura_Descripcion
 				,M.Factura_Nro -- Se insertan las Facturas ya que según pudimos observar en la maestra, todas las ubicaciones compradas fueron rendidas --
 			FROM gd_esquema.Maestra M
-		    GROUP BY  M.Compra_Fecha, M.Cli_Dni, M.Cli_Nombre, Compra_Cantidad, M.Espectaculo_Cod, 
+		    GROUP BY  M.Espec_Empresa_Razon_Social, M.Espec_Empresa_Cuit, Compra_Fecha, M.Cli_Dni, M.Cli_Nombre, Compra_Cantidad, M.Espectaculo_Cod, 
 					  M.Ubicacion_Asiento, M.Ubicacion_Fila, M.Ubicacion_Precio, M.Ubicacion_Sin_numerar, 
 					  M.Ubicacion_Sin_numerar,M.Item_Factura_Monto, M.Item_Factura_Cantidad,
 					  M.Item_Factura_Descripcion, M.Factura_Nro
@@ -1351,7 +1354,6 @@ INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2
 		    ON A.Compras_Ubicaciones_ID - 1  = B.Compras_Ubicaciones_ID;
 		
 /* MARCA EN #COMPRAS_UBICACIONES_ITEMS2 DE COMPRAS CON MAS DE UNA UBICACION */  
-
 UPDATE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 SET MISMA_COMPRA = 1
 WHERE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Compra_Fecha = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Compra_Fecha_ANT AND
    EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Cli_Dni = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Cli_Dni_ANT AND
@@ -1359,7 +1361,6 @@ WHERE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Compra_Fecha = EL_GROUP_BY.#COMPRA
    EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espectaculo_Cod = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espectaculo_Cod_ANT;
 
 /* CARGA DE Ubicacion_ID, Publicacion_ID, Factura_ID EN TABLA #COMPRAS_UBICACIONES_ITEMS2 */ 
-
 UPDATE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 SET Ubicacion_ID = U.Ubicacion_ID,
 													Publicacion_ID = P.Publicacion_ID,
 													Factura_ID = F.Factura_ID
@@ -1376,9 +1377,7 @@ UPDATE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 SET Ubicacion_ID = U.Ubicacion_ID
 												  F.Factura_Nro = M.Factura_Nro AND
 												  P.Espectaculo_ID = E.Espectaculo_ID;
 
-
 /*CREACION DE TABLA AUXILIAR DE COMPRAS #Compra*/
-
 CREATE TABLE EL_GROUP_BY.#Compra (
 		Compra_ID INT IDENTITY(1,1),
 		Compra_Fecha DATETIME  ,
@@ -1475,10 +1474,6 @@ INSERT INTO EL_GROUP_BY.Item
 					,Compra_ID
 	FROM #COMPRAS_UBICACIONES_ITEMS2;
 
-DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS;
-DROP TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2;
-DROP table EL_GROUP_BY.#compra;
---DROP TABLE #TMP;
 COMMIT TRANSACTION;
 GO
 
@@ -1701,6 +1696,7 @@ go
 CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @USUARIO VARCHAR(50),
 @PASSWORD NVARCHAR(50),
+@PRIMER_LOGIN BIT,
 @NOMBRE VARCHAR(255),
 @APELLIDO VARCHAR(255),
 @TIPO_DOC VARCHAR(10),
@@ -1724,7 +1720,7 @@ BEGIN TRANSACTION
 										 ,'CLIENTE'
 										 ,1
 										 ,0
-										 ,1
+										 ,@PRIMER_LOGIN
 										 ,@TELEFONO
 										 ,@CALLE
 										 ,@NRO_CALLE
@@ -2078,6 +2074,7 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.CREAR_EMPRESA
 @USUARIO		VARCHAR(50),
 @PASSWORD		NVARCHAR(50),
+@PRIMER_LOGIN   BIT,
 @RAZON_SOCIAL	VARCHAR(255),
 @EMAIL			VARCHAR(255),
 @TELEFONO		VARCHAR(20), 
@@ -2096,7 +2093,7 @@ BEGIN TRANSACTION
 										 ,'Empresa'		--Tipo
 										 ,1				--Habilitado
 										 ,0				--Intentos
-										 ,1				--Primer login
+										 ,@PRIMER_LOGIN --Primer login
 										 ,@TELEFONO
 										 ,@CALLE
 										 ,@NUMERO
@@ -2537,6 +2534,91 @@ end
 GO
 
 
+
+-- -----------------------------------------------------
+-- SP - Listar Compras de una Empresa para Rendir
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA
+@ID_EMPRESA INT,
+@FECHA DATETIME
+as
+begin
+
+	SELECT	C.Compra_ID AS 'Id Compra',
+			C.Compra_Fecha as 'Fecha de Compra',
+			PU.Publicacion_ID,
+			U.Ubicacion_ID,
+			ES.Espectaculo_Descripcion as 'Espectáculo',
+			ES.Espectaculo_Fecha as 'Fecha Espectáculo',
+			U.Ubicacion_Fila as 'Fila',
+			U.Ubicacion_Asiento as 'Asiento',
+			U.Ubicacion_Sin_Numerar as 'Sin Numerar',
+			UT.Ubicacion_Tipo_Descripcion AS 'Tipo de Ubicación',
+			u.Ubicacion_Precio as 'Precio',
+			G.Grado_Publicacion_Comision as 'Comision de compra',
+			FP.Forma_Pago_Descripcion AS 'Forma de Pago',
+			P.Grado_Publicacion_ID
+	FROM EL_GROUP_BY.Compra C
+	INNER JOIN EL_GROUP_BY.Publicacion_Ubicacion PU on C.Compra_ID = PU.Compra_ID
+	INNER JOIN EL_GROUP_BY.Forma_Pago FP ON FP.Forma_Pago_ID = C.Forma_Pago_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion U on PU.Ubicacion_ID = U.Ubicacion_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT ON UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+	INNER JOIN EL_GROUP_BY.Publicacion p ON P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Espectaculo ES ON ES.Espectaculo_ID = P.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Empresa EM ON EM.Empresa_ID = ES.Empresa_ID
+	AND EM.Empresa_ID = @ID_EMPRESA
+	INNER JOIN EL_GROUP_BY.Grado_Publicacion G on G.Grado_Publicacion_ID = P.Grado_Publicacion_ID
+	WHERE C.Compra_Fecha < @FECHA
+	AND C.Compra_Rendida = 0
+	ORDER BY C.Compra_ID, pu.Publicacion_ID, u.Ubicacion_ID
+
+end
+go
+
+
+-- -----------------------------------------------------
+-- SP - Crear Factura
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.CREAR_FACTURA
+@FECHA DATETIME,
+@TOTAL NUMERIC(18,2),
+@EMPRESA_ID INT,
+@FACTURA_ID INT OUTPUT
+as
+begin transaction
+
+	INSERT EL_GROUP_BY.Factura VALUES(
+		(SELECT MAX(F.Factura_Nro) FROM EL_GROUP_BY.Factura F)+1,
+		@FECHA,
+		@TOTAL,
+		@EMPRESA_ID)
+
+	SET @FACTURA_ID  = SCOPE_IDENTITY();
+	 
+
+commit transaction
+GO
+
+
+-- -----------------------------------------------------
+-- SP - Crear ITEMS
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.CREAR_ITEMS
+@ITEMS AS ITEM_TIPO_TABLA READONLY
+AS
+BEGIN TRANSACTION
+
+	INSERT INTO EL_GROUP_BY.Item 
+		SELECT * FROM  @ITEMS
+
+	UPDATE EL_GROUP_BY.Compra SET Compra_Rendida = 1
+	WHERE Compra_ID in (SELECT Compra_ID FROM @ITEMS)
+
+COMMIT TRANSACTION
+GO
+
+
 -- -----------------------------------------------------
 -- SP - Listado Clientes con mayores puntos vencidos
 -- -----------------------------------------------------
@@ -2650,7 +2732,7 @@ begin
 	order by G.Grado_Publicacion_ID desc
 end
 go
-drop proc EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES;
+
 /****************************************************************
 *							SPs - FIN							*
 ****************************************************************/
@@ -2679,6 +2761,51 @@ EXEC EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
 
 /****************************************************************
 *			EJECUCIÓN DE MIGRACIÓN - FIN						*
+****************************************************************/
+
+/*
+/****************************************************************
+*			CONSTRAINTS UNIQUE, CHECK - INICIO					*
+****************************************************************/
+-- VALIDAMOS USERNAME ÚNICO --
+ALTER TABLE EL_GROUP_BY.Usuario 
+ADD CONSTRAINT UQ_Usuario_Username 
+	UNIQUE(Usuario_Username); 
+
+-- VALIDAMOS TIPO Y NUMERO DE DNI ÚNICO --
+ALTER TABLE EL_GROUP_BY.Cliente 
+ADD CONSTRAINT UQ_Tipo_Num_Doc 
+	UNIQUE (Cliente_Tipo_Documento, Cliente_Numero_Documento) 
+
+-- VALIDAMOS CUIT ÚNICO --
+ALTER TABLE EL_GROUP_BY.Empresa 
+ADD CONSTRAINT UQ_Empresa_Cuit 
+	UNIQUE (Empresa_Cuit);
+
+-- VALIDAMOS RAZÓN SOCIAL ÚNICA --	
+ALTER TABLE EL_GROUP_BY.Empresa 
+ADD CONSTRAINT UQ_Empresa_Razon 
+UNIQUE (Empresa_Razon_Social);
+
+-- VALIDAMOS COMISIÓN ENTRE 0 Y 100 % --
+ALTER TABLE EL_GROUP_BY.Grado_Publicacion 
+ADD CONSTRAINT CHK_Porc_Comision_entre_0y100 
+	CHECK ( Grado_Publicacion_Comision >= 0.00 AND Grado_Publicacion_Comision <= 1.00);
+
+-- VALIDAMOS COMPRAS NO NEGATIVAS --
+ALTER TABLE EL_GROUP_BY.Compra
+ADD CONSTRAINT CHK_Monto_No_Negativo 
+	CHECK ( Compra_Monto_Total >= 0.00);
+/****************************************************************
+*			CONSTRAINTS UNIQUE, CHECK - FIN						*
+****************************************************************/*/
+
+/****************************************************************
+*						INDICES - INICIO						*
+****************************************************************/
+
+/****************************************************************
+*						INDICES - FIN							*
 ****************************************************************/
 /* COMENTE TODO PARA CORRER LA MIGRACION
 --------------------------------------------------------

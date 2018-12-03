@@ -183,6 +183,7 @@
             this.actionsGeneratePayCommissionsToolStripMenuItem.Name = "actionsGeneratePayCommissionsToolStripMenuItem";
             this.actionsGeneratePayCommissionsToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
             this.actionsGeneratePayCommissionsToolStripMenuItem.Text = "Generar pago de comisiones";
+            this.actionsGeneratePayCommissionsToolStripMenuItem.Click += new System.EventHandler(this.actionsGeneratePayCommissionsToolStripMenuItem_Click);
             // 
             // actionsExchangeAdminPointsToolStripMenuItem
             // 
