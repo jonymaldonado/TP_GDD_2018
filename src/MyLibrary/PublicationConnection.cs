@@ -15,7 +15,7 @@ namespace MyLibrary
 {
     public class PublicationConnection
     {
-        public static DataSet ListPublication(String description, DateTime publicDate, String user)
+        public static DataSet ListPublication(String description, DateTime dateFrom, DateTime dateTo, String user)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -25,9 +25,14 @@ namespace MyLibrary
             parameter.Value = description;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@FECHA_PUBLI", SqlDbType.DateTime);
-            parameter.Value = publicDate;
+            parameter = new SqlParameter("@FECHA_DESDE", SqlDbType.DateTime);
+            parameter.Value = dateFrom;
             parameters.Add(parameter);
+
+            parameter = new SqlParameter("@FECHA_HASTA", SqlDbType.DateTime);
+            parameter.Value = dateTo;
+            parameters.Add(parameter);
+
 
             parameter = new SqlParameter("@USERNAME", SqlDbType.NVarChar, 50);
             parameter.Value = user;

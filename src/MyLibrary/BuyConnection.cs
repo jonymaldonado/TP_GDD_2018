@@ -61,7 +61,7 @@ namespace MyLibrary
             }
             parameters.Add(parameter);
 
-            return Connection.GetDataSet("EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES", Connection.Type.StoredProcedure, parameters);
+            return Connection.GetDataSet("EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES_COMPRA", Connection.Type.StoredProcedure, parameters);
         }
     }
 }

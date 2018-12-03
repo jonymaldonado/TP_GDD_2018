@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MyLibrary;
 using DAO;
+using System.Configuration;
 
 namespace PalcoNet.Editar_Publicacion
 {
@@ -16,14 +17,16 @@ namespace PalcoNet.Editar_Publicacion
     {
         private String user;
         private Int32 idEmpresa;
-        
+        private static DateTime systemDate = Convert.ToDateTime(ConfigurationManager.AppSettings["FechaSistema"]);
+
         public EditPublication(String user, Int32 idEmpresa)
         {
             InitializeComponent();
 
             this.user = user;
             this.idEmpresa = idEmpresa;
-
+            dtp_public_date.MinDate = systemDate;
+            dtp_date_to.MinDate = systemDate;
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
@@ -38,7 +41,7 @@ namespace PalcoNet.Editar_Publicacion
 
         private void btn_search_Click(object sender, EventArgs e)
         {
-            dgv_list.DataSource = PublicationConnection.ListPublication(txt_description.Text,dtp_public_date.Value,user).Tables[0];
+            dgv_list.DataSource = PublicationConnection.ListPublication(txt_description.Text,dtp_public_date.Value, dtp_date_to.Value ,user).Tables[0];
             
         }
 
@@ -66,6 +69,12 @@ namespace PalcoNet.Editar_Publicacion
             }
 
         }
+
+        private void dtp_public_date_ValueChanged(object sender, EventArgs e)
+        {
+            dtp_date_to.MinDate = dtp_public_date.Value;
+        }
+
 
     }
 }

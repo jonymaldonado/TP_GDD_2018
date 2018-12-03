@@ -34,6 +34,7 @@ namespace PalcoNet.Generar_Publicacion
         private Int32 idEmpresa;
         private Int32 idGrado;
         private Form previusForm;
+        private static DateTime systemDate = Convert.ToDateTime(ConfigurationManager.AppSettings["FechaSistema"]);
 
         public string grade
         {
@@ -65,7 +66,9 @@ namespace PalcoNet.Generar_Publicacion
 
             //Setea globales
             dateTimePicker1.Format = DateTimePickerFormat.Custom;
-            dateTimePicker1.CustomFormat = "MM/dd/yyyy hh:mm:ss";  
+            dateTimePicker1.CustomFormat = "MM/dd/yyyy hh:mm:ss";
+            dateTimePicker1.MinDate = systemDate;
+            dtp_date.MinDate = systemDate;
             this.user = user;
             this.idEmpresa = idEmpresa;
             this.edit = edit;

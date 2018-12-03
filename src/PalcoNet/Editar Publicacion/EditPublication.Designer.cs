@@ -33,13 +33,15 @@
             this.btn_search = new System.Windows.Forms.Button();
             this.btn_clean = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btn_edit = new System.Windows.Forms.Button();
             this.dtp_public_date = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_description = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.returnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btn_edit = new System.Windows.Forms.Button();
+            this.dtp_date_to = new System.Windows.Forms.DateTimePicker();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -53,17 +55,17 @@
             this.dgv_list.AllowUserToResizeRows = false;
             this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_list.Location = new System.Drawing.Point(12, 172);
+            this.dgv_list.Location = new System.Drawing.Point(12, 179);
             this.dgv_list.Name = "dgv_list";
             this.dgv_list.ReadOnly = true;
             this.dgv_list.RowHeadersVisible = false;
             this.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_list.Size = new System.Drawing.Size(818, 286);
+            this.dgv_list.Size = new System.Drawing.Size(818, 279);
             this.dgv_list.TabIndex = 56;
             // 
             // btn_search
             // 
-            this.btn_search.Location = new System.Drawing.Point(378, 19);
+            this.btn_search.Location = new System.Drawing.Point(381, 25);
             this.btn_search.Name = "btn_search";
             this.btn_search.Size = new System.Drawing.Size(106, 23);
             this.btn_search.TabIndex = 54;
@@ -73,7 +75,7 @@
             // 
             // btn_clean
             // 
-            this.btn_clean.Location = new System.Drawing.Point(378, 75);
+            this.btn_clean.Location = new System.Drawing.Point(381, 89);
             this.btn_clean.Name = "btn_clean";
             this.btn_clean.Size = new System.Drawing.Size(106, 23);
             this.btn_clean.TabIndex = 53;
@@ -83,6 +85,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.dtp_date_to);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.btn_edit);
             this.groupBox1.Controls.Add(this.dtp_public_date);
             this.groupBox1.Controls.Add(this.label2);
@@ -92,10 +96,20 @@
             this.groupBox1.Controls.Add(this.txt_description);
             this.groupBox1.Location = new System.Drawing.Point(12, 49);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(818, 117);
+            this.groupBox1.Size = new System.Drawing.Size(818, 124);
             this.groupBox1.TabIndex = 52;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros de búsqueda";
+            // 
+            // btn_edit
+            // 
+            this.btn_edit.Location = new System.Drawing.Point(381, 57);
+            this.btn_edit.Name = "btn_edit";
+            this.btn_edit.Size = new System.Drawing.Size(106, 23);
+            this.btn_edit.TabIndex = 62;
+            this.btn_edit.Text = "Editar";
+            this.btn_edit.UseVisualStyleBackColor = true;
+            this.btn_edit.Click += new System.EventHandler(this.btn_edit_Click);
             // 
             // dtp_public_date
             // 
@@ -104,20 +118,21 @@
             this.dtp_public_date.Size = new System.Drawing.Size(220, 20);
             this.dtp_public_date.TabIndex = 6;
             this.dtp_public_date.Value = new System.DateTime(2018, 1, 1, 0, 0, 0, 0);
+            this.dtp_public_date.ValueChanged += new System.EventHandler(this.dtp_public_date_ValueChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(14, 62);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(98, 13);
+            this.label2.Size = new System.Drawing.Size(74, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Fecha Publicación:";
+            this.label2.Text = "Fecha Desde:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 30);
+            this.label1.Location = new System.Drawing.Point(15, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 4;
@@ -148,15 +163,22 @@
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
-            // btn_edit
+            // dtp_date_to
             // 
-            this.btn_edit.Location = new System.Drawing.Point(378, 46);
-            this.btn_edit.Name = "btn_edit";
-            this.btn_edit.Size = new System.Drawing.Size(106, 23);
-            this.btn_edit.TabIndex = 62;
-            this.btn_edit.Text = "Editar";
-            this.btn_edit.UseVisualStyleBackColor = true;
-            this.btn_edit.Click += new System.EventHandler(this.btn_edit_Click);
+            this.dtp_date_to.Location = new System.Drawing.Point(118, 91);
+            this.dtp_date_to.Name = "dtp_date_to";
+            this.dtp_date_to.Size = new System.Drawing.Size(220, 20);
+            this.dtp_date_to.TabIndex = 64;
+            this.dtp_date_to.Value = new System.DateTime(2018, 1, 1, 0, 0, 0, 0);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 94);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(71, 13);
+            this.label3.TabIndex = 63;
+            this.label3.Text = "Fecha Hasta:";
             // 
             // EditPublication
             // 
@@ -191,5 +213,7 @@
         private System.Windows.Forms.ToolStripMenuItem returnToolStripMenuItem;
         private System.Windows.Forms.DateTimePicker dtp_public_date;
         private System.Windows.Forms.Button btn_edit;
+        private System.Windows.Forms.DateTimePicker dtp_date_to;
+        private System.Windows.Forms.Label label3;
     }
 }

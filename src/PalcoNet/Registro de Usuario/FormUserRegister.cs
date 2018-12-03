@@ -15,7 +15,7 @@ namespace PalcoNet.Registro_de_Usuario
     {
         private const string CLIENTE = "CLIENTE";
         private const string EMPRESA = "EMPRESA";
-        Login.Login formLogin;
+
         private int userId;
 
         public FormUserRegister()
