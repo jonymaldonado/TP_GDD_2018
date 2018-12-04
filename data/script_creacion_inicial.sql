@@ -1032,7 +1032,9 @@ BEGIN TRANSACTION
 					(F.Funcionalidad_ID = 1 OR
 					F.Funcionalidad_ID = 2 OR
 					F.Funcionalidad_ID = 3 OR
-					F.Funcionalidad_ID = 11)
+					F.Funcionalidad_ID = 5 OR
+					F.Funcionalidad_ID = 11 OR
+					F.Funcionalidad_ID = 12)
 	UNION
 		SELECT Rol_ID,
 				Funcionalidad_ID
@@ -1040,15 +1042,13 @@ BEGIN TRANSACTION
 			WHERE R.Rol_Nombre = 'CLIENTE' AND
 					(F.Funcionalidad_ID = 8 OR
 					F.Funcionalidad_ID = 9 OR
-					F.Funcionalidad_ID = 10 OR
-					F.Funcionalidad_ID = 12)
+					F.Funcionalidad_ID = 10)
 	UNION
 		SELECT Rol_ID,
 				Funcionalidad_ID
 			FROM EL_GROUP_BY.ROL R, EL_GROUP_BY.FUNCIONALIDAD F
 			WHERE R.Rol_Nombre = 'EMPRESA' AND
 					(F.Funcionalidad_ID = 4 OR
-						F.Funcionalidad_ID = 5 OR
 						F.Funcionalidad_ID = 6 OR
 						F.Funcionalidad_ID = 7)
 COMMIT TRANSACTION;
@@ -1242,6 +1242,8 @@ BEGIN TRANSACTION
 
 /*CREACION DE TABLA AUXILIAR #COMPRAS_UBICACIONES_ITEMS*/  
 CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS (Compras_Ubicaciones_ID INT IDENTITY(1,1)
+												   ,Espec_Empresa_Razon_Social NVARCHAR(255)
+												   ,Espec_Empresa_Cuit NVARCHAR(255)
 												   ,Compra_Fecha DATETIME
 												   ,Cli_Dni NUMERIC(18,0)
                                                    ,Cli_Nombre NVARCHAR(255)
@@ -1260,7 +1262,9 @@ CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS (Compras_Ubicaciones_ID INT 
 
 /* CARGA DE DATOS TABLA AUXILIAR #COMPRAS_UBICACIONES_ITEMS*/  
 INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS
-	SELECT DISTINCT M.Compra_Fecha
+	SELECT DISTINCT M.Espec_Empresa_Razon_Social
+				,M.Espec_Empresa_Cuit
+				,M.Compra_Fecha
 				,M.Cli_Dni
 				,M.Cli_Nombre
 				,M.Compra_Cantidad
@@ -1286,6 +1290,8 @@ INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS
 
 /*CREACION DE TABLA AUXILIAR #COMPRAS_UBICACIONES_ITEMS2*/  
 CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 (Compras_Ubicaciones_ID INT IDENTITY(1,1)
+												   ,Espec_Empresa_Razon_Social NVARCHAR(255)
+												   ,Espec_Empresa_Cuit NVARCHAR(255)
 												   ,Compra_Fecha DATETIME
 												   ,Cli_Dni NUMERIC(18,0)
                                                    ,Cli_Nombre NVARCHAR(255)
@@ -1299,6 +1305,8 @@ CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 (Compras_Ubicaciones_ID INT
 												   ,Item_Cantidad NUMERIC(18,0)
 												   ,Item_Descripcion NVARCHAR(60)
 												   ,Factura_Nro NUMERIC(18,0)
+												   ,Espec_Empresa_Razon_Social_ANT NVARCHAR(255)
+												   ,Espec_Empresa_Cuit_ANT NVARCHAR(255)
 												   ,Compra_Fecha_ANT DATETIME
 												   ,Cli_Dni_ANT NUMERIC(18,0)
 												   ,Cli_Nombre_ANT NVARCHAR(255)
@@ -1319,7 +1327,9 @@ CREATE TABLE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 (Compras_Ubicaciones_ID INT
 
 /*CARGA DE DATOS TABLA AUXILIAR #COMPRAS_UBICACIONES_ITEMS2*/   
 INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2
-        SELECT DISTINCT  A.Compra_Fecha
+        SELECT DISTINCT   A.Espec_Empresa_Razon_Social
+				,A.Espec_Empresa_Cuit
+				,A.Compra_Fecha
 				,A.Cli_Dni
 				,A.Cli_Nombre
 				,A.Compra_Cantidad
@@ -1332,7 +1342,9 @@ INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2
 				,A.Item_Cantidad
 				,A.Item_Descripcion
 				,A.Factura_Nro
-			    ,B.Compra_Fecha
+			    ,B.Espec_Empresa_Razon_Social
+				,B.Espec_Empresa_Cuit
+				,B.Compra_Fecha
 				,B.Cli_Dni
 				,B.Cli_Nombre
 				,B.Compra_Cantidad
@@ -1349,7 +1361,7 @@ INSERT INTO EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2
 				,NULL
 				,0
 				,NULL
-			FROM EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS A
+			FROM EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS A																			   
 			LEFT JOIN EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS B
 		    ON A.Compras_Ubicaciones_ID - 1  = B.Compras_Ubicaciones_ID;
 		
@@ -1358,7 +1370,9 @@ UPDATE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 SET MISMA_COMPRA = 1
 WHERE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Compra_Fecha = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Compra_Fecha_ANT AND
    EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Cli_Dni = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Cli_Dni_ANT AND
    EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Cli_Nombre = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Cli_Nombre_ANT AND
-   EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espectaculo_Cod = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espectaculo_Cod_ANT;
+   EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espectaculo_Cod = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espectaculo_Cod_ANT AND
+   EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espec_Empresa_Razon_Social = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espec_Empresa_Razon_Social_ANT AND
+   EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espec_Empresa_Cuit = EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2.Espec_Empresa_Cuit_ANT;
 
 /* CARGA DE Ubicacion_ID, Publicacion_ID, Factura_ID EN TABLA #COMPRAS_UBICACIONES_ITEMS2 */ 
 UPDATE EL_GROUP_BY.#COMPRAS_UBICACIONES_ITEMS2 SET Ubicacion_ID = U.Ubicacion_ID,
