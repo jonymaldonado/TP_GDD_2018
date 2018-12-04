@@ -8,6 +8,8 @@ using System.Data.SqlClient;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Windows.Forms;
+using MyLibrary;
 
 
 namespace MyLibrary
@@ -58,6 +60,7 @@ namespace MyLibrary
 
         public static SqlDataReader GetUbicationsToBuy(Int32 idPublic)
         {
+
             List<SqlParameter> parameters = new List<SqlParameter>();
             parameters.Add(new SqlParameter("@PUBLI_ID", idPublic));
             SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_UBICACIONES_PARA_COMPRA", Connection.Type.StoredProcedure, parameters);

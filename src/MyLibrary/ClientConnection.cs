@@ -275,6 +275,12 @@ namespace MyLibrary
 
         }
 
+        public static Int32 GetUserId(Int32 ClientId)
+        {
+            return Connection.queryForInt("SELECT Usuario_ID FROM EL_GROUP_BY.Cliente WHERE Cliente_ID =" + ClientId);
+
+        }
+
     }
 
 }

@@ -15,6 +15,6 @@ namespace DAO
         public String Cuil { get; set; }
         public DateTime BirthDate { get; set; }
         public String CardName { get; set; }
-        public Int64 CardNumber { get; set; }
+        public String CardNumber { get; set; }
     }
 }

@@ -2503,7 +2503,7 @@ SELECT	PU.Publicacion_ID,
 	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo T ON T.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
 	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
 	INNER JOIN EL_GROUP_BY.Espectaculo E on e.Espectaculo_ID = P.Espectaculo_ID
-	WHERE PU.Publicacion_ID = 7804
+	WHERE PU.Publicacion_ID = @PUBLI_ID
 	AND U.Ubicacion_Canjeada = 0
 	AND PU.Compra_ID is null
 

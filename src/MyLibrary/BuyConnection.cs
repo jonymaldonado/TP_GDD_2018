@@ -55,5 +55,10 @@ namespace MyLibrary
 
             return Connection.GetDataSet("EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES_COMPRA", Connection.Type.StoredProcedure, parameters);
         }
+
+        public static SqlDataReader GetCreditCard(Int32 ClieID)
+        {
+            return Connection.GetDataReader("SELECT Cliente_Tarjeta_Numero, Cliente_Tarjeta_Marca FROM EL_GROUP_BY.Cliente WHERE Cliente_ID = "+ClieID);
+        }
     }
 }

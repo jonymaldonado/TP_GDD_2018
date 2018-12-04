@@ -22,10 +22,11 @@ namespace PalcoNet.Comprar
         public Int64 total = 0;
         private DataSet ds;
         private Int32 IdCliente;
+        public bool creditCardOk = false;
+        public bool CreditCardOk { set { this.creditCardOk = value; } get { return this.creditCardOk; } }
         private static BindingList<UbicationDAO> ubications = new BindingList<UbicationDAO>();
         private static BindingList<UbicationDAO> ubicationsToBuy = new BindingList<UbicationDAO>();
-
-
+        
         public FormToBuy(Int32 IdCliente)
         {
             InitializeComponent();
@@ -39,6 +40,8 @@ namespace PalcoNet.Comprar
 
         private void ModifyScreen()
         {
+            ubications.Clear();
+            ubicationsToBuy.Clear();
             dgv_ubicaciones.DataSource = ubications;
             dgv_ubications_to_buy.DataSource = ubicationsToBuy;
 
@@ -65,7 +68,9 @@ namespace PalcoNet.Comprar
             dgv_ubications_to_buy.Columns["SinNumerar"].DisplayIndex = 5;
             dgv_ubications_to_buy.Columns["Precio"].DisplayIndex = 6;
 
+            total = 0;
             txt_total.Text = total.ToString();
+
         }
 
         private void bindingSource1_CurrentChanged(object sender, EventArgs e)
@@ -193,7 +198,6 @@ namespace PalcoNet.Comprar
         private void LoadUbications(Int32 PubliID)
         {
             SqlDataReader reader = UbicationConnection.GetUbicationsToBuy(PubliID);
-
             ubications.Clear();
 
             if (reader.HasRows)
@@ -258,7 +262,54 @@ namespace PalcoNet.Comprar
 
         private void btn_buy_Click(object sender, EventArgs e)
         {
+            SqlDataReader reader = BuyConnection.GetCreditCard(this.IdCliente);
+            String CreditCard = "";
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    CreditCard = reader.IsDBNull(0) ? "" : reader.GetString(0);
+                }
+            }
+            reader.Close();
             
+            //Se debe asignar una tarjeta de credito para poder confirmar la compra
+            if (String.IsNullOrEmpty(CreditCard))
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+                sb.Append("No tiene asignada una tarjeta de crédito, no podrá realizar la compra");
+                sb.Append(Environment.NewLine);
+                sb.Append("¿Desea asignarla ahora?");
+                
+                DialogResult result = MessageBox.Show(sb.ToString(), "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    AsignCreditCard();
+                    if(this.creditCardOk)
+                        Buy();
+                }
+            }
+            else
+            {
+                Buy();
+            }
+                
+        }
+
+        private void Buy()
+        {
+            MessageBox.Show("Confirma la compra?");
+        }
+
+        private void AsignCreditCard()
+        {
+            using (Abm_Cliente.FormAMClient FormAMClient = new Abm_Cliente.FormAMClient(this, this.IdCliente))
+            {
+                FormAMClient.ShowDialog();
+            }
         }
 
     }
