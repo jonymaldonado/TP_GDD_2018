@@ -15,7 +15,7 @@ namespace MyLibrary
             return Connection.GetDataReader("SELECT RUBRO_ID, RUBRO_DESCRIPCION FROM EL_GROUP_BY.RUBRO");
         }
 
-        public static DataSet ListExistingPublications(DateTime dateFrom, DateTime dateTo, string desc, Int32 categoryOne, Int32 categoryTwo, Int32 categoryThree)
+        public static DataSet ListExistingPublications(DateTime dateFrom, DateTime dateTo, DateTime systemDate, string desc, Int32 categoryOne, Int32 categoryTwo, Int32 categoryThree)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -27,6 +27,10 @@ namespace MyLibrary
 
             parameter = new SqlParameter("@FECHA_HASTA", SqlDbType.DateTime, 100);
             parameter.Value = dateTo;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@FECHA_SIST", SqlDbType.DateTime, 100);
+            parameter.Value = systemDate;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@DESCRIPCION", SqlDbType.VarChar, 255);

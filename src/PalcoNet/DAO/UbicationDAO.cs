@@ -22,6 +22,8 @@ namespace DAO
             }
 
         }
+        public Int32 PubliID { get; set; }
+        public Int32 EmpresaID { get; set; }
         
     }
 

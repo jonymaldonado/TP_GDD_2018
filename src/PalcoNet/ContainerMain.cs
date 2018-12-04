@@ -229,7 +229,9 @@ namespace PalcoNet
 
         private void actionsBuyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(new Comprar.FormToBuy());
+            int idCliente = Connection.queryForInt("SELECT Cliente_ID FROM EL_GROUP_BY.Cliente WHERE Usuario_ID =" + this.id);
+            
+            openForm(new Comprar.FormToBuy(idCliente));
         }
 
         private void actionsGeneratePayCommissionsToolStripMenuItem_Click(object sender, EventArgs e)
