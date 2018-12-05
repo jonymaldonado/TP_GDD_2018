@@ -181,7 +181,7 @@ namespace MyLibrary
             parameter.Value = client.CardName;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@TARJETA_NRO", SqlDbType.Int, 100);
+            parameter = new SqlParameter("@TARJETA_NRO", SqlDbType.NVarChar, 20);
             parameter.Value = client.CardNumber;
             parameters.Add(parameter);
         }

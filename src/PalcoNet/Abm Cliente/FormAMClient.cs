@@ -158,7 +158,7 @@ namespace PalcoNet.Abm_Cliente
             clientDAO.BirthDate = Convert.ToDateTime(dtp_birthdate.Value.Date.ToString());
             clientDAO.CardName = txt_name_card.Text;
             clientDAO.CardNumber = txt_number_card.Text;
-            clientDAO.FirstLogin = this.isRegisterUser;
+            clientDAO.FirstLogin = !this.isRegisterUser;
 
             return clientDAO;
         }
