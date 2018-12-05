@@ -68,6 +68,7 @@ namespace PalcoNet.Abm_Grado
         private void limpiarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             txt_comision.Text = "";
+            txt_peso.Text = "";
         }
 
         private void CreateGrado()
@@ -113,6 +114,7 @@ namespace PalcoNet.Abm_Grado
 
             grado.Comision = Convert.ToDecimal(txt_comision.Text) / 100;
             grado.Prioridad = cmb_priority.Text;
+            grado.Peso = Convert.ToInt32(txt_peso.Text);
 
             return grado;
         }
@@ -128,6 +130,7 @@ namespace PalcoNet.Abm_Grado
                     Decimal value = reader.GetDecimal(0) * 100;
                     Int32 valueInt = Convert.ToInt32(value);
                     txt_comision.Text = valueInt.ToString();
+                    txt_peso.Text = Convert.ToString(reader.GetInt32(2));
 
                     cmb_priority.SelectedIndex = cmb_priority.FindStringExact(reader.GetString(1));
 

@@ -65,6 +65,10 @@ namespace MyLibrary
             parameter.Value = grado.Prioridad;
             parameters.Add(parameter);
 
+            parameter = new SqlParameter("@PESO", SqlDbType.Int);
+            parameter.Value = grado.Peso;
+            parameters.Add(parameter);
+
         }
 
         public static SqlDataReader GetGradoForModify(Int32 id)

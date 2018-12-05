@@ -583,6 +583,7 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 		Grado_Publicacion_ID INT IDENTITY(1,1),
 		Grado_Publicacion_Comision NUMERIC(3,2) NOT NULL,
 		Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
+		Grado_Publicacion_Peso INT NOT NULL,
 		Grado_Publicacion_Habilitado BIT NOT NULL,
 	PRIMARY KEY (Grado_Publicacion_ID))
 ;
@@ -1113,10 +1114,10 @@ GO
 									      														 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION AS
 BEGIN TRANSACTION
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'MIGRADA',0)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'BAJA',1)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.15,'MEDIA',1)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.20,'ALTA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'MIGRADA',0,0)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'BAJA',10,1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.15,'MEDIA',20,1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.20,'ALTA',30,1)
 COMMIT;
 GO	
 -- -----------------------------------------------------
@@ -2206,7 +2207,8 @@ begin
 			G.Grado_Publicacion_Prioridad
 	from EL_GROUP_BY.Grado_Publicacion G 
 	where G.Grado_Publicacion_Prioridad LIKE ISNULL('%' + @PRIORIDAD + '%', '%')
-	  AND G.Grado_Publicacion_Habilitado = 1; 
+	  AND G.Grado_Publicacion_Habilitado = 1
+	  ORDER BY G.Grado_Publicacion_Peso DESC; 
 end
 go
 
@@ -2229,11 +2231,13 @@ GO
 -- -----------------------------------------------------
 CREATE PROCEDURE EL_GROUP_BY.CREAR_GRADO
 @COMISION		NUMERIC(3,2),
-@PRIORIDAD		VARCHAR(10)
+@PRIORIDAD		VARCHAR(10),
+@PESO			INT
 AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (@COMISION
 										 ,@PRIORIDAD
+										 ,@PESO
 										 ,1				
 										 )
 
@@ -2250,7 +2254,8 @@ create procedure EL_GROUP_BY.OBTENER_GRADO_FOR_MODIFY
 as
 begin
 	SELECT  G.Grado_Publicacion_Comision,
-			G.Grado_Publicacion_Prioridad
+			G.Grado_Publicacion_Prioridad,
+			G.Grado_Publicacion_Peso
 	FROM EL_GROUP_BY.Grado_Publicacion G
 	WHERE G.Grado_Publicacion_ID = @ID
 end
@@ -2263,13 +2268,15 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_GRADO
 @ID				INT,
 @COMISION		NUMERIC(3,2),
-@PRIORIDAD		VARCHAR(10)
+@PRIORIDAD		VARCHAR(10), 
+@PESO			INT
 AS
 BEGIN TRANSACTION
 
 	UPDATE EL_GROUP_BY.Grado_Publicacion
 		SET Grado_Publicacion_Comision = @COMISION,
-			Grado_Publicacion_Prioridad = @PRIORIDAD
+			Grado_Publicacion_Prioridad = @PRIORIDAD,
+			Grado_Publicacion_Peso = @PESO
 		WHERE Grado_Publicacion_ID = @ID
 
 COMMIT

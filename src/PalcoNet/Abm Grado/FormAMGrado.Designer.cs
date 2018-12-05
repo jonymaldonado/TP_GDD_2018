@@ -38,6 +38,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_comision = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txt_peso = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.group_empresa.SuspendLayout();
             this.SuspendLayout();
@@ -79,13 +81,15 @@
             // 
             // group_empresa
             // 
+            this.group_empresa.Controls.Add(this.txt_peso);
+            this.group_empresa.Controls.Add(this.label3);
             this.group_empresa.Controls.Add(this.cmb_priority);
             this.group_empresa.Controls.Add(this.label2);
             this.group_empresa.Controls.Add(this.label1);
             this.group_empresa.Controls.Add(this.txt_comision);
             this.group_empresa.Location = new System.Drawing.Point(12, 27);
             this.group_empresa.Name = "group_empresa";
-            this.group_empresa.Size = new System.Drawing.Size(302, 112);
+            this.group_empresa.Size = new System.Drawing.Size(302, 135);
             this.group_empresa.TabIndex = 61;
             this.group_empresa.TabStop = false;
             this.group_empresa.Text = "Datos Empresa";
@@ -125,13 +129,29 @@
             this.txt_comision.Size = new System.Drawing.Size(184, 20);
             this.txt_comision.TabIndex = 0;
             this.txt_comision.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_comision_KeyPress);
-            this.txt_comision.Validating += txt_comision_Validating;     
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(48, 100);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(34, 13);
+            this.label3.TabIndex = 60;
+            this.label3.Text = "Peso:";
+            // 
+            // txt_peso
+            // 
+            this.txt_peso.Location = new System.Drawing.Point(89, 97);
+            this.txt_peso.MaxLength = 255;
+            this.txt_peso.Name = "txt_peso";
+            this.txt_peso.Size = new System.Drawing.Size(184, 20);
+            this.txt_peso.TabIndex = 61;
             // 
             // FormAMGrado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(332, 157);
+            this.ClientSize = new System.Drawing.Size(332, 171);
             this.Controls.Add(this.group_empresa);
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormAMGrado";
@@ -156,5 +176,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_comision;
         private System.Windows.Forms.ComboBox cmb_priority;
+        private System.Windows.Forms.TextBox txt_peso;
+        private System.Windows.Forms.Label label3;
     }
 }

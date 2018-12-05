@@ -11,6 +11,7 @@ namespace DAO
         public Int32 Id { get; set; }
         public Decimal Comision { get; set; }
         public String Prioridad { get; set; }
+        public Int32 Peso { get; set; }
 
     }
 }
