@@ -365,9 +365,11 @@ namespace PalcoNet.Comprar
                 totalCompra = 0;
                 ubicacionesCompra.Clear();
 
-                MessageBox.Show("Compra realizada con éxito");
+                MessageBox.Show("Compra realizada con éxito", "Compra");
                 ubicationsToBuy.Clear();
                 ubications.Clear();
+                total = 0;
+                txt_total.Text = total.ToString();
                 FindPublications();
                 
             }

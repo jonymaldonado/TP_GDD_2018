@@ -132,8 +132,6 @@ IF OBJECT_ID('EL_GROUP_BY.CARGAR_FACTURAS') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
 
-IF OBJECT_ID('EL_GROUP_BY.UBICACIONES_MIGRADAS_DISPONIBLES') IS NOT NULL
-	DROP PROCEDURE EL_GROUP_BY.UBICACIONES_MIGRADAS_DISPONIBLES;
 GO
 
 /****************************************************************
@@ -555,11 +553,7 @@ CREATE TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA As Table
 	Ubicacion_Asiento NUMERIC(18,0) NULL,
 	Ubicacion_Sin_Numerar BIT NOT NULL,
 	Ubicacion_Precio NUMERIC(18,0) NOT NULL,
-	Ubicacion_Disponible BIT NOT NULL,
-	Ubicacion_Tipo_ID INT NOT NULL,
-	Ubicacion_Canjeada BIT NOT NULL,
-	Ubicacion_Fecha_Canje DATETIME NULL,
-	Ubicacion_Cliente_Canje INT NULL
+	Ubicacion_Tipo_ID INT NOT NULL
 )
 
 -- -----------------------------------------------------
@@ -715,7 +709,6 @@ CREATE TABLE EL_GROUP_BY.Publicacion_Ubicacion (
 		Ubicacion_ID INT NOT NULL,
 		Publicacion_ID INT NOT NULL,
 		Compra_ID INT NULL,
-		Publicacion_Ubicacion_Disponible BIT NOT NULL,
 		Publicacion_Ubicacion_Canjeada BIT NOT NULL,
 		Publicacion_Ubicacion_Fecha_Canje DATETIME NULL,
 		Publicacion_Ubicacion_Cliente_Canje INT NULL
@@ -1194,7 +1187,6 @@ BEGIN TRANSACTION
 		SELECT DISTINCT U.Ubicacion_ID
 				,P.Publicacion_ID
 				,NULL -- La compra la voy a relacionar luego
-				,0 -- Ubicacion_Disponible Migramos como NO por ahora
 				,0 -- NO Canjeada dado que el canje de puntos es una funcionalidad nueva
 				,NULL -- fecha de canje - idem campo anterior
 				,NULL -- Cliente de Canje - idem campo anterior
@@ -1482,17 +1474,6 @@ INSERT INTO EL_GROUP_BY.Item
 					,Compra_ID
 	FROM #COMPRAS_UBICACIONES_ITEMS2;
 
-COMMIT TRANSACTION;
-GO
-
--- -----------------------------------------------------
--- SPMigra -- Ubicaciones Migradas Disponibles
--- -----------------------------------------------------
- CREATE PROCEDURE EL_GROUP_BY.UBICACIONES_MIGRADAS_DISPONIBLES AS
-BEGIN TRANSACTION
-	UPDATE EL_GROUP_BY.Publicacion_Ubicacion 
-	SET EL_GROUP_BY.Publicacion_Ubicacion.Publicacion_Ubicacion_Disponible = 1
-	WHERE EL_GROUP_BY.Publicacion_Ubicacion.Compra_ID IS NULL; 										      
 COMMIT TRANSACTION;
 GO
 
@@ -1969,11 +1950,12 @@ begin
 			UT.Ubicacion_Tipo_Descripcion,
 			(U.Ubicacion_Precio*5) as Puntos
 	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
-	INNER JOIN EL_GROUP_BY.Ubicacion U on U.Ubicacion_ID = PU.Ubicacion_ID and U.Ubicacion_Canjeada = 0
+	INNER JOIN EL_GROUP_BY.Ubicacion U on U.Ubicacion_ID = PU.Ubicacion_ID 
 	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
 	INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
 	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
 	WHERE (U.Ubicacion_Precio*5) < @PUNTOS
+	AND PU.Publicacion_Ubicacion_Canjeada = 0
 	AND convert(date, E.Espectaculo_Fecha,120) > convert(date, @FECHA,120)
 	order by Fecha, E.Espectaculo_ID, U.Ubicacion_Fila, U.Ubicacion_asiento asc
 	
@@ -1992,9 +1974,11 @@ CREATE PROCEDURE EL_GROUP_BY.CANJEAR_UBICACION
 @FECHA DATETIME
 AS
 BEGIN TRANSACTION
-	UPDATE EL_GROUP_BY.Ubicacion
-		SET Ubicacion_Canjeada = 1 
+	UPDATE EL_GROUP_BY.Publicacion_Ubicacion
+		SET	Publicacion_Ubicacion_Canjeada = 1,
+			Publicacion_Ubicacion_Cliente_Canje = @CLIENTE_ID 
 		WHERE Ubicacion_ID = @UBICACION_ID
+		AND Publicacion_ID = @PUBLICACION_ID
 
 	DECLARE CU_PUNTOS CURSOR FOR
 	SELECT	P.Puntos_ID,
@@ -2343,12 +2327,58 @@ GO
 -- -----------------------------------------------------
 -- SP - Crear ubicaciones
 -- -----------------------------------------------------
+
 CREATE PROCEDURE EL_GROUP_BY.CREAR_UBICACIONES
 @UBICACIONES AS UBICACION_TIPO_TABLA READONLY,
 @PUBLI_ID INT 
 AS
 BEGIN TRANSACTION
 
+	DECLARE CU_UBICACION CURSOR FOR
+	SELECT	*
+	FROM @UBICACIONES 
+
+	DECLARE @FILA VARCHAR(3) 
+	DECLARE @ASIENTO NUMERIC(18,0)
+	DECLARE @SIN_NUMERAR BIT 
+	DECLARE @PRECIO NUMERIC(18,0) 
+	DECLARE @TIPO_ID INT 
+	DECLARE @UBICACION_ID INT
+
+	OPEN CU_UBICACION
+	FETCH CU_UBICACION INTO @FILA, @ASIENTO, @SIN_NUMERAR, @PRECIO, @TIPO_ID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+
+		SET @UBICACION_ID = 0;
+
+		SELECT @UBICACION_ID = U.Ubicacion_ID
+		FROM EL_GROUP_BY.Ubicacion U
+		WHERE U.Ubicacion_Fila = @FILA
+			AND U.Ubicacion_Asiento = @ASIENTO
+			AND U.Ubicacion_Sin_Numerar = @SIN_NUMERAR
+			AND U.Ubicacion_Precio = @PRECIO
+			AND U.Ubicacion_Tipo_ID = @TIPO_ID
+
+		IF @UBICACION_ID = 0
+			BEGIN
+				INSERT INTO EL_GROUP_BY.Ubicacion
+				VALUES(@FILA, @ASIENTO, @SIN_NUMERAR, @PRECIO, @TIPO_ID)
+
+				SET @UBICACION_ID = SCOPE_IDENTITY();
+			END 
+
+		INSERT INTO EL_GROUP_BY.Publicacion_Ubicacion
+		VALUES( @UBICACION_ID, @PUBLI_ID, null, 0, NULL, NULL)
+	
+		FETCH CU_UBICACION INTO @FILA, @ASIENTO, @SIN_NUMERAR, @PRECIO, @TIPO_ID
+		
+	END
+	
+	CLOSE CU_UBICACION
+	DEALLOCATE CU_UBICACION
+
+	/*
 	DECLARE @output_id TABLE (id int)
 
 	INSERT INTO EL_GROUP_BY.Ubicacion 
@@ -2358,6 +2388,7 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Publicacion_Ubicacion
 	SELECT id, @PUBLI_ID, null
 	FROM @output_id 
+	*/
 
 COMMIT TRANSACTION
 GO
@@ -2373,10 +2404,11 @@ BEGIN TRANSACTION
 	DELETE EL_GROUP_BY.Publicacion_Ubicacion
 	WHERE Ubicacion_ID IN (SELECT Ubicacion_ID FROM  @UBICACIONES)
 	AND Publicacion_ID IN (SELECT Publicacion_ID FROM  @UBICACIONES)
-
+	
+	/*
 	DELETE EL_GROUP_BY.Ubicacion 
 	WHERE Ubicacion_ID IN (SELECT Ubicacion_ID FROM  @UBICACIONES)
-
+	*/
 	
 COMMIT TRANSACTION
 GO
@@ -2510,7 +2542,7 @@ SELECT	PU.Publicacion_ID,
 	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
 	INNER JOIN EL_GROUP_BY.Espectaculo E on e.Espectaculo_ID = P.Espectaculo_ID
 	WHERE PU.Publicacion_ID = @PUBLI_ID
-	AND U.Ubicacion_Canjeada = 0
+	AND PU.Publicacion_Ubicacion_Canjeada = 0
 	AND PU.Compra_ID is null
 
 end
@@ -2550,10 +2582,11 @@ BEGIN TRANSACTION
 		@VENCIMIENTO,
 		@CLIENTE_ID)
 
+	/*
 	UPDATE EL_GROUP_BY.Ubicacion
 		SET Ubicacion_Disponible = 0
 		WHERE Ubicacion_ID IN ( SELECT Ubicacion_ID FROM @UBICACIONES)
-	
+	*/
 
 COMMIT TRANSACTION
 GO
@@ -2631,7 +2664,6 @@ begin
 		
 end
 GO
-
 
 
 -- -----------------------------------------------------
@@ -2797,6 +2829,7 @@ begin
 	INNER JOIN EL_GROUP_BY.Empresa EM ON ES.Empresa_ID = EM.Empresa_ID
 	INNER JOIN EL_GROUP_BY.Grado_Publicacion g on g.Grado_Publicacion_ID = p.Grado_Publicacion_ID
 	WHERE PU.Compra_ID IS NULL
+	AND PU.Publicacion_Ubicacion_Canjeada = 0
 	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, g.Grado_Publicacion_Prioridad
 
 
@@ -2831,17 +2864,16 @@ begin
 	inner join EL_GROUP_BY.Grado_Publicacion G on P.Grado_Publicacion_ID = G.Grado_Publicacion_ID
 	inner join EL_GROUP_BY.Publicacion_Ubicacion PU on PU.Publicacion_ID = P.Publicacion_ID
 	and PU.Compra_ID is null --Que no haya sido comprada
+	and PU.Publicacion_Ubicacion_Canjeada = 0 --Que no haya sido canjeada
 	inner join EL_GROUP_BY.Ubicacion U on PU.Ubicacion_ID = U.Ubicacion_ID
-	and U.Ubicacion_Canjeada = 0 --Que no haya sido canjeada
 	where E.Espectaculo_Fecha between @FECHA_DESDE and @FECHA_HASTA
 		and p.Estado_Publicacion_ID = 2	   
 		and E.Espectaculo_Fecha_Vencimiento > @FECHA_SIST --Que no este vencida
 		and P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
 		and (E.Rubro_ID = @RUBRO_UNO or E.Rubro_ID = @RUBRO_DOS or E.Rubro_ID = @RUBRO_TRES)
 	group by P.Publicacion_ID, G.Grado_Publicacion_Prioridad, E.Espectaculo_Descripcion, 
-			 E.Espectaculo_Fecha, G.Grado_Publicacion_ID, E.Espectaculo_Direccion, R.Rubro_Descripcion
-	--order by G.Grado_Publicacion_ID desc
-	--queda pendiente ordenar por grado cuando nos definan como es el peso
+			 E.Espectaculo_Fecha, G.Grado_Publicacion_ID, E.Espectaculo_Direccion, R.Rubro_Descripcion, G.Grado_Publicacion_Peso
+	order by G.Grado_Publicacion_Peso desc
 
 end
 go
@@ -2871,7 +2903,6 @@ EXEC EL_GROUP_BY.CARGAR_UBICACIONES;
 EXEC EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION;
 EXEC EL_GROUP_BY.CARGAR_FACTURAS;
 EXEC EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
-EXEC EL_GROUP_BY.UBICACIONES_MIGRADAS_DISPONIBLES;
 
 /****************************************************************
 *			EJECUCIÓN DE MIGRACIÓN - FIN						*

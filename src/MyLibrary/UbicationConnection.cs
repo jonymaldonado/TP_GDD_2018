@@ -77,23 +77,15 @@ namespace MyLibrary
             dataTable.Columns.Add("Ubicacion_Asiento", typeof(int));
             dataTable.Columns.Add("Ubicacion_Sin_Numerar", typeof(int));
             dataTable.Columns.Add("Ubicacion_Precio", typeof(int));
-            dataTable.Columns.Add("Ubicacion_Disponible", typeof(int));
             dataTable.Columns.Add("Ubicacion_Tipo_ID", typeof(int));
-            dataTable.Columns.Add("Ubicacion_Canjeada", typeof(int));
-            dataTable.Columns.Add("Ubicacion_Fecha_Canje", typeof(DateTime));
-            dataTable.Columns.Add("Ubicacion_Cliente_Canje", typeof(int));
-
+            
             foreach (UbicationDAO ubicacion in ubicaciones)
             {
-                dataTable.Rows.Add(ubicacion.Fila,
+                dataTable.Rows.Add( ubicacion.Fila,
                                     ubicacion.Asiento,
                                     ubicacion.SinNumerar,
                                     ubicacion.Precio,
-                                    1, //Disponible
-                                    ubicacion.TipoDAO.id,
-                                    0, //No canjeada
-                                    null,
-                                    null);
+                                    ubicacion.TipoDAO.id );
             }
             List<SqlParameter> parameters = new List<SqlParameter>();
             SqlParameter parameter = new SqlParameter();

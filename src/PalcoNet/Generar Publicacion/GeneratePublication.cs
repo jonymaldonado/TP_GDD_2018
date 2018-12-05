@@ -398,7 +398,18 @@ namespace PalcoNet.Generar_Publicacion
                         }
                         ubicacion.TipoDAO = ubicationsTypes.ElementAt(cb_type.SelectedIndex);
                         ubicacion.Precio = Convert.ToInt32(txt_precio.Text);
-                        ubications.Add(ubicacion);
+
+                        if (ubications.SingleOrDefault(u => u.Fila == ubicacion.Fila && 
+                                                            u.Asiento == ubicacion.Asiento &&
+                                                            u.SinNumerar == ubicacion.SinNumerar &&
+                                                            u.Precio == ubicacion.Precio &&
+                                                            u.TipoDAO.id == ubicacion.TipoDAO.id
+                                                            ) == null)
+                        {
+                            ubications.Add(ubicacion);
+                        }
+
+                        
 
                     }
 
