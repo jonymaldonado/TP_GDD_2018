@@ -386,11 +386,9 @@ CREATE TABLE EL_GROUP_BY.Rol_Funcionalidad (
 	PRIMARY KEY (Funcionalidad_ID, Rol_ID),
 	CONSTRAINT FK_Rol_Funcionalidad_Rol_ID FOREIGN KEY (Rol_ID)
 		REFERENCES EL_GROUP_BY.Rol (Rol_ID)
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE,
 	CONSTRAINT FK_Rol_Funcionalidad_Funcionalidad_ID FOREIGN KEY (Funcionalidad_ID)     
 		REFERENCES EL_GROUP_BY.Funcionalidad (Funcionalidad_ID)
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
 
@@ -429,11 +427,9 @@ CREATE TABLE EL_GROUP_BY.Rol_Usuario(
 	PRIMARY KEY (Usuario_ID, Rol_ID),
 	CONSTRAINT FK_Rol_Usuario_Rol_ID FOREIGN KEY (Rol_ID)
 		REFERENCES EL_GROUP_BY.Rol (Rol_ID)
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE,
 	CONSTRAINT FK_Rol_Usuario_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
 
@@ -456,7 +452,6 @@ CREATE TABLE EL_GROUP_BY.Cliente (
 	PRIMARY KEY (Cliente_ID),
 	CONSTRAINT FK_Cliente_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
 
@@ -476,8 +471,7 @@ CREATE TABLE EL_GROUP_BY.Empresa (
 	PRIMARY KEY (Empresa_ID),
 	CONSTRAINT FK_Empresa_Usuario_ID FOREIGN KEY (Usuario_ID)     
 		REFERENCES EL_GROUP_BY.Usuario (Usuario_ID)     
-		ON DELETE CASCADE    
-				ON UPDATE CASCADE)
+		ON UPDATE CASCADE)
 ;
 
 
@@ -509,11 +503,9 @@ CREATE TABLE EL_GROUP_BY.Espectaculo (
 	PRIMARY KEY (Espectaculo_ID),
 	CONSTRAINT FK_Espectaculo_Empresa_ID FOREIGN KEY (Empresa_ID)
 		REFERENCES EL_GROUP_BY.Empresa (Empresa_ID)
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE,  
 	CONSTRAINT FK_Espectaculo_Rubro_ID FOREIGN KEY (Rubro_ID)
 		REFERENCES EL_GROUP_BY.Rubro (Rubro_ID)     
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
 
@@ -546,11 +538,9 @@ CREATE TABLE EL_GROUP_BY.Ubicacion (
 	PRIMARY KEY (Ubicacion_ID),
 	CONSTRAINT FK_Ubicacion_Tipo_ID FOREIGN KEY (Ubicacion_Tipo_ID)     
 		REFERENCES EL_GROUP_BY.Ubicacion_Tipo (Ubicacion_Tipo_ID)     
-	    ON DELETE CASCADE    
 		ON UPDATE CASCADE,
 	CONSTRAINT FK_Ubicacion_Cliente_Canje_ID FOREIGN KEY (Ubicacion_Cliente_Canje)     
 		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
-	    ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
 
@@ -608,11 +598,9 @@ CREATE TABLE EL_GROUP_BY.Publicacion (
   PRIMARY KEY (Publicacion_ID),
   CONSTRAINT FK_Publicacion_Grado_Publicacion_ID FOREIGN KEY (Grado_Publicacion_ID)     
     REFERENCES EL_GROUP_BY.Grado_Publicacion (Grado_Publicacion_ID)     
-    ON DELETE CASCADE    
     ON UPDATE CASCADE,
   CONSTRAINT FK_Publicacion_Espectaculo_ID FOREIGN KEY (Espectaculo_ID)     
     REFERENCES EL_GROUP_BY.Espectaculo (Espectaculo_ID)     
-    ON DELETE CASCADE    
     ON UPDATE CASCADE)
 ;
 
@@ -665,11 +653,9 @@ CREATE TABLE EL_GROUP_BY.Compra (
 	PRIMARY KEY (Compra_ID),
 	CONSTRAINT FK_Compra_Usuario_ID FOREIGN KEY (Cliente_ID)     
 		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE,
 	CONSTRAINT FK_Compra_Forma_Pago_ID FOREIGN KEY (Forma_Pago_ID)     
 		REFERENCES EL_GROUP_BY.Forma_Pago (Forma_Pago_ID)     
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
 
@@ -688,7 +674,6 @@ CREATE TABLE EL_GROUP_BY.Item (
 	PRIMARY KEY (Item_ID),
 	CONSTRAINT FK_Item_Factura_ID FOREIGN KEY (Factura_ID)     
 		REFERENCES EL_GROUP_BY.Factura (Factura_ID)     
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 
 -- -----------------------------------------------------
@@ -717,7 +702,6 @@ CREATE TABLE EL_GROUP_BY.Puntos (
 	PRIMARY KEY (Puntos_ID),
 	CONSTRAINT FK_Puntos_Cliente_ID FOREIGN KEY (Cliente_ID)     
 		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
-		ON DELETE CASCADE    
 		ON UPDATE CASCADE)
 ;
 
