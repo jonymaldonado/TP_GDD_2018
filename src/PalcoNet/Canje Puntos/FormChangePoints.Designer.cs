@@ -46,7 +46,6 @@
             this.txt_number_doc = new System.Windows.Forms.TextBox();
             this.txt_clientId = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.btn_select_client = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_email = new System.Windows.Forms.TextBox();
@@ -187,7 +186,6 @@
             this.groupBox1.Controls.Add(this.txt_number_doc);
             this.groupBox1.Controls.Add(this.txt_clientId);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.btn_select_client);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txt_email);
@@ -253,15 +251,6 @@
             this.label5.Size = new System.Drawing.Size(101, 13);
             this.label5.TabIndex = 9;
             this.label5.Text = "Nro. de documento:";
-            // 
-            // btn_select_client
-            // 
-            this.btn_select_client.Location = new System.Drawing.Point(190, 21);
-            this.btn_select_client.Name = "btn_select_client";
-            this.btn_select_client.Size = new System.Drawing.Size(110, 25);
-            this.btn_select_client.TabIndex = 1;
-            this.btn_select_client.Text = "Seleccionar";
-            this.btn_select_client.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -395,7 +384,6 @@
         private System.Windows.Forms.TextBox txt_number_doc;
         private System.Windows.Forms.TextBox txt_clientId;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button btn_select_client;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_email;

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
+using DAO;
+using MyLibrary;
+using System.Configuration;
 
 namespace MyLibrary
 {
@@ -60,5 +63,61 @@ namespace MyLibrary
         {
             return Connection.GetDataReader("SELECT Cliente_Tarjeta_Numero, Cliente_Tarjeta_Marca FROM EL_GROUP_BY.Cliente WHERE Cliente_ID = "+ClieID);
         }
+
+
+        public static void CreateBuy(CompraDAO compra, List<UbicationDAO> ubicaciones, Int32 IdEmpresa)
+        {
+            DataTable dataTable = new DataTable("PUBLICACION_UBICACION_TIPO_TABLA");
+
+            dataTable.Columns.Add("Ubicacion_ID", typeof(int));
+            dataTable.Columns.Add("Publicacion_ID", typeof(int));
+            
+            foreach (UbicationDAO ubicacion in ubicaciones)
+            {
+                dataTable.Rows.Add( ubicacion.UbicacionId,
+                                    ubicacion.PubliID );
+            }
+            List<SqlParameter> parameters = new List<SqlParameter>();
+            SqlParameter parameter = new SqlParameter();
+
+            parameter.ParameterName = "@UBICACIONES";
+            parameter.SqlDbType = System.Data.SqlDbType.Structured;
+            parameter.Value = dataTable;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@FECHA", SqlDbType.DateTime);
+            parameter.Value = compra.Compra_Fecha;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@CANTIDAD", SqlDbType.BigInt);
+            parameter.Value = compra.Compra_Cantidad;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@MONTO", SqlDbType.BigInt);
+            parameter.Value = compra.Compra_Monto_Total;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@CLIENTE_ID", SqlDbType.Int);
+            parameter.Value = compra.Cliente_ID;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@FORMA_PAGO", SqlDbType.Int);
+            parameter.Value = compra.Forma_Pago_ID;
+            parameters.Add(parameter);
+
+            //Se otorgan 10 puntos por cada localidad comprada
+            parameter = new SqlParameter("@PUNTOS", SqlDbType.Decimal);
+            parameter.Value = Convert.ToDecimal(ubicaciones.Count * 10);
+            parameters.Add(parameter);
+
+            //Los puntos se vencen 6 meses despues de la fecha de compra que los generó
+            parameter = new SqlParameter("@VENCIMIENTO", SqlDbType.DateTime);
+            parameter.Value = compra.Compra_Fecha.AddMonths(6);
+            parameters.Add(parameter);
+            
+            Connection.WriteInTheBase("EL_GROUP_BY.CREAR_COMPRA", Connection.Type.StoredProcedure, parameters);
+
+        }
+
     }
 }

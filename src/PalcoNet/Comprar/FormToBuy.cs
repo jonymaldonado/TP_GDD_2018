@@ -147,6 +147,12 @@ namespace PalcoNet.Comprar
 
         private void btn_search_Click(object sender, EventArgs e)
         {
+            FindPublications();
+
+        }
+
+        private void FindPublications()
+        {
             int grade1 = 0;
             int grade2 = 0;
             int grade3 = 0;
@@ -175,6 +181,7 @@ namespace PalcoNet.Comprar
             bindingNavigator1.BindingSource = bindingSource1;
             bindingSource1.CurrentChanged += new System.EventHandler(bindingSource1_CurrentChanged);
             bindingSource1.DataSource = new PageOffsetList(this.totalRecords);
+        
         }
 
         private void btn_select_Click(object sender, EventArgs e)
@@ -301,7 +308,69 @@ namespace PalcoNet.Comprar
 
         private void Buy()
         {
-            MessageBox.Show("Confirma la compra?");
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            sb.Append("Su compra contiene "+ubicationsToBuy.Count+" localidad/es");
+            sb.Append(Environment.NewLine);
+            sb.Append("¿Desea confirmar la compra?");
+
+            DialogResult result = MessageBox.Show(sb.ToString(), "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                List<UbicationDAO> sortedUbicationsToBuy = ubicationsToBuy.OrderBy(o => o.EmpresaID).ThenBy(o => o.PubliID).ThenBy(o => o.UbicacionId).ToList();
+                List<UbicationDAO> ubicacionesCompra = new List<UbicationDAO>();
+                Int32 empresaAnt = sortedUbicationsToBuy.First().EmpresaID;
+                Int64 totalCompra = 0;
+                CompraDAO compra;
+
+                foreach (UbicationDAO ubicacion in sortedUbicationsToBuy)
+                {
+                    /* Corte de control por empresa    
+                     * Se debe crear una compra por empresa de espectaculos
+                     * con todas las ubicaciones seleccionadas para esa empresa
+                     */
+                     
+                    if (empresaAnt != ubicacion.EmpresaID)
+                    {
+                        compra = new CompraDAO();
+
+                        compra.Compra_Cantidad = ubicacionesCompra.Count;
+                        compra.Compra_Monto_Total = totalCompra;
+                        compra.Compra_Fecha = Convert.ToDateTime(systemDate);
+                        compra.Cliente_ID = this.IdCliente;
+                        compra.Forma_Pago_ID = 2; //Tarjeta de credito
+
+                        BuyConnection.CreateBuy(compra, ubicacionesCompra, empresaAnt);
+                        totalCompra = 0;
+                        ubicacionesCompra.Clear();                        
+                    
+                    }
+
+                    totalCompra += ubicacion.Precio;
+                    ubicacionesCompra.Add(ubicacion);
+                    empresaAnt = ubicacion.EmpresaID;
+
+                }
+
+                compra = new CompraDAO();
+
+                compra.Compra_Cantidad = ubicacionesCompra.Count;
+                compra.Compra_Monto_Total = totalCompra;
+                compra.Compra_Fecha = Convert.ToDateTime(systemDate);
+                compra.Cliente_ID = this.IdCliente;
+                compra.Forma_Pago_ID = 2; //Tarjeta de credito
+
+                BuyConnection.CreateBuy(compra, ubicacionesCompra, empresaAnt);
+                totalCompra = 0;
+                ubicacionesCompra.Clear();
+
+                MessageBox.Show("Compra realizada con éxito");
+                ubicationsToBuy.Clear();
+                ubications.Clear();
+                FindPublications();
+                
+            }
         }
 
         private void AsignCreditCard()
