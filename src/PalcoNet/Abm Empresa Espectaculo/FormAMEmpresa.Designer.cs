@@ -87,7 +87,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -200,7 +200,7 @@
             this.txt_location.MaxLength = 50;
             this.txt_location.Name = "txt_location";
             this.txt_location.Size = new System.Drawing.Size(185, 20);
-            this.txt_location.TabIndex = 75;
+            this.txt_location.TabIndex = 78;
             // 
             // label13
             // 
@@ -288,7 +288,6 @@
             this.txt_cuit.Name = "txt_cuit";
             this.txt_cuit.Size = new System.Drawing.Size(184, 20);
             this.txt_cuit.TabIndex = 6;
-            this.txt_cuit.Validating += txt_cuit_Validating;        
             // 
             // label3
             // 
@@ -306,6 +305,7 @@
             this.txt_phone.Name = "txt_phone";
             this.txt_phone.Size = new System.Drawing.Size(184, 20);
             this.txt_phone.TabIndex = 4;
+            this.txt_phone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_floor_KeyPress);
             // 
             // label2
             // 
@@ -323,7 +323,6 @@
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(184, 20);
             this.txt_email.TabIndex = 2;
-            this.txt_email.Validating += txt_email_Validating; 
             // 
             // label1
             // 

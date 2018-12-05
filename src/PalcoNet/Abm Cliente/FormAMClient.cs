@@ -301,6 +301,21 @@ namespace PalcoNet.Abm_Cliente
 
         }
 
+        private void txt_numeric_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Solo deja numericos
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '.'))
+            {
+                e.Handled = true;
+            }
+
+        }
+
         private bool ExistsDoc()
         {
             return ClientConnection.ExistsDoc(cmb_type_doc.Text.Trim(), txt_number_doc.Text.Trim(), this.userId);

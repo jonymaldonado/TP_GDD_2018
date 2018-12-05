@@ -200,6 +200,7 @@
             this.txt_floor.Name = "txt_floor";
             this.txt_floor.Size = new System.Drawing.Size(52, 20);
             this.txt_floor.TabIndex = 8;
+            this.txt_floor.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_numeric_KeyPress);
             // 
             // label10
             // 
@@ -223,6 +224,7 @@
             this.txt_cuil.Name = "txt_cuil";
             this.txt_cuil.Size = new System.Drawing.Size(163, 20);
             this.txt_cuil.TabIndex = 5;
+            this.txt_cuil.Validating += txt_cuil_Validating;
             // 
             // label1
             // 
@@ -239,6 +241,7 @@
             this.txt_phone.Name = "txt_phone";
             this.txt_phone.Size = new System.Drawing.Size(162, 20);
             this.txt_phone.TabIndex = 12;
+            this.txt_phone.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_numeric_KeyPress);
             // 
             // txt_number_doc
             // 
@@ -346,6 +349,7 @@
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(162, 20);
             this.txt_email.TabIndex = 13;
+            this.txt_email.Validating += txt_email_Validating;
             // 
             // label7
             // 
