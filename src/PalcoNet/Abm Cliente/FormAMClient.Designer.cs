@@ -95,7 +95,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -151,7 +151,7 @@
             this.txt_postal_code.Location = new System.Drawing.Point(119, 290);
             this.txt_postal_code.Name = "txt_postal_code";
             this.txt_postal_code.Size = new System.Drawing.Size(162, 20);
-            this.txt_postal_code.TabIndex = 65;
+            this.txt_postal_code.TabIndex = 11;
             // 
             // label14
             // 
@@ -167,7 +167,7 @@
             this.txt_location.Location = new System.Drawing.Point(120, 262);
             this.txt_location.Name = "txt_location";
             this.txt_location.Size = new System.Drawing.Size(162, 20);
-            this.txt_location.TabIndex = 63;
+            this.txt_location.TabIndex = 10;
             // 
             // label13
             // 
@@ -183,7 +183,7 @@
             this.txt_department.Location = new System.Drawing.Point(227, 236);
             this.txt_department.Name = "txt_department";
             this.txt_department.Size = new System.Drawing.Size(56, 20);
-            this.txt_department.TabIndex = 61;
+            this.txt_department.TabIndex = 9;
             // 
             // label12
             // 
@@ -199,7 +199,7 @@
             this.txt_floor.Location = new System.Drawing.Point(120, 236);
             this.txt_floor.Name = "txt_floor";
             this.txt_floor.Size = new System.Drawing.Size(52, 20);
-            this.txt_floor.TabIndex = 59;
+            this.txt_floor.TabIndex = 8;
             // 
             // label10
             // 
@@ -215,15 +215,14 @@
             this.txt_number_street.Location = new System.Drawing.Point(120, 210);
             this.txt_number_street.Name = "txt_number_street";
             this.txt_number_street.Size = new System.Drawing.Size(162, 20);
-            this.txt_number_street.TabIndex = 57;
+            this.txt_number_street.TabIndex = 7;
             // 
             // txt_cuil
             // 
             this.txt_cuil.Location = new System.Drawing.Point(120, 156);
             this.txt_cuil.Name = "txt_cuil";
             this.txt_cuil.Size = new System.Drawing.Size(163, 20);
-            this.txt_cuil.TabIndex = 55;
-            this.txt_cuil.Validating += txt_cuil_Validating;   
+            this.txt_cuil.TabIndex = 5;
             // 
             // label1
             // 
@@ -239,14 +238,14 @@
             this.txt_phone.Location = new System.Drawing.Point(120, 317);
             this.txt_phone.Name = "txt_phone";
             this.txt_phone.Size = new System.Drawing.Size(162, 20);
-            this.txt_phone.TabIndex = 54;
+            this.txt_phone.TabIndex = 12;
             // 
             // txt_number_doc
             // 
             this.txt_number_doc.Location = new System.Drawing.Point(120, 101);
             this.txt_number_doc.Name = "txt_number_doc";
             this.txt_number_doc.Size = new System.Drawing.Size(163, 20);
-            this.txt_number_doc.TabIndex = 53;
+            this.txt_number_doc.TabIndex = 3;
             // 
             // dtp_birthdate
             // 
@@ -346,8 +345,7 @@
             this.txt_email.Location = new System.Drawing.Point(119, 342);
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(162, 20);
-            this.txt_email.TabIndex = 7;
-            this.txt_email.Validating += txt_email_Validating; 
+            this.txt_email.TabIndex = 13;
             // 
             // label7
             // 
@@ -363,7 +361,7 @@
             this.txt_street.Location = new System.Drawing.Point(121, 184);
             this.txt_street.Name = "txt_street";
             this.txt_street.Size = new System.Drawing.Size(162, 20);
-            this.txt_street.TabIndex = 5;
+            this.txt_street.TabIndex = 6;
             // 
             // label6
             // 
@@ -391,7 +389,7 @@
             this.txt_name_card.Location = new System.Drawing.Point(71, 65);
             this.txt_name_card.Name = "txt_name_card";
             this.txt_name_card.Size = new System.Drawing.Size(205, 20);
-            this.txt_name_card.TabIndex = 59;
+            this.txt_name_card.TabIndex = 21;
             // 
             // label17
             // 
@@ -407,7 +405,7 @@
             this.txt_number_card.Location = new System.Drawing.Point(71, 29);
             this.txt_number_card.Name = "txt_number_card";
             this.txt_number_card.Size = new System.Drawing.Size(205, 20);
-            this.txt_number_card.TabIndex = 57;
+            this.txt_number_card.TabIndex = 20;
             // 
             // label16
             // 

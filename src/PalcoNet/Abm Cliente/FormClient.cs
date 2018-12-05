@@ -13,9 +13,21 @@ namespace PalcoNet.Abm_Cliente
 {
     public partial class FormClient : Form
     {
+        public Historial_Cliente.FormClientHistory previusForm;
+
         public FormClient()
         {
             InitializeComponent();
+            btn_select.Enabled = false;
+            dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
+        }
+
+        public FormClient(Historial_Cliente.FormClientHistory previusForm)
+        {
+            InitializeComponent();
+            btn_select.Enabled = true;
+            this.previusForm = previusForm;
+
             dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
         }
 
@@ -85,6 +97,14 @@ namespace PalcoNet.Abm_Cliente
             FormAMClient form = new FormAMClient(this, false, userId);
             this.Hide();
             form.ShowDialog();
+        }
+
+        private void btn_select_Click(object sender, EventArgs e)
+        {
+            int userId = Convert.ToInt32(dgv_list.CurrentRow.Cells[0].Value);
+            this.previusForm.ClientId = ClientConnection.GetClientIdWithUserId(userId);
+
+            this.Close();
         }
 
     }

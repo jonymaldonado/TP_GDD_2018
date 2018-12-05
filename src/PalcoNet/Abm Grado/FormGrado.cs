@@ -19,27 +19,18 @@ namespace PalcoNet.Abm_Grado
         public FormGrado()
         {
             InitializeComponent();
-            this.LoadPriority();
             this.btn_select.Visible = false;
         }
 
         public FormGrado(Generar_Publicacion.GeneratePublication Form)
         {
             InitializeComponent();
-            this.LoadPriority();
             this.FormGenerate = Form;
 
             this.addToolStripMenuItem.Visible = false;
             this.deleteToolStripMenuItem.Visible = false;
             this.updateToolStripMenuItem.Visible = false;
             this.btn_select.Enabled = true;
-        }
-
-        private void LoadPriority()
-        {
-            cmb_priority.Items.Add("BAJA");
-            cmb_priority.Items.Add("MEDIA");
-            cmb_priority.Items.Add("ALTA");
         }
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
@@ -65,7 +56,7 @@ namespace PalcoNet.Abm_Grado
                 GradoDAO grado = new GradoDAO();
 
                 grado.Id = Convert.ToInt32(dgv_list.CurrentRow.Cells[0].Value.ToString());
-                grado.Prioridad = cmb_priority.Text;
+                
                 GradoConnection.DeleteGrado(grado);
                 MessageBox.Show("El Grado ha sido dado de baja correctamente.");
 
@@ -88,7 +79,7 @@ namespace PalcoNet.Abm_Grado
         {
             GradoDAO grado = new GradoDAO();
 
-            grado.Prioridad = cmb_priority.Text;
+            grado.Prioridad = txt_prioridad.Text;
             dgv_list.DataSource = GradoConnection.ListExistingGrado(grado).Tables[0];
         }
 

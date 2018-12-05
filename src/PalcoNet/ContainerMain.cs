@@ -194,7 +194,14 @@ namespace PalcoNet
 
         private void watchRecordClientToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(new Historial_Cliente.FormClientHistory(this.id));
+            int idCliente = 0;
+
+            idCliente = Connection.queryForInt("SELECT Cliente_ID FROM EL_GROUP_BY.Cliente WHERE Usuario_ID =" + this.id);
+
+            if (idCliente != 0)
+                openForm(new Historial_Cliente.FormClientHistory(this.id, false, idCliente));
+            else
+                openForm(new Historial_Cliente.FormClientHistory(this.id, true,0));
         }
 
         private void actionsExchangeAdminPointsToolStripMenuItem_Click(object sender, EventArgs e)

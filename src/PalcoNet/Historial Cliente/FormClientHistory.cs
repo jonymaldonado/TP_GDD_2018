@@ -20,20 +20,48 @@ namespace PalcoNet.Historial_Cliente
         private const int pageSize = 10;
         public DataSet ds;
 
-        public FormClientHistory(int userId)
+        public int ClientId
+        {
+            set 
+            { 
+                this.clientId = value;
+                txt_clientId.Text = Convert.ToString(value);
+                SetHistory();            
+            }
+
+            get { return this.clientId; }
+
+        }
+
+        public FormClientHistory(int userId, bool admin, int clientId)
         {
             InitializeComponent();
 
             this.userId = userId;
-            this.clientId = ClientConnection.GetClientIdWithUserId(userId);
-            txt_clientId.Text = Convert.ToString(this.clientId);
 
+            if(admin)
+            {
+                btn_search.Enabled = true;
+            }
+            else
+            {
+                btn_search.Enabled = false;
+                this.clientId = clientId;
+                txt_clientId.Text = Convert.ToString(this.clientId);
+            }
+
+            SetHistory();
+
+        }
+
+        private void SetHistory()
+        {
             setClientData(this.clientId);
             this.ds = setHistoryData(this.clientId);
 
             dgv_list.DataSource = this.ds.Tables[0];
             this.totalRecords = this.ds.Tables[0].Rows.Count;
-           
+
             bindingNavigator1.BindingSource = bindingSource1;
             bindingSource1.CurrentChanged += new System.EventHandler(bindingSource1_CurrentChanged);
             bindingSource1.DataSource = new PageOffsetList(this.totalRecords);
@@ -107,6 +135,14 @@ namespace PalcoNet.Historial_Cliente
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btn_search_Click(object sender, EventArgs e)
+        {
+            using (Abm_Cliente.FormClient FormClient = new Abm_Cliente.FormClient(this))
+            {
+                FormClient.ShowDialog();
+            }
         }
 
     }

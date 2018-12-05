@@ -52,6 +52,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.dgv_list = new System.Windows.Forms.DataGridView();
+            this.btn_select = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
@@ -98,7 +99,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -291,12 +292,23 @@
             this.dgv_list.Size = new System.Drawing.Size(548, 242);
             this.dgv_list.TabIndex = 35;
             // 
+            // btn_select
+            // 
+            this.btn_select.Location = new System.Drawing.Point(318, 159);
+            this.btn_select.Name = "btn_select";
+            this.btn_select.Size = new System.Drawing.Size(92, 23);
+            this.btn_select.TabIndex = 41;
+            this.btn_select.Text = "Seleccionar";
+            this.btn_select.UseVisualStyleBackColor = true;
+            this.btn_select.Click += new System.EventHandler(this.btn_select_Click);
+            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(754, 471);
+            this.Controls.Add(this.btn_select);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
@@ -346,5 +358,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         public System.Windows.Forms.DataGridView dgv_list;
+        private System.Windows.Forms.Button btn_select;
     }
 }

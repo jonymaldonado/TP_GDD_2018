@@ -26,7 +26,6 @@ namespace PalcoNet.Abm_Grado
             InitializeComponent();
             this.isUpper = isUpper;
             this.formPrevious = formGrado;
-            LoadPriority();
 
             if (!isUpper) //Modificacion
             {
@@ -34,13 +33,6 @@ namespace PalcoNet.Abm_Grado
                 this.LoadFieldsOfGrado();
             }
 
-        }
-
-        private void LoadPriority()
-        {
-            cmb_priority.Items.Add("BAJA");
-            cmb_priority.Items.Add("MEDIA");
-            cmb_priority.Items.Add("ALTA");
         }
 
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,7 +105,7 @@ namespace PalcoNet.Abm_Grado
         {
 
             grado.Comision = Convert.ToDecimal(txt_comision.Text) / 100;
-            grado.Prioridad = cmb_priority.Text;
+            grado.Prioridad = txt_prioridad.Text;
             grado.Peso = Convert.ToInt32(txt_peso.Text);
 
             return grado;
@@ -132,7 +124,7 @@ namespace PalcoNet.Abm_Grado
                     txt_comision.Text = valueInt.ToString();
                     txt_peso.Text = Convert.ToString(reader.GetInt32(2));
 
-                    cmb_priority.SelectedIndex = cmb_priority.FindStringExact(reader.GetString(1));
+                    txt_prioridad.Text = reader.GetString(1);
 
                 }
             }

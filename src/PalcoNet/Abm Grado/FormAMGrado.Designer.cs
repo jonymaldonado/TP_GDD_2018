@@ -34,12 +34,12 @@
             this.returnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.limpiarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.group_empresa = new System.Windows.Forms.GroupBox();
-            this.cmb_priority = new System.Windows.Forms.ComboBox();
+            this.txt_peso = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_comision = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txt_peso = new System.Windows.Forms.TextBox();
+            this.txt_prioridad = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.group_empresa.SuspendLayout();
             this.SuspendLayout();
@@ -68,7 +68,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -81,9 +81,9 @@
             // 
             // group_empresa
             // 
+            this.group_empresa.Controls.Add(this.txt_prioridad);
             this.group_empresa.Controls.Add(this.txt_peso);
             this.group_empresa.Controls.Add(this.label3);
-            this.group_empresa.Controls.Add(this.cmb_priority);
             this.group_empresa.Controls.Add(this.label2);
             this.group_empresa.Controls.Add(this.label1);
             this.group_empresa.Controls.Add(this.txt_comision);
@@ -94,14 +94,23 @@
             this.group_empresa.TabStop = false;
             this.group_empresa.Text = "Datos Empresa";
             // 
-            // cmb_priority
+            // txt_peso
             // 
-            this.cmb_priority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_priority.FormattingEnabled = true;
-            this.cmb_priority.Location = new System.Drawing.Point(89, 62);
-            this.cmb_priority.Name = "cmb_priority";
-            this.cmb_priority.Size = new System.Drawing.Size(184, 21);
-            this.cmb_priority.TabIndex = 59;
+            this.txt_peso.Location = new System.Drawing.Point(89, 97);
+            this.txt_peso.MaxLength = 255;
+            this.txt_peso.Name = "txt_peso";
+            this.txt_peso.Size = new System.Drawing.Size(184, 20);
+            this.txt_peso.TabIndex = 61;
+            this.txt_peso.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_comision_KeyPress);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(48, 100);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(34, 13);
+            this.label3.TabIndex = 60;
+            this.label3.Text = "Peso:";
             // 
             // label2
             // 
@@ -130,22 +139,13 @@
             this.txt_comision.TabIndex = 0;
             this.txt_comision.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_comision_KeyPress);
             // 
-            // label3
+            // txt_prioridad
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(48, 100);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(34, 13);
-            this.label3.TabIndex = 60;
-            this.label3.Text = "Peso:";
-            // 
-            // txt_peso
-            // 
-            this.txt_peso.Location = new System.Drawing.Point(89, 97);
-            this.txt_peso.MaxLength = 255;
-            this.txt_peso.Name = "txt_peso";
-            this.txt_peso.Size = new System.Drawing.Size(184, 20);
-            this.txt_peso.TabIndex = 61;
+            this.txt_prioridad.Location = new System.Drawing.Point(88, 63);
+            this.txt_prioridad.MaxLength = 255;
+            this.txt_prioridad.Name = "txt_prioridad";
+            this.txt_prioridad.Size = new System.Drawing.Size(184, 20);
+            this.txt_prioridad.TabIndex = 60;
             // 
             // FormAMGrado
             // 
@@ -175,8 +175,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_comision;
-        private System.Windows.Forms.ComboBox cmb_priority;
         private System.Windows.Forms.TextBox txt_peso;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txt_prioridad;
     }
 }

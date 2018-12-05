@@ -39,9 +39,9 @@
             this.label8 = new System.Windows.Forms.Label();
             this.dgv_list = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
-            this.cmb_priority = new System.Windows.Forms.ComboBox();
             this.btn_search = new System.Windows.Forms.Button();
             this.btn_select = new System.Windows.Forms.Button();
+            this.txt_prioridad = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
             this.SuspendLayout();
@@ -87,7 +87,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -152,20 +152,11 @@
             this.label1.TabIndex = 59;
             this.label1.Text = "Prioridad";
             // 
-            // cmb_priority
-            // 
-            this.cmb_priority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_priority.FormattingEnabled = true;
-            this.cmb_priority.Location = new System.Drawing.Point(81, 40);
-            this.cmb_priority.Name = "cmb_priority";
-            this.cmb_priority.Size = new System.Drawing.Size(97, 21);
-            this.cmb_priority.TabIndex = 58;
-            // 
             // btn_search
             // 
-            this.btn_search.Location = new System.Drawing.Point(194, 39);
+            this.btn_search.Location = new System.Drawing.Point(193, 67);
             this.btn_search.Name = "btn_search";
-            this.btn_search.Size = new System.Drawing.Size(106, 23);
+            this.btn_search.Size = new System.Drawing.Size(106, 21);
             this.btn_search.TabIndex = 60;
             this.btn_search.Text = "Buscar";
             this.btn_search.UseVisualStyleBackColor = true;
@@ -174,7 +165,7 @@
             // btn_select
             // 
             this.btn_select.Enabled = false;
-            this.btn_select.Location = new System.Drawing.Point(194, 68);
+            this.btn_select.Location = new System.Drawing.Point(81, 67);
             this.btn_select.Name = "btn_select";
             this.btn_select.Size = new System.Drawing.Size(106, 21);
             this.btn_select.TabIndex = 61;
@@ -182,15 +173,22 @@
             this.btn_select.UseVisualStyleBackColor = true;
             this.btn_select.Click += new System.EventHandler(this.button1_Click);
             // 
+            // txt_prioridad
+            // 
+            this.txt_prioridad.Location = new System.Drawing.Point(81, 41);
+            this.txt_prioridad.Name = "txt_prioridad";
+            this.txt_prioridad.Size = new System.Drawing.Size(218, 20);
+            this.txt_prioridad.TabIndex = 62;
+            // 
             // FormGrado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(327, 404);
+            this.Controls.Add(this.txt_prioridad);
             this.Controls.Add(this.btn_select);
             this.Controls.Add(this.btn_search);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.cmb_priority);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
@@ -218,8 +216,8 @@
         private System.Windows.Forms.Label label8;
         public System.Windows.Forms.DataGridView dgv_list;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmb_priority;
         private System.Windows.Forms.Button btn_search;
         private System.Windows.Forms.Button btn_select;
+        private System.Windows.Forms.TextBox txt_prioridad;
     }
 }
