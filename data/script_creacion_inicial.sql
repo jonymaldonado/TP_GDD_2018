@@ -892,7 +892,7 @@ BEGIN TRANSACTION
 		WHERE Cli_Dni IS NOT NULL
 		ORDER BY Cli_Dni
 
-	-- Acá cargaremos al admin como un cliente más por cuestiones de seguridad
+	/* Acá cargaremos al admin como un cliente más por cuestiones de seguridad
 	INSERT INTO EL_GROUP_BY.Cliente
 		VALUES ('admin'
 				,'admin'
@@ -903,7 +903,7 @@ BEGIN TRANSACTION
 				,'admin'
 				,4242424242424242
 				,CONVERT(DATETIME,'2018/02/02 00:00:00',121)
-				,783)
+				,783)*/
 COMMIT
 GO
 
@@ -922,13 +922,13 @@ BEGIN TRANSACTION
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
 
-	-- Acá cargaremos al admin como una empresa más por cuestiones de seguridad
+	/* Acá cargaremos al admin como una empresa más por cuestiones de seguridad
 	INSERT INTO EL_GROUP_BY.Empresa
 		VALUES ('admin'
 				,'30-71031609-7'
 				,'Baires'
 				,CONVERT(DATETIME,'1980/02/02 00:00:00',121)
-				,783)
+				,783)*/
 COMMIT
 GO
 

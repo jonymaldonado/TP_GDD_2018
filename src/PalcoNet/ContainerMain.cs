@@ -199,7 +199,15 @@ namespace PalcoNet
 
         private void actionsExchangeAdminPointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openForm(new Canje_Puntos.FormChangePoints(this.id));
+            int idCliente = 0;
+
+            idCliente = Connection.queryForInt("SELECT Cliente_ID FROM EL_GROUP_BY.Cliente WHERE Usuario_ID =" + this.id);
+
+            if (idCliente != 0)
+                openForm(new Canje_Puntos.FormChangePoints(this.id));
+            else
+                MessageBox.Show("No puede canjear puntos si el Usuario no tiene asignado un Cliente", "Error");
+
         }
 
         private void listStatisticalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -215,23 +223,40 @@ namespace PalcoNet
 
         private void actionsGeneratePublicationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int idEmpresa = Connection.queryForInt("SELECT Empresa_ID FROM EL_GROUP_BY.Empresa WHERE Usuario_ID ="+this.id);
+            int idEmpresa = 0;
             
-            openForm(new Generar_Publicacion.GeneratePublication(this, this.user, idEmpresa, 0, false));
+            idEmpresa = Connection.queryForInt("SELECT Empresa_ID FROM EL_GROUP_BY.Empresa WHERE Usuario_ID ="+this.id);
+
+            if (idEmpresa != 0)
+                openForm(new Generar_Publicacion.GeneratePublication(this, this.user, idEmpresa, 0, false));
+            else
+                MessageBox.Show("No puede generar publicación si el usuario no tiene asignada una Empresa de espectáculos","Error");
+
         }
 
         private void actionsEditPublicationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int idEmpresa = Connection.queryForInt("SELECT Empresa_ID FROM EL_GROUP_BY.Empresa WHERE Usuario_ID =" + this.id);
+            int idEmpresa = 0;
 
-            openForm(new Editar_Publicacion.EditPublication(this.user, idEmpresa));
+            idEmpresa = Connection.queryForInt("SELECT Empresa_ID FROM EL_GROUP_BY.Empresa WHERE Usuario_ID =" + this.id);
+
+            if (idEmpresa != 0)
+                openForm(new Editar_Publicacion.EditPublication(this.user, idEmpresa));
+            else
+                MessageBox.Show("No puede editar una publicación si el usuario no tiene asignada una Empresa de espectáculos", "Error");
+
         }
 
         private void actionsBuyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int idCliente = Connection.queryForInt("SELECT Cliente_ID FROM EL_GROUP_BY.Cliente WHERE Usuario_ID =" + this.id);
+            int idCliente = 0;
             
-            openForm(new Comprar.FormToBuy(idCliente));
+            idCliente = Connection.queryForInt("SELECT Cliente_ID FROM EL_GROUP_BY.Cliente WHERE Usuario_ID =" + this.id);
+
+            if (idCliente != 0)
+                openForm(new Comprar.FormToBuy(idCliente));
+            else
+                MessageBox.Show("No puede comprar si el Usuario no tiene asignado un Cliente" , "Error");
         }
 
         private void actionsGeneratePayCommissionsToolStripMenuItem_Click(object sender, EventArgs e)
