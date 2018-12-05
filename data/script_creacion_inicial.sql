@@ -449,7 +449,7 @@ CREATE TABLE EL_GROUP_BY.Cliente (
 		Cliente_Cuil NVARCHAR(20),
 		Cliente_Fecha_Nacimiento DATETIME,
 		Cliente_Tarjeta_Marca NVARCHAR(20),
-		Cliente_Tarjeta_Numero NVARCHAR(16),
+		Cliente_Tarjeta_Numero NVARCHAR(20),
 		Cliente_Fecha_Creacion DATETIME,
 		Usuario_ID INT,
 	PRIMARY KEY (Cliente_ID),
@@ -825,7 +825,7 @@ BEGIN TRAN
 					,'CLIENTE'
 					,1
 					,0
-					,0
+					,1
 					,null
 					,Cli_Dom_Calle
 					,Cli_Nro_Calle
@@ -1693,7 +1693,6 @@ go
 -- -----------------------------------------------------
 -- SP - Nuevo Cliente
 -- -----------------------------------------------------
-
 CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @USUARIO VARCHAR(50),
 @PASSWORD NVARCHAR(50),
@@ -1713,7 +1712,7 @@ CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @CODIGO_POSTAL VARCHAR(255),
 @FECHA_NAC DATETIME,
 @TARJETA_NOMBRE VARCHAR(255),
-@TARJETA_NRO NUMERIC(16,0)
+@TARJETA_NRO NVARCHAR(20)
 AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.USUARIO VALUES (@USUARIO
@@ -1858,11 +1857,10 @@ create proc EL_GROUP_BY.ACTUALIZAR_PASSWORD
 as
 begin
 	update EL_GROUP_BY.Usuario set Usuario_Password = HASHBYTES('SHA2_256', @PASSWORD),
-									Usuario_Primer_Login = 1
+									Usuario_Primer_Login = 0
 		where Usuario_ID = @USUARIO_ID
 end
 go
-
 -- -----------------------------------------------------
 -- SP - Consultar si hay algún usuario con el mismo username
 -- -----------------------------------------------------

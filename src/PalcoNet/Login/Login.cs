@@ -60,7 +60,7 @@ namespace PalcoNet.Login
 
             int isFirstLogin = UserConnection.GetFirstLogin(userId);
 
-            if (isFirstLogin == 0)
+            if (isFirstLogin == 1)
             {
                 if (ConfirmChangePassword()) 
                 {

@@ -175,7 +175,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             empresa.Department = txt_department.Text;
             empresa.Location = txt_location.Text;
             empresa.PostalCode = txt_postal_code.Text;
-            empresa.FirstLogin = this.isRegisterUser;
+            empresa.FirstLogin = !this.isRegisterUser;
 
             return empresa;
         }
