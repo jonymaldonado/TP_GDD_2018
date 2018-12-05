@@ -131,6 +131,9 @@ IF OBJECT_ID('EL_GROUP_BY.CARGAR_FACTURAS') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
+
+IF OBJECT_ID('EL_GROUP_BY.UBICACIONES_MIGRADAS_DISPONIBLES') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.UBICACIONES_MIGRADAS_DISPONIBLES;
 GO
 
 /****************************************************************
@@ -285,9 +288,6 @@ IF OBJECT_ID('EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES_COMPRA') IS NOT NULL
 	DROP PROC EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES_COMPRA;
 
-IF OBJECT_ID('EL_GROUP_BY.CREAR_COMPRA') IS NOT NULL
-	DROP PROC EL_GROUP_BY.CREAR_COMPRA;
-
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_COMPRAS_EMPRESA;
 
@@ -300,7 +300,7 @@ IF OBJECT_ID('EL_GROUP_BY.CREAR_ITEMS') IS NOT NULL
 IF type_id('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
 
-IF type_id('EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA') IS NOT NULL
+IF type_id('EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA ;
 
 IF type_id('EL_GROUP_BY.ITEM_TIPO_TABLA') IS NOT NULL
@@ -452,7 +452,7 @@ CREATE TABLE EL_GROUP_BY.Cliente (
 		Cliente_Cuil NVARCHAR(20),
 		Cliente_Fecha_Nacimiento DATETIME,
 		Cliente_Tarjeta_Marca NVARCHAR(20),
-		Cliente_Tarjeta_Numero NVARCHAR(20),
+		Cliente_Tarjeta_Numero NVARCHAR(16),
 		Cliente_Fecha_Creacion DATETIME,
 		Usuario_ID INT,
 	PRIMARY KEY (Cliente_ID),
@@ -536,17 +536,10 @@ CREATE TABLE EL_GROUP_BY.Ubicacion (
 		Ubicacion_Asiento NUMERIC(18,0) NULL,
 		Ubicacion_Sin_Numerar BIT NOT NULL,
 		Ubicacion_Precio NUMERIC(18,0) NOT NULL,
-		Ubicacion_Disponible BIT NOT NULL,
-		Ubicacion_Tipo_ID INT NOT NULL,
-		Ubicacion_Canjeada BIT NOT NULL,
-		Ubicacion_Fecha_Canje DATETIME NULL,
-		Ubicacion_Cliente_Canje INT NULL
+		Ubicacion_Tipo_ID INT NOT NULL
 	PRIMARY KEY (Ubicacion_ID),
 	CONSTRAINT FK_Ubicacion_Tipo_ID FOREIGN KEY (Ubicacion_Tipo_ID)     
 		REFERENCES EL_GROUP_BY.Ubicacion_Tipo (Ubicacion_Tipo_ID)     
-		ON UPDATE CASCADE,
-	CONSTRAINT FK_Ubicacion_Cliente_Canje_ID FOREIGN KEY (Ubicacion_Cliente_Canje)     
-		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
 		ON UPDATE CASCADE)
 ;
 
@@ -583,7 +576,6 @@ CREATE TABLE EL_GROUP_BY.Grado_Publicacion (
 		Grado_Publicacion_ID INT IDENTITY(1,1),
 		Grado_Publicacion_Comision NUMERIC(3,2) NOT NULL,
 		Grado_Publicacion_Prioridad NVARCHAR(10) NOT NULL,
-		Grado_Publicacion_Peso INT NOT NULL,
 		Grado_Publicacion_Habilitado BIT NOT NULL,
 	PRIMARY KEY (Grado_Publicacion_ID))
 ;
@@ -719,7 +711,14 @@ CREATE TABLE EL_GROUP_BY.Publicacion_Ubicacion (
 		Ubicacion_ID INT NOT NULL,
 		Publicacion_ID INT NOT NULL,
 		Compra_ID INT NULL,
-	PRIMARY KEY (Ubicacion_ID, Publicacion_ID))
+		Publicacion_Ubicacion_Disponible BIT NOT NULL,
+		Publicacion_Ubicacion_Canjeada BIT NOT NULL,
+		Publicacion_Ubicacion_Fecha_Canje DATETIME NULL,
+		Publicacion_Ubicacion_Cliente_Canje INT NULL
+	PRIMARY KEY (Ubicacion_ID, Publicacion_ID),
+	CONSTRAINT FK_Ubicacion_Cliente_Canje_ID FOREIGN KEY (Publicacion_Ubicacion_Cliente_Canje)     
+		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
+		ON UPDATE CASCADE)
 ;
 GO
 
@@ -829,7 +828,7 @@ BEGIN TRAN
 					,'CLIENTE'
 					,1
 					,0
-					,1
+					,0
 					,null
 					,Cli_Dom_Calle
 					,Cli_Nro_Calle
@@ -1114,10 +1113,10 @@ GO
 									      														 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_GRADOS_PUBLICACION AS
 BEGIN TRANSACTION
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'MIGRADA',0,0)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'BAJA',10,1)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.15,'MEDIA',20,1)
-	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.20,'ALTA',30,1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'MIGRADA',0)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.1,'BAJA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.15,'MEDIA',1)
+	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (0.20,'ALTA',1)
 COMMIT;
 GO	
 -- -----------------------------------------------------
@@ -1176,11 +1175,7 @@ BEGIN TRANSACTION
 						,Ubicacion_Asiento
 						,Ubicacion_Sin_numerar
 						,Ubicacion_Precio
-						,0 -- Ubicacion_Disponible Migramos como NO por ahora
 						,EL_GROUP_BY.FUNC_ID_UBICACION_TIPO(Ubicacion_Tipo_Codigo)
-						,0 -- NO Canjeada dado que el canje de puntos es una funcionalidad nueva
-						,NULL -- fecha de canje - idem campo anterior
-						,NULL -- Cliente de Canje - idem campo anterior
 		FROM gd_esquema.Maestra
 COMMIT TRANSACTION;
 GO
@@ -1195,6 +1190,10 @@ BEGIN TRANSACTION
 		SELECT DISTINCT U.Ubicacion_ID
 				,P.Publicacion_ID
 				,NULL -- La compra la voy a relacionar luego
+				,0 -- Ubicacion_Disponible Migramos como NO por ahora
+				,0 -- NO Canjeada dado que el canje de puntos es una funcionalidad nueva
+				,NULL -- fecha de canje - idem campo anterior
+				,NULL -- Cliente de Canje - idem campo anterior
 		FROM EL_GROUP_BY.Ubicacion U,
 			 EL_GROUP_BY.Publicacion P,
 			 EL_GROUP_BY.Espectaculo E,
@@ -1482,6 +1481,18 @@ INSERT INTO EL_GROUP_BY.Item
 COMMIT TRANSACTION;
 GO
 
+-- -----------------------------------------------------
+-- SPMigra -- Ubicaciones Migradas Disponibles
+-- -----------------------------------------------------
+
+CREATE PROCEDURE EL_GROUP_BY.UBICACIONES_MIGRADAS_DISPONIBLES AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.Publicacion_Ubicacion 
+	SET EL_GROUP_BY.Publicacion_Ubicacion.Publicacion_Ubicacion_Disponible = 1
+	WHERE EL_GROUP_BY.Publicacion_Ubicacion.Compra_ID IS NULL; 										
+COMMIT TRANSACTION;
+GO
+
 /****************************************************************
 *				SPs DE MIGRACIÓN (SPMigra) - FIN				*
 ****************************************************************/
@@ -1697,6 +1708,7 @@ go
 -- -----------------------------------------------------
 -- SP - Nuevo Cliente
 -- -----------------------------------------------------
+
 CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @USUARIO VARCHAR(50),
 @PASSWORD NVARCHAR(50),
@@ -1716,7 +1728,7 @@ CREATE PROCEDURE EL_GROUP_BY.CREAR_CLIENTE
 @CODIGO_POSTAL VARCHAR(255),
 @FECHA_NAC DATETIME,
 @TARJETA_NOMBRE VARCHAR(255),
-@TARJETA_NRO NVARCHAR(20)
+@TARJETA_NRO NUMERIC(16,0)
 AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.USUARIO VALUES (@USUARIO
@@ -1861,10 +1873,11 @@ create proc EL_GROUP_BY.ACTUALIZAR_PASSWORD
 as
 begin
 	update EL_GROUP_BY.Usuario set Usuario_Password = HASHBYTES('SHA2_256', @PASSWORD),
-									Usuario_Primer_Login = 0
+									Usuario_Primer_Login = 1
 		where Usuario_ID = @USUARIO_ID
 end
 go
+
 -- -----------------------------------------------------
 -- SP - Consultar si hay algún usuario con el mismo username
 -- -----------------------------------------------------
@@ -2207,8 +2220,7 @@ begin
 			G.Grado_Publicacion_Prioridad
 	from EL_GROUP_BY.Grado_Publicacion G 
 	where G.Grado_Publicacion_Prioridad LIKE ISNULL('%' + @PRIORIDAD + '%', '%')
-	  AND G.Grado_Publicacion_Habilitado = 1
-	  ORDER BY G.Grado_Publicacion_Peso DESC; 
+	  AND G.Grado_Publicacion_Habilitado = 1; 
 end
 go
 
@@ -2231,13 +2243,11 @@ GO
 -- -----------------------------------------------------
 CREATE PROCEDURE EL_GROUP_BY.CREAR_GRADO
 @COMISION		NUMERIC(3,2),
-@PRIORIDAD		VARCHAR(10),
-@PESO			INT
+@PRIORIDAD		VARCHAR(10)
 AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Grado_Publicacion VALUES (@COMISION
 										 ,@PRIORIDAD
-										 ,@PESO
 										 ,1				
 										 )
 
@@ -2254,8 +2264,7 @@ create procedure EL_GROUP_BY.OBTENER_GRADO_FOR_MODIFY
 as
 begin
 	SELECT  G.Grado_Publicacion_Comision,
-			G.Grado_Publicacion_Prioridad,
-			G.Grado_Publicacion_Peso
+			G.Grado_Publicacion_Prioridad
 	FROM EL_GROUP_BY.Grado_Publicacion G
 	WHERE G.Grado_Publicacion_ID = @ID
 end
@@ -2268,15 +2277,13 @@ GO
 CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_GRADO
 @ID				INT,
 @COMISION		NUMERIC(3,2),
-@PRIORIDAD		VARCHAR(10), 
-@PESO			INT
+@PRIORIDAD		VARCHAR(10)
 AS
 BEGIN TRANSACTION
 
 	UPDATE EL_GROUP_BY.Grado_Publicacion
 		SET Grado_Publicacion_Comision = @COMISION,
-			Grado_Publicacion_Prioridad = @PRIORIDAD,
-			Grado_Publicacion_Peso = @PESO
+			Grado_Publicacion_Prioridad = @PRIORIDAD
 		WHERE Grado_Publicacion_ID = @ID
 
 COMMIT
@@ -2501,49 +2508,6 @@ SELECT	PU.Publicacion_ID,
 
 end
 go
-
-
--- -----------------------------------------------------
--- SP - Crear COMPRA
--- -----------------------------------------------------
-CREATE PROCEDURE EL_GROUP_BY.CREAR_COMPRA
-@UBICACIONES AS PUBLICACION_UBICACION_TIPO_TABLA READONLY,
-@FECHA DATETIME,
-@CANTIDAD NUMERIC(18,0),
-@MONTO NUMERIC(18,2),
-@CLIENTE_ID INT,
-@FORMA_PAGO INT,
-@PUNTOS DECIMAL(18,0),
-@VENCIMIENTO DATETIME
-AS
-BEGIN TRANSACTION
-
-	INSERT EL_GROUP_BY.Compra VALUES(
-			@FECHA,
-			@CANTIDAD,
-			@MONTO,
-			0,
-			@CLIENTE_ID,
-			@FORMA_PAGO)
-
-	UPDATE EL_GROUP_BY.Publicacion_Ubicacion 
-		SET Compra_ID = SCOPE_IDENTITY()
-		WHERE Ubicacion_ID IN ( SELECT Ubicacion_ID FROM @UBICACIONES)
-		AND Publicacion_ID IN ( SELECT Publicacion_ID FROM @UBICACIONES)
-
-	INSERT EL_GROUP_BY.Puntos VALUES(
-		@PUNTOS,
-		@VENCIMIENTO,
-		@CLIENTE_ID)
-
-	UPDATE EL_GROUP_BY.Ubicacion
-		SET Ubicacion_Disponible = 0
-		WHERE Ubicacion_ID IN ( SELECT Ubicacion_ID FROM @UBICACIONES)
-	
-
-COMMIT TRANSACTION
-GO
-
 
 -- -----------------------------------------------------
 -- SP - Edita publicacion y espectaculo
@@ -2857,7 +2821,7 @@ EXEC EL_GROUP_BY.CARGAR_UBICACIONES;
 EXEC EL_GROUP_BY.CARGAR_PUBLICACION_UBICACION;
 EXEC EL_GROUP_BY.CARGAR_FACTURAS;
 EXEC EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
-
+EXEC EL_GROUP_BY.UBICACIONES_MIGRADAS_DISPONIBLES;
 /****************************************************************
 *			EJECUCIÓN DE MIGRACIÓN - FIN						*
 ****************************************************************/
