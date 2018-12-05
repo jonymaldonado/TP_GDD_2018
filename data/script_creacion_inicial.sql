@@ -892,18 +892,18 @@ BEGIN TRANSACTION
 		WHERE Cli_Dni IS NOT NULL
 		ORDER BY Cli_Dni
 
-	-- Acá cargaremos al admin como un cliente más
-/*	INSERT INTO EL_GROUP_BY.Cliente
+	/* Acá cargaremos al admin como un cliente más por cuestiones de seguridad
+	INSERT INTO EL_GROUP_BY.Cliente
 		VALUES ('admin'
-			,'admin'
-			,'DNI'
-			,35123123
-			,'20-35123123-4'
-			,CONVERT(DATETIME,'1990/02/02 00:00:00',121)
-			,'SANTANDER RIO'
-			,4242424242424242
-			,CONVERT(DATETIME,'2018/02/02 00:00:00',121)
-			,783)*/
+				,'admin'
+				,'DNI'
+				,35123123
+				,'20-35123123-4'
+				,CONVERT(DATETIME,'1990/02/02 00:00:00',121)
+				,'admin'
+				,4242424242424242
+				,CONVERT(DATETIME,'2018/02/02 00:00:00',121)
+				,783)*/
 COMMIT
 GO
 
@@ -922,13 +922,13 @@ BEGIN TRANSACTION
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
 
-	-- Acá cargaremos al admin como una empresa más
+	/* Acá cargaremos al admin como una empresa más por cuestiones de seguridad
 	INSERT INTO EL_GROUP_BY.Empresa
-		VALUES ('RAZON SOCIAL X'
-		    ,'30-71031609-7'
-			,'Baires'
-			,CONVERT(DATETIME,'1980/02/02 00:00:00',121)
-			,783)
+		VALUES ('admin'
+				,'30-71031609-7'
+				,'Baires'
+				,CONVERT(DATETIME,'1980/02/02 00:00:00',121)
+				,783)*/
 COMMIT
 GO
 
@@ -2809,7 +2809,7 @@ EXEC EL_GROUP_BY.CARGAR_COMPRAS_E_ITEMS;
 *			EJECUCIÓN DE MIGRACIÓN - FIN						*
 ****************************************************************/
 
-/*
+
 /****************************************************************
 *			CONSTRAINTS UNIQUE, CHECK - INICIO					*
 ****************************************************************/
@@ -2844,7 +2844,7 @@ ADD CONSTRAINT CHK_Monto_No_Negativo
 	CHECK ( Compra_Monto_Total >= 0.00);
 /****************************************************************
 *			CONSTRAINTS UNIQUE, CHECK - FIN						*
-****************************************************************/*/
+****************************************************************/
 
 /****************************************************************
 *						INDICES - INICIO						*
