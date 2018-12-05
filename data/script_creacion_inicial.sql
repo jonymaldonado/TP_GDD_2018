@@ -193,6 +193,12 @@ IF OBJECT_ID('EL_GROUP_BY.ACTUALIZAR_CLIENTE') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_CLIENTE') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.ELIMINAR_CLIENTE;
 
+IF OBJECT_ID('EL_GROUP_BY.EXISTE_CUIL_CLIENTE') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.EXISTE_CUIL_CLIENTE;
+
+IF OBJECT_ID('EL_GROUP_BY.EXISTE_DOC_CLIENTE') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.EXISTE_DOC_CLIENTE;
+
 IF OBJECT_ID('EL_GROUP_BY.OBTENER_USER_FOR_MODIFY') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.OBTENER_USER_FOR_MODIFY;
 
@@ -222,6 +228,12 @@ IF OBJECT_ID('EL_GROUP_BY.ACTUALIZAR_EMPRESA') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.OBTENER_EMPRESA_FOR_MODIFY;
+
+IF OBJECT_ID('EL_GROUP_BY.EXISTE_CUIT_EMPRESA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.EXISTE_CUIT_EMPRESA;
+
+IF OBJECT_ID('EL_GROUP_BY.EXISTE_RAZON_EMPRESA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.EXISTE_RAZON_EMPRESA;
 
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_GRADOS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_GRADOS;
@@ -1818,6 +1830,67 @@ COMMIT
 GO
 
 -- -----------------------------------------------------
+-- SP - Busca si existe algun cliente con Tipo/Dni
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.EXISTE_DOC_CLIENTE
+@TIPO_DOC NVARCHAR(10),
+@NUM_DOC NUMERIC(18,0),
+@USER_ID INT,
+@EXISTE BIT OUTPUT
+as
+begin
+
+	SET @EXISTE = 0;
+
+	IF @USER_ID is null
+		BEGIN
+			SELECT @EXISTE = 1 
+			WHERE exists(
+				Select 1 FROM  EL_GROUP_BY.Cliente C
+				WHERE C.Cliente_Tipo_Documento = @TIPO_DOC
+				AND c.Cliente_Numero_Documento = @NUM_DOC)
+		END
+	ELSE
+		BEGIN
+			SELECT @EXISTE = 1 
+			WHERE exists(
+				Select 1 FROM  EL_GROUP_BY.Cliente C
+				WHERE C.Cliente_Tipo_Documento = @TIPO_DOC
+				AND c.Cliente_Numero_Documento = @NUM_DOC
+				AND C.Usuario_ID != @USER_ID)
+		END
+
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Busca si existe algun cliente con cuil
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.EXISTE_CUIL_CLIENTE
+@CUIL NVARCHAR(20),
+@USER_ID INT,
+@EXISTE BIT OUTPUT
+as
+begin
+
+	SET @EXISTE = 0;
+
+	IF @USER_ID is null
+		SELECT @EXISTE = 1 
+		WHERE exists(
+			SELECT 1 FROM  EL_GROUP_BY.Cliente C
+			WHERE C.Cliente_Cuil = @CUIL)
+	ELSE
+		SELECT @EXISTE = 1 
+		WHERE exists(
+			SELECT 1 FROM  EL_GROUP_BY.Cliente C
+			WHERE C.Cliente_Cuil = @CUIL
+			AND C.Usuario_ID != @USER_ID)
+			
+end
+GO
+
+-- -----------------------------------------------------
 -- SP - Obtener Usuario a Modificar
 -- -----------------------------------------------------
 
@@ -2191,6 +2264,59 @@ BEGIN TRANSACTION
 COMMIT
 GO
 
+
+-- -----------------------------------------------------
+-- SP - Busca si existe alguna empresa con misma razon social
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.EXISTE_RAZON_EMPRESA
+@RAZON_SOCIAL NVARCHAR(255),
+@USER_ID INT,
+@EXISTE BIT OUTPUT
+as
+begin
+
+	SET @EXISTE = 0;
+
+	IF @USER_ID is null
+		SELECT @EXISTE = 1 
+		WHERE exists(
+			Select 1 FROM  EL_GROUP_BY.Empresa E
+			WHERE E.Empresa_Razon_Social = @RAZON_SOCIAL)
+	ELSE
+		SELECT @EXISTE = 1 
+		WHERE exists(
+			Select 1 FROM  EL_GROUP_BY.Empresa E
+			WHERE E.Empresa_Razon_Social = @RAZON_SOCIAL
+			AND e.Usuario_ID != @USER_ID)
+		
+end
+GO
+
+-- -----------------------------------------------------
+-- SP - Busca si existe alguna empresa con misma razon social
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.EXISTE_CUIT_EMPRESA
+@CUIT NVARCHAR(255),
+@USER_ID INT,
+@EXISTE BIT OUTPUT
+as
+begin
+
+	SET @EXISTE = 0;
+
+	IF @USER_ID IS NULL
+		SELECT @EXISTE = 1 
+		WHERE exists(
+			Select 1 FROM  EL_GROUP_BY.Empresa E
+			WHERE E.Empresa_Cuit = @CUIT)
+	ELSE
+		SELECT @EXISTE = 1 
+		WHERE exists(
+			Select 1 FROM  EL_GROUP_BY.Empresa E
+			WHERE E.Empresa_Cuit = @CUIT
+			AND e.Usuario_ID != @USER_ID)
+end
+GO
 
 -- -----------------------------------------------------
 -- SP - Listar Grados

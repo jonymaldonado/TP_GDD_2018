@@ -281,6 +281,66 @@ namespace MyLibrary
 
         }
 
+        public static bool ExistsDoc(string docType, string docNum, string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@TIPO_DOC", SqlDbType.NVarChar, 10);
+            parameter.Value = docType;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@NUM_DOC", SqlDbType.BigInt);
+            parameter.Value = Convert.ToInt64(docNum);
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@USER_ID", SqlDbType.Int);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(userId))
+            {
+                parameter.Value = userId;
+            }
+            parameters.Add(parameter);
+
+            SqlParameter result = new SqlParameter("@EXISTE", SqlDbType.Bit);
+            result.Size = sizeof(bool);
+            result.Direction = ParameterDirection.Output;
+            parameters.Add(result);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.EXISTE_DOC_CLIENTE", Connection.Type.StoredProcedure, parameters);
+
+            return Convert.ToBoolean(result.Value);
+        }
+
+        public static bool ExistsCuil(string cuil, string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@CUIL", SqlDbType.NVarChar, 20);
+            parameter.Value = cuil;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@USER_ID", SqlDbType.Int);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(userId))
+            {
+                parameter.Value = userId;
+            }
+            parameters.Add(parameter);
+
+            SqlParameter result = new SqlParameter("@EXISTE", SqlDbType.Bit);
+            result.Size = sizeof(bool);
+            result.Direction = ParameterDirection.Output;
+            parameters.Add(result);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.EXISTE_CUIL_CLIENTE", Connection.Type.StoredProcedure, parameters);
+
+            return Convert.ToBoolean(result.Value);
+        }
+
     }
 
 }

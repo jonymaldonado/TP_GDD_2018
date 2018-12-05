@@ -15,6 +15,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 {
     public partial class FormAMEmpresa : Form
     {
+        public EmpresaDAO empresa = new EmpresaDAO();
         string userId;
         bool isUpper = false;
         Form formPrevious;
@@ -182,22 +183,23 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (this.isUpper || this.isRegisterUser)
-                    this.CreateEmpresa();
-                else
-                    this.UpdateEmpresa();
 
-            }
-            catch (SqlException ex)
+            if (ExistsRazonSocial())
             {
-                //if (ex.Message.Contains("UniqueConstraint"))
-                    //throw new UniqueConstraintException();
-                    MessageBox.Show(ex.Message.ToString());
-                //throw;
-
+                MessageBox.Show("La Razón Social " + txt_razon_social.Text + " ya existe en el sistema. Ingrese una diferente.", "Error");
+                return;
             }
+
+            if (ExistsCuit())
+            {
+                MessageBox.Show("El Cuit " + txt_cuit.Text + " ya existe en el sistema. Ingrese uno diferente.");
+                return;
+            }
+
+            if (this.isUpper || this.isRegisterUser)
+                this.CreateEmpresa();
+            else
+                this.UpdateEmpresa();
         }
 
 
@@ -255,6 +257,16 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             else
                 e.Cancel = false;
 
+        }
+
+        private bool ExistsRazonSocial()
+        {
+            return EmpresaConnection.ExistsRazonSocial(txt_razon_social.Text, this.userId);
+        }
+
+        private bool ExistsCuit()
+        {
+            return EmpresaConnection.ExistsCuit(txt_cuit.Text, this.userId);
         }
         
     }

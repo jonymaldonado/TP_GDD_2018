@@ -226,6 +226,19 @@ namespace PalcoNet.Abm_Cliente
 
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            if (ExistsDoc())
+            {
+                MessageBox.Show("El "+cmb_type_doc.Text+" "+ txt_number_doc.Text+" ya existe en el sistema. Ingrese uno diferente.");
+                return;
+            }
+
+            if (ExistsCuil())
+            {
+                MessageBox.Show("El Cuil "+ txt_cuil.Text +" ya existe en el sistema. Ingrese uno diferente.");
+                return;
+            }
+
             if (this.isUpper || this.isRegisterUser)
                 this.CreateClient();
             else
@@ -286,6 +299,16 @@ namespace PalcoNet.Abm_Cliente
             else
                 e.Cancel = false;
 
+        }
+
+        private bool ExistsDoc()
+        {
+            return ClientConnection.ExistsDoc(cmb_type_doc.Text.Trim(), txt_number_doc.Text.Trim(), this.userId);
+        }
+
+        private bool ExistsCuil()
+        {
+            return ClientConnection.ExistsCuil(txt_cuil.Text.Trim(), this.userId);
         }
     }
 

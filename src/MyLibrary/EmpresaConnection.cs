@@ -190,6 +190,64 @@ namespace MyLibrary
 
             return ds;
         }
+
+        public static bool ExistsRazonSocial(string razon, string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@RAZON_SOCIAL", SqlDbType.NVarChar, 255);
+            parameter.Value = razon;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@USER_ID", SqlDbType.Int);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(userId))
+            {
+                parameter.Value = userId;
+            }
+            parameters.Add(parameter);
+
+            SqlParameter result = new SqlParameter("@EXISTE", SqlDbType.Bit);
+            result.Size = sizeof(bool);
+            result.Direction = ParameterDirection.Output;
+            parameters.Add(result);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.EXISTE_RAZON_EMPRESA", Connection.Type.StoredProcedure, parameters);
+
+            return Convert.ToBoolean(result.Value);
+        }
+
+        public static bool ExistsCuit(string cuit, string userId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@CUIT", SqlDbType.NVarChar, 255);
+            parameter.Value = cuit;
+            parameters.Add(parameter);
+
+
+            parameter = new SqlParameter("@USER_ID", SqlDbType.Int);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(userId))
+            {
+                parameter.Value = userId;
+            }
+            parameters.Add(parameter);
+
+            SqlParameter result = new SqlParameter("@EXISTE", SqlDbType.Bit);
+            result.Size = sizeof(bool);
+            result.Direction = ParameterDirection.Output;
+            parameters.Add(result);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.EXISTE_CUIT_EMPRESA", Connection.Type.StoredProcedure, parameters);
+
+            return Convert.ToBoolean(result.Value);
+        }
+
     }
 
 
