@@ -123,7 +123,7 @@ namespace MyLibrary
             command.Connection = GetConnection();
 
             int result = Convert.ToInt32(command.ExecuteScalar());
-           
+                       
             return result;
         }
 

@@ -270,6 +270,9 @@ IF OBJECT_ID('EL_GROUP_BY.OBTENER_PUBLICACION_FOR_MODIFY') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.OBTENER_UBICACIONES') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.OBTENER_UBICACIONES;
 
+IF OBJECT_ID('EL_GROUP_BY.OBTENER_UBICACIONES_PARA_COMPRA') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.OBTENER_UBICACIONES_PARA_COMPRA;
+
 IF OBJECT_ID('EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION;
 
@@ -446,7 +449,7 @@ CREATE TABLE EL_GROUP_BY.Cliente (
 		Cliente_Cuil NVARCHAR(20),
 		Cliente_Fecha_Nacimiento DATETIME,
 		Cliente_Tarjeta_Marca NVARCHAR(20),
-		Cliente_Tarjeta_Numero NUMERIC(16,0),
+		Cliente_Tarjeta_Numero NVARCHAR(16),
 		Cliente_Fecha_Creacion DATETIME,
 		Usuario_ID INT,
 	PRIMARY KEY (Cliente_ID),
@@ -2460,6 +2463,38 @@ end
 go
 
 -- -----------------------------------------------------
+-- SP - Obtiene ubicaciones de la publicacion que estan 
+-- disponibles para la compra
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.OBTENER_UBICACIONES_PARA_COMPRA
+@PUBLI_ID int
+as
+begin
+
+SELECT	PU.Publicacion_ID,
+			PU.Ubicacion_ID,
+			E.Empresa_ID,
+			T.Ubicacion_Tipo_Descripcion,
+			U.Ubicacion_Fila,
+			U.Ubicacion_Asiento,
+			u.Ubicacion_Sin_Numerar,
+			u.Ubicacion_Precio,
+			u.Ubicacion_Tipo_ID,
+			T.Ubicacion_Tipo_Codigo
+	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
+	INNER JOIN EL_GROUP_BY.Ubicacion U ON U.Ubicacion_ID = PU.Ubicacion_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo T ON T.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Espectaculo E on e.Espectaculo_ID = P.Espectaculo_ID
+	WHERE PU.Publicacion_ID = @PUBLI_ID
+	AND U.Ubicacion_Canjeada = 0
+	AND PU.Compra_ID is null
+
+end
+go
+
+-- -----------------------------------------------------
 -- SP - Edita publicacion y espectaculo
 -- -----------------------------------------------------
 CREATE PROCEDURE EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION
@@ -2705,30 +2740,44 @@ GO
 
 -- -----------------------------------------------------
 -- SP - Listado publicaciones publicadas para comprar
--- -----------------------------------------------------
+-- -----------------------------------------------------	
 
 create procedure EL_GROUP_BY.LISTAR_PUBLICACIONES_DISPONIBLES_COMPRA
 @FECHA_DESDE DATETIME, 
 @FECHA_HASTA DATETIME,
+@FECHA_SIST DATETIME,
 @DESCRIPCION VARCHAR(255),
 @RUBRO_UNO INT,
 @RUBRO_DOS INT,
 @RUBRO_TRES INT
 as
 begin
-	select P.Publicacion_ID,
-			P.Publicacion_Descripcion,
-			P.Publicacion_FechaHora,
-			P.Publicacion_Cantidad_Localidades
-	from EL_GROUP_BY.Publicacion P join EL_GROUP_BY.Espectaculo E
-	on P.Espectaculo_ID = E.Espectaculo_ID join EL_GROUP_BY.Rubro R
-	on E.Rubro_ID = R.Rubro_ID join EL_GROUP_BY.Grado_Publicacion G
-	on P.Grado_Publicacion_ID = G.Grado_Publicacion_ID
-	where P.Publicacion_FechaHora between @FECHA_DESDE and @FECHA_HASTA
-		  and p.Estado_Publicacion_ID = 2 
-		  and P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
-		  or (R.Rubro_ID = @RUBRO_UNO or R.Rubro_ID = @RUBRO_DOS or R.Rubro_ID = @RUBRO_TRES)
-	order by G.Grado_Publicacion_ID desc
+	
+	select  P.Publicacion_ID,
+			G.Grado_Publicacion_Prioridad,
+			E.Espectaculo_Descripcion,
+			E.Espectaculo_Fecha,
+			count(PU.Ubicacion_ID) as 'Localidades disponibles', 
+			E.Espectaculo_Direccion,
+			R.Rubro_Descripcion
+	from EL_GROUP_BY.Publicacion P 
+	inner join EL_GROUP_BY.Espectaculo E on P.Espectaculo_ID = E.Espectaculo_ID 
+	inner join EL_GROUP_BY.Rubro R on E.Rubro_ID = R.Rubro_ID 
+	inner join EL_GROUP_BY.Grado_Publicacion G on P.Grado_Publicacion_ID = G.Grado_Publicacion_ID
+	inner join EL_GROUP_BY.Publicacion_Ubicacion PU on PU.Publicacion_ID = P.Publicacion_ID
+	and PU.Compra_ID is null --Que no haya sido comprada
+	inner join EL_GROUP_BY.Ubicacion U on PU.Ubicacion_ID = U.Ubicacion_ID
+	and U.Ubicacion_Canjeada = 0 --Que no haya sido canjeada
+	where E.Espectaculo_Fecha between @FECHA_DESDE and @FECHA_HASTA
+		and p.Estado_Publicacion_ID = 2	   
+		and E.Espectaculo_Fecha_Vencimiento > @FECHA_SIST --Que no este vencida
+		and P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
+		and (E.Rubro_ID = @RUBRO_UNO or E.Rubro_ID = @RUBRO_DOS or E.Rubro_ID = @RUBRO_TRES)
+	group by P.Publicacion_ID, G.Grado_Publicacion_Prioridad, E.Espectaculo_Descripcion, 
+			 E.Espectaculo_Fecha, G.Grado_Publicacion_ID, E.Espectaculo_Direccion, R.Rubro_Descripcion
+	--order by G.Grado_Publicacion_ID desc
+	--queda pendiente ordenar por grado cuando nos definan como es el peso
+
 end
 go
 

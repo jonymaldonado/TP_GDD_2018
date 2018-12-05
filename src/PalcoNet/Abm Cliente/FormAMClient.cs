@@ -18,10 +18,12 @@ namespace PalcoNet.Abm_Cliente
         string userId;
         bool isUpper = false;
         Form formPrevious;
+        Comprar.FormToBuy formPreviusCompra;
 
         string user = null;
         string password = null;
         bool isRegisterUser = false;
+        bool creditCardChange = false;
 
         public FormAMClient(FormClient formClient, bool isUpper, string userId)
         {
@@ -35,6 +37,21 @@ namespace PalcoNet.Abm_Cliente
                 this.userId = userId;
                 this.LoadFieldsOfClient();
             }
+        }
+
+        public FormAMClient(Comprar.FormToBuy FormCompra, Int32 ClientId)
+        {
+            InitializeComponent();
+            this.LoadDocs();
+            this.isUpper = false;
+            this.formPrevious = FormCompra;
+            this.formPreviusCompra = FormCompra;
+            this.userId = Convert.ToString(ClientConnection.GetUserId(ClientId));
+            this.LoadFieldsOfClient();
+            this.creditCardChange = true;
+            groupBox3.Enabled = false;
+            returnToolStripMenuItem.Enabled = false;
+
         }
 
         public FormAMClient(Registro_de_Usuario.FormUserRegister formRegisterUser, string user, string password)
@@ -83,7 +100,7 @@ namespace PalcoNet.Abm_Cliente
                     txt_postal_code.Text = reader.IsDBNull(11) ? "" : reader.GetString(11);
                     txt_phone.Text = reader.IsDBNull(12) ? "" : reader.GetString(12);
                     txt_email.Text = reader.IsDBNull(13) ? "" : reader.GetString(13);
-                    txt_number_card.Text = reader.IsDBNull(15) ? "" : reader.GetDecimal(14).ToString();
+                    txt_number_card.Text = reader.IsDBNull(15) ? "" : reader.GetString(14);
                     txt_name_card.Text = reader.IsDBNull(14) ? "" : reader.GetString(15);
                 }
             }
@@ -140,7 +157,7 @@ namespace PalcoNet.Abm_Cliente
             clientDAO.PostalCode = txt_postal_code.Text;
             clientDAO.BirthDate = Convert.ToDateTime(dtp_birthdate.Value.Date.ToString());
             clientDAO.CardName = txt_name_card.Text;
-            clientDAO.CardNumber = Convert.ToInt64(txt_number_card.Text);
+            clientDAO.CardNumber = txt_number_card.Text;
             clientDAO.FirstLogin = this.isRegisterUser;
 
             return clientDAO;
@@ -179,7 +196,16 @@ namespace PalcoNet.Abm_Cliente
 
         private bool AreAllTheDataCompleted()
         {
-            return (!string.IsNullOrEmpty(txt_name.Text)
+            bool resultado = false;
+
+            if(this.creditCardChange)
+            {
+                resultado = (!string.IsNullOrEmpty(txt_name_card.Text)
+                            && !string.IsNullOrEmpty(txt_number_card.Text));
+            }
+            else
+            {
+                resultado = (!string.IsNullOrEmpty(txt_name.Text)
                     && !string.IsNullOrEmpty(txt_surname.Text)
                     && !string.IsNullOrEmpty(cmb_type_doc.Text)
                     && !string.IsNullOrEmpty(txt_number_doc.Text)
@@ -193,6 +219,9 @@ namespace PalcoNet.Abm_Cliente
                     && !string.IsNullOrEmpty(txt_email.Text)
                     && !string.IsNullOrEmpty(txt_name_card.Text)
                     && !string.IsNullOrEmpty(txt_number_card.Text));
+            }
+
+            return resultado;
         }
 
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -216,7 +245,16 @@ namespace PalcoNet.Abm_Cliente
                 ClientDAO clientDAO = GetClientDAO(null, null);
 
                 ClientConnection.UpdateClient(clientDAO, this.userId);
-                MessageBox.Show("La modificación del cliente ha sido realizada correctamente.");
+
+                if(!this.creditCardChange)
+                    MessageBox.Show("La modificación del cliente ha sido realizada correctamente.");
+                else
+                {
+                    MessageBox.Show("Se ha actualizado la tarjeta de crédito exitosamente.");
+                    this.formPreviusCompra.CreditCardOk = true;
+                }
+                    
+
                 formPrevious.Show();
                 this.Close();
             }
