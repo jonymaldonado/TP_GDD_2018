@@ -1703,7 +1703,8 @@ begin
               AND C.Cliente_Apellido LIKE ISNULL('%' + @APELLIDO + '%', '%')
               AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
               AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
-              AND U.Usuario_Habilitado = 1;
+              AND U.Usuario_Habilitado = 1
+	order by C.Cliente_Nombre, C.Cliente_Apellido, U.Usuario_Mail, C.Cliente_Numero_Documento;
 end
 go
 
@@ -3054,7 +3055,7 @@ begin
 			U.Usuario_Habilitado
 	from EL_GROUP_BY.USUARIO U
 	WHERE U.Usuario_Username LIKE ISNULL('%' + @USERNAME + '%', '%')
-         
+    order by u.Usuario_Username asc     
 end
 go
 
