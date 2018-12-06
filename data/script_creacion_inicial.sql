@@ -14,7 +14,7 @@ IF OBJECT_ID('EL_GROUP_BY.Publicacion') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.Espectaculo') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Espectaculo;
-
+	
 IF OBJECT_ID('EL_GROUP_BY.Compra') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Compra;
 
@@ -309,6 +309,12 @@ IF OBJECT_ID('EL_GROUP_BY.CREAR_FACTURA') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.CREAR_ITEMS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.CREAR_ITEMS;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_USUARIOS') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_USUARIOS;
+
+IF OBJECT_ID('EL_GROUP_BY.SET_USUARIO_HABILITADO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.SET_USUARIO_HABILITADO;
 
 IF type_id('EL_GROUP_BY.UBICACION_TIPO_TABLA') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA;
@@ -974,6 +980,7 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('CANJE_ADMINISTRACION_PUNTOS',1)
 	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('GENERAR_PAGO_COMISIONES',1)
 	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('LISTADO_ESTADISTICO',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('ADMINISTRACION_USUARIOS',1)
 COMMIT;
 GO
 
@@ -1033,7 +1040,8 @@ BEGIN TRANSACTION
 					F.Funcionalidad_ID = 3 OR
 					F.Funcionalidad_ID = 5 OR
 					F.Funcionalidad_ID = 11 OR
-					F.Funcionalidad_ID = 12)
+					F.Funcionalidad_ID = 12 OR
+					F.Funcionalidad_ID = 13)
 	UNION
 		SELECT Rol_ID,
 				Funcionalidad_ID
@@ -3003,6 +3011,37 @@ begin
 
 end
 go
+
+
+-- -----------------------------------------------------
+-- SP - Listar Usuarios para administracion
+-- -----------------------------------------------------
+create procedure EL_GROUP_BY.LISTAR_USUARIOS
+@USERNAME NVARCHAR(10)
+as
+begin
+	select  U.Usuario_ID,
+			U.Usuario_Username,
+			U.Usuario_Habilitado
+	from EL_GROUP_BY.USUARIO U
+	WHERE U.Usuario_Username LIKE ISNULL('%' + @USERNAME + '%', '%')
+         
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Hablitar/Deshabilitar Usuario
+-- -----------------------------------------------------
+CREATE PROCEDURE EL_GROUP_BY.SET_USUARIO_HABILITADO
+@USUARIO_ID INT,
+@HABILITADO BIT
+AS
+BEGIN TRANSACTION
+	UPDATE EL_GROUP_BY.USUARIO
+		SET Usuario_Habilitado = @HABILITADO 
+		WHERE Usuario_ID = @USUARIO_ID;
+COMMIT
+GO
 
 /****************************************************************
 *							SPs - FIN							*
