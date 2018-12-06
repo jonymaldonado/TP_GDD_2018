@@ -23,6 +23,10 @@ IF OBJECT_ID('EL_GROUP_BY.Puntos') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.Ubicacion') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Ubicacion;
+
+IF OBJECT_ID('EL_GROUP_BY.Publicacion_Ubicacion ') IS NOT NULL
+	DROP TABLE EL_GROUP_BY.Publicacion_Ubicacion 
+GO
 	
 IF OBJECT_ID('EL_GROUP_BY.Cliente') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Cliente;
@@ -65,10 +69,6 @@ IF OBJECT_ID('EL_GROUP_BY.Estado_Publicacion') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.Forma_Pago') IS NOT NULL
 	DROP TABLE EL_GROUP_BY.Forma_Pago;
-
-IF OBJECT_ID('EL_GROUP_BY.Publicacion_Ubicacion ') IS NOT NULL
-	DROP TABLE EL_GROUP_BY.Publicacion_Ubicacion 
-GO
 
 /****************************************************************
 *					DROP DE TABLAS - FIN						*
