@@ -84,6 +84,44 @@ namespace MyLibrary
         {
             return Connection.queryForInt("EXEC EL_GROUP_BY.ES_UNICO_USERNAME '" +userName+ "'");
         }
+
+        public static DataSet ListUsers(String username)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@USERNAME", SqlDbType.NVarChar, 10);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(username))
+            {
+                parameter.Value = username;
+            }
+            parameters.Add(parameter);
+
+            DataSet ds = Connection.GetDataSet("EL_GROUP_BY.LISTAR_USUARIOS", Connection.Type.StoredProcedure, parameters);
+
+            return ds;
+
+        }
+
+        public static void SetUserStatus(Int32 userId, bool status)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@USUARIO_ID", SqlDbType.Int);
+            parameter.Value = userId;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@HABILITADO", SqlDbType.Bit);
+            parameter.Value = status;
+            parameters.Add(parameter);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.SET_USUARIO_HABILITADO", Connection.Type.StoredProcedure, parameters);
+        }
+
     }
 
 }

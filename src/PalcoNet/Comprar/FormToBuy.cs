@@ -30,8 +30,8 @@ namespace PalcoNet.Comprar
         public FormToBuy(Int32 IdCliente)
         {
             InitializeComponent();
-            //dtp_date_from.MinDate = DateTime.Parse(systemDate.ToString());
-            //dtp_date_to.MinDate = DateTime.Parse(systemDate.ToString());
+            dtp_date_from.MinDate = DateTime.Parse(systemDate.ToString());
+            dtp_date_to.MinDate = DateTime.Parse(systemDate.ToString());
 
             this.IdCliente = IdCliente;
             ModifyScreen(); 
@@ -309,6 +309,12 @@ namespace PalcoNet.Comprar
         private void Buy()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+            if (ubicationsToBuy.Count == 0)
+            {
+                MessageBox.Show("¡Debe seleccionar almenos una localidad para comprar!", "Error");
+                return;
+            }
 
             sb.Append("Su compra contiene "+ubicationsToBuy.Count+" localidad/es");
             sb.Append(Environment.NewLine);

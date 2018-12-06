@@ -50,6 +50,7 @@
             this.watchRecordClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listStatisticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.administraciónDeUsuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -152,7 +153,8 @@
             this.actionsEditPublicationToolStripMenuItem,
             this.actionsBuyToolStripMenuItem,
             this.actionsGeneratePayCommissionsToolStripMenuItem,
-            this.actionsExchangeAdminPointsToolStripMenuItem});
+            this.actionsExchangeAdminPointsToolStripMenuItem,
+            this.administraciónDeUsuariosToolStripMenuItem});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.actionsToolStripMenuItem.Text = "A&cciones";
@@ -223,6 +225,13 @@
             this.listStatisticalToolStripMenuItem.Text = "Estadístico";
             this.listStatisticalToolStripMenuItem.Click += new System.EventHandler(this.listStatisticalToolStripMenuItem_Click);
             // 
+            // administraciónDeUsuariosToolStripMenuItem
+            // 
+            this.administraciónDeUsuariosToolStripMenuItem.Name = "administraciónDeUsuariosToolStripMenuItem";
+            this.administraciónDeUsuariosToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.administraciónDeUsuariosToolStripMenuItem.Text = "Administración de Usuarios";
+            this.administraciónDeUsuariosToolStripMenuItem.Click += new System.EventHandler(this.administraciónDeUsuariosToolStripMenuItem_Click);
+            // 
             // ContainerMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -263,6 +272,7 @@
         private System.Windows.Forms.ToolStripMenuItem listStatisticalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actionsGeneratePayCommissionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actionsExchangeAdminPointsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem administraciónDeUsuariosToolStripMenuItem;
     }
 }
 

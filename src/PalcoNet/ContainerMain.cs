@@ -136,6 +136,11 @@ namespace PalcoNet
                         this.listStatisticalToolStripMenuItem.Available = true;
                         break;
 
+                    case 13:
+                        this.actionsToolStripMenuItem.Available = true;
+                        this.administraciónDeUsuariosToolStripMenuItem.Available = true;
+                        break;
+
                     default: break;
                 }
             }
@@ -269,6 +274,11 @@ namespace PalcoNet
         private void actionsGeneratePayCommissionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openForm(new Generar_Rendicion_Comisiones.GenerateComision());
+        }
+
+        private void administraciónDeUsuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Administracion_de_Usuarios.UserAdmin());
         }
     }
 

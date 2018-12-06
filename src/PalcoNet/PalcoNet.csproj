@@ -99,6 +99,12 @@
     <Compile Include="Abm Rubro\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Administracion de Usuarios\UserAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Administracion de Usuarios\UserAdmin.Designer.cs">
+      <DependentUpon>UserAdmin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Canje Puntos\FormChangePoints.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -193,6 +199,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Abm Rubro\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Administracion de Usuarios\UserAdmin.resx">
+      <DependentUpon>UserAdmin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Canje Puntos\FormChangePoints.resx">
       <DependentUpon>FormChangePoints.cs</DependentUpon>
