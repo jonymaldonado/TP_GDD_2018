@@ -325,8 +325,6 @@ IF type_id('EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA') IS NOT NULL
 IF type_id('EL_GROUP_BY.ITEM_TIPO_TABLA') IS NOT NULL
 	DROP TYPE EL_GROUP_BY.ITEM_TIPO_TABLA;
 
-	
-
 /****************************************************************
 *					DROP DE SPs - FIN							*
 ****************************************************************/
@@ -2698,6 +2696,8 @@ CREATE PROCEDURE EL_GROUP_BY.CREAR_COMPRA
 AS
 BEGIN TRANSACTION
 
+	DECLARE @COMPRA_ID INT
+
 	INSERT EL_GROUP_BY.Compra VALUES(
 			@FECHA,
 			@CANTIDAD,
@@ -2706,8 +2706,10 @@ BEGIN TRANSACTION
 			@CLIENTE_ID,
 			@FORMA_PAGO)
 
+	SET @COMPRA_ID = SCOPE_IDENTITY()
+
 	UPDATE EL_GROUP_BY.Publicacion_Ubicacion 
-		SET Compra_ID = SCOPE_IDENTITY()
+		SET Compra_ID = @COMPRA_ID
 		WHERE Ubicacion_ID IN ( SELECT Ubicacion_ID FROM @UBICACIONES)
 		AND Publicacion_ID IN ( SELECT Publicacion_ID FROM @UBICACIONES)
 
@@ -2716,15 +2718,42 @@ BEGIN TRANSACTION
 		@VENCIMIENTO,
 		@CLIENTE_ID)
 
-	/*
-	UPDATE EL_GROUP_BY.Ubicacion
-		SET Ubicacion_Disponible = 0
-		WHERE Ubicacion_ID IN ( SELECT Ubicacion_ID FROM @UBICACIONES)
-	*/
+-- -----------------------------------------------------
+-- Luego de una compra, si la publicacion sobre
+-- la que se realizó una compra se quedó sin ubicaciones
+-- disponibles, se pasa a finalizada
+-- -----------------------------------------------------
+	DECLARE CU_PUBLI_COMPRADA CURSOR FOR
+		SELECT	DISTINCT(PU.Publicacion_ID) 
+		FROM  EL_GROUP_BY.Publicacion_Ubicacion PU
+		WHERE PU.Compra_ID = @COMPRA_ID
+	
+	DECLARE @PUBLI_ID INT
+	DECLARE @CANT_LOC INT
+
+	OPEN CU_PUBLI_COMPRADA
+	FETCH CU_PUBLI_COMPRADA INTO @PUBLI_ID
+	WHILE @@FETCH_STATUS = 0 
+	BEGIN
+		UPDATE EL_GROUP_BY.Publicacion 
+			SET Estado_Publicacion_ID = 3
+			WHERE Publicacion_ID = @PUBLI_ID
+			AND NOT EXISTS( 
+				SELECT COUNT(PU.Ubicacion_ID)
+				FROM EL_GROUP_BY.Publicacion_Ubicacion PU
+				WHERE PU.Publicacion_ID = @PUBLI_ID
+				AND PU.Publicacion_Ubicacion_Canjeada = 0 
+				AND PU.Compra_ID IS NULL
+				GROUP BY PU.Publicacion_ID )
+
+		FETCH CU_PUBLI_COMPRADA INTO @PUBLI_ID
+	END
+	
+	CLOSE CU_PUBLI_COMPRADA 
+	DEALLOCATE CU_PUBLI_COMPRADA 
 
 COMMIT TRANSACTION
 GO
-
 
 -- -----------------------------------------------------
 -- SP - Edita publicacion y espectaculo
