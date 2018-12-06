@@ -18,14 +18,14 @@ namespace PalcoNet.Abm_Cliente
         public FormClient()
         {
             InitializeComponent();
-            btn_select.Enabled = false;
+            btn_select.Visible = false;
             dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
         }
 
         public FormClient(Historial_Cliente.FormClientHistory previusForm)
         {
             InitializeComponent();
-            btn_select.Enabled = true;
+            btn_select.Visible = true;
             this.previusForm = previusForm;
 
             dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];

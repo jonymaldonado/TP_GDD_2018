@@ -301,6 +301,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormEmpresa";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ABM Empresa";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

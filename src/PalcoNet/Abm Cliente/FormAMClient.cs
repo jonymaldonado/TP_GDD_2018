@@ -260,7 +260,7 @@ namespace PalcoNet.Abm_Cliente
                 ClientConnection.UpdateClient(clientDAO, this.userId);
 
                 if(!this.creditCardChange)
-                    MessageBox.Show("La modificación del cliente ha sido realizada correctamente.");
+                    MessageBox.Show("La modificación del cliente ha sido realizada correctamente. Para ver los cambios realize nuevamente la búsqueda");
                 else
                 {
                     MessageBox.Show("Se ha actualizado la tarjeta de crédito exitosamente.");

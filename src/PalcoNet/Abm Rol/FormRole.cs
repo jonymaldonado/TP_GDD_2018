@@ -133,6 +133,7 @@ namespace PalcoNet.Abm_Rol
         private void btn_reestablish_Click(object sender, EventArgs e)
         {
             RoleConnection.LoadDGV(dg_rol);
+            txt_add_name.Text = "";
             txt_search_name.Text = "";
         }
 
