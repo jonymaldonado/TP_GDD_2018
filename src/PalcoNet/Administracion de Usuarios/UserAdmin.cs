@@ -46,5 +46,55 @@ namespace PalcoNet.Administracion_de_Usuarios
             }
             dgv_list.DataSource = UserConnection.ListUsers(txt_search_name.Text).Tables[0];
         }
+
+        private void btn_pass_Click(object sender, EventArgs e)
+        {
+
+            if(dgv_list.SelectedRows.Count != 1)
+                MessageBox.Show("Debe seleccionar un solo usuario","Error");
+            else
+            {
+                String username = " ";
+                Int32 userId = 0;
+
+                foreach (DataGridViewRow row in dgv_list.SelectedRows)
+                {
+                    userId = Convert.ToInt32(row.Cells["Usuario_ID"].Value);
+                    username = Convert.ToString(row.Cells["Usuario_Username"].Value);
+                }
+                
+                this.Hide();
+
+                Registro_de_Usuario.FormChangePassword fr = new Registro_de_Usuario.FormChangePassword(userId, username);
+
+                fr.ShowDialog();
+                this.Show();
+            }
+        }
+
+        private void btn_rol_Click(object sender, EventArgs e)
+        {
+            if (dgv_list.SelectedRows.Count != 1)
+                MessageBox.Show("Debe seleccionar un solo usuario", "Error");
+            else
+            {
+                String username = " ";
+                Int32 userId = 0;
+
+                foreach (DataGridViewRow row in dgv_list.SelectedRows)
+                {
+                    userId = Convert.ToInt32(row.Cells["Usuario_ID"].Value);
+                    username = Convert.ToString(row.Cells["Usuario_Username"].Value);
+                }
+
+                this.Hide();
+
+                Administracion_de_Usuarios.RoleAssign fr = new Administracion_de_Usuarios.RoleAssign(userId, username);
+                fr.ShowDialog();
+                this.Show();
+            }
+
+
+        }
     }
 }

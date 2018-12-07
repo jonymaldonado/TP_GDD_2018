@@ -272,9 +272,9 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(64, 28);
+            this.dateTimePicker1.Location = new System.Drawing.Point(8, 135);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(169, 20);
+            this.dateTimePicker1.Size = new System.Drawing.Size(350, 20);
             this.dateTimePicker1.TabIndex = 2;
             this.dateTimePicker1.Value = new System.DateTime(2018, 1, 1, 0, 0, 0, 0);
             // 
@@ -400,6 +400,7 @@
             // txt_asientos
             // 
             this.txt_asientos.Location = new System.Drawing.Point(74, 57);
+            this.txt_asientos.MaxLength = 4;
             this.txt_asientos.Name = "txt_asientos";
             this.txt_asientos.Size = new System.Drawing.Size(122, 20);
             this.txt_asientos.TabIndex = 3;
@@ -417,6 +418,7 @@
             // txt_filas
             // 
             this.txt_filas.Location = new System.Drawing.Point(74, 29);
+            this.txt_filas.MaxLength = 3;
             this.txt_filas.Name = "txt_filas";
             this.txt_filas.Size = new System.Drawing.Size(122, 20);
             this.txt_filas.TabIndex = 1;

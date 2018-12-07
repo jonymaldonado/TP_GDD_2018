@@ -87,7 +87,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -154,11 +154,11 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(287, 88);
+            this.label5.Location = new System.Drawing.Point(285, 88);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(43, 13);
+            this.label5.Size = new System.Drawing.Size(47, 13);
             this.label5.TabIndex = 80;
-            this.label5.Text = "Ciudad:";
+            this.label5.Text = "Ciudad*:";
             // 
             // txt_city
             // 
@@ -171,11 +171,11 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(259, 34);
+            this.label15.Location = new System.Drawing.Point(255, 34);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(74, 13);
+            this.label15.Size = new System.Drawing.Size(78, 13);
             this.label15.TabIndex = 78;
-            this.label15.Text = "Código postal:";
+            this.label15.Text = "Código postal*:";
             // 
             // txt_postal_code
             // 
@@ -188,11 +188,11 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(277, 62);
+            this.label14.Location = new System.Drawing.Point(273, 62);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(56, 13);
+            this.label14.Size = new System.Drawing.Size(60, 13);
             this.label14.TabIndex = 76;
-            this.label14.Text = "Localidad:";
+            this.label14.Text = "Localidad*:";
             // 
             // txt_location
             // 
@@ -240,11 +240,11 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(19, 59);
+            this.label10.Location = new System.Drawing.Point(15, 59);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(47, 13);
+            this.label10.Size = new System.Drawing.Size(51, 13);
             this.label10.TabIndex = 70;
-            this.label10.Text = "Número:";
+            this.label10.Text = "Número*:";
             // 
             // txt_number_street
             // 
@@ -258,11 +258,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(33, 33);
+            this.label7.Location = new System.Drawing.Point(29, 33);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(33, 13);
+            this.label7.Size = new System.Drawing.Size(37, 13);
             this.label7.TabIndex = 68;
-            this.label7.Text = "Calle:";
+            this.label7.Text = "Calle:*";
             // 
             // txt_street
             // 
@@ -277,9 +277,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(315, 68);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.Size = new System.Drawing.Size(39, 13);
             this.label4.TabIndex = 7;
-            this.label4.Text = "CUIT:";
+            this.label4.Text = "CUIT*:";
             // 
             // txt_cuit
             // 
@@ -295,9 +295,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(297, 32);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(52, 13);
+            this.label3.Size = new System.Drawing.Size(56, 13);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Teléfono:";
+            this.label3.Text = "Teléfono*:";
             // 
             // txt_phone
             // 
@@ -313,9 +313,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(50, 70);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Email:";
+            this.label2.Text = "Email*:";
             // 
             // txt_email
             // 
@@ -329,11 +329,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 36);
+            this.label1.Location = new System.Drawing.Point(10, 36);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 13);
+            this.label1.Size = new System.Drawing.Size(77, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Razón Social:";
+            this.label1.Text = "Razón Social*:";
             // 
             // txt_razon_social
             // 

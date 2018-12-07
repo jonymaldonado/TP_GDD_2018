@@ -46,11 +46,12 @@
             this.actionsBuyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsGeneratePayCommissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsExchangeAdminPointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.administraciónDeUsuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.watchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.watchRecordClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listStatisticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.administraciónDeUsuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cambiarPasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,22 +73,23 @@
             // 
             this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSeparator5,
+            this.cambiarPasswordToolStripMenuItem,
             this.closeSessionToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileMenu.ImageTransparentColor = System.Drawing.SystemColors.ActiveBorder;
             this.fileMenu.Name = "fileMenu";
-            this.fileMenu.Size = new System.Drawing.Size(60, 20);
-            this.fileMenu.Text = "&Archivo";
+            this.fileMenu.Size = new System.Drawing.Size(53, 20);
+            this.fileMenu.Text = "&Sesión";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(140, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(169, 6);
             // 
             // closeSessionToolStripMenuItem
             // 
             this.closeSessionToolStripMenuItem.Name = "closeSessionToolStripMenuItem";
-            this.closeSessionToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.closeSessionToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.closeSessionToolStripMenuItem.Text = "Cerrar Sesion";
             this.closeSessionToolStripMenuItem.Click += new System.EventHandler(this.closeSessionToolStripMenuItem_Click);
             // 
@@ -95,7 +97,7 @@
             // 
             this.exitToolStripMenuItem.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.exitToolStripMenuItem.Text = "&Salir";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -194,6 +196,13 @@
             this.actionsExchangeAdminPointsToolStripMenuItem.Text = "Canje y administración de puntos";
             this.actionsExchangeAdminPointsToolStripMenuItem.Click += new System.EventHandler(this.actionsExchangeAdminPointsToolStripMenuItem_Click);
             // 
+            // administraciónDeUsuariosToolStripMenuItem
+            // 
+            this.administraciónDeUsuariosToolStripMenuItem.Name = "administraciónDeUsuariosToolStripMenuItem";
+            this.administraciónDeUsuariosToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.administraciónDeUsuariosToolStripMenuItem.Text = "Administración de Usuarios";
+            this.administraciónDeUsuariosToolStripMenuItem.Click += new System.EventHandler(this.administraciónDeUsuariosToolStripMenuItem_Click);
+            // 
             // watchToolStripMenuItem
             // 
             this.watchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -225,12 +234,12 @@
             this.listStatisticalToolStripMenuItem.Text = "Estadístico";
             this.listStatisticalToolStripMenuItem.Click += new System.EventHandler(this.listStatisticalToolStripMenuItem_Click);
             // 
-            // administraciónDeUsuariosToolStripMenuItem
+            // cambiarPasswordToolStripMenuItem
             // 
-            this.administraciónDeUsuariosToolStripMenuItem.Name = "administraciónDeUsuariosToolStripMenuItem";
-            this.administraciónDeUsuariosToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-            this.administraciónDeUsuariosToolStripMenuItem.Text = "Administración de Usuarios";
-            this.administraciónDeUsuariosToolStripMenuItem.Click += new System.EventHandler(this.administraciónDeUsuariosToolStripMenuItem_Click);
+            this.cambiarPasswordToolStripMenuItem.Name = "cambiarPasswordToolStripMenuItem";
+            this.cambiarPasswordToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.cambiarPasswordToolStripMenuItem.Text = "Cambiar Password";
+            this.cambiarPasswordToolStripMenuItem.Click += new System.EventHandler(this.cambiarPasswordToolStripMenuItem_Click);
             // 
             // ContainerMain
             // 
@@ -273,6 +282,7 @@
         private System.Windows.Forms.ToolStripMenuItem actionsGeneratePayCommissionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actionsExchangeAdminPointsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem administraciónDeUsuariosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cambiarPasswordToolStripMenuItem;
     }
 }
 

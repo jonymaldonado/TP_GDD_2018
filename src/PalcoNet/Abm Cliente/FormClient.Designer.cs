@@ -126,6 +126,7 @@
             this.txt_number_doc.Name = "txt_number_doc";
             this.txt_number_doc.Size = new System.Drawing.Size(149, 20);
             this.txt_number_doc.TabIndex = 10;
+            this.txt_number_doc.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_numeric_KeyPress);
             // 
             // label5
             // 

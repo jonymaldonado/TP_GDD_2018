@@ -99,6 +99,12 @@
     <Compile Include="Abm Rubro\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Administracion de Usuarios\RoleAssign.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Administracion de Usuarios\RoleAssign.Designer.cs">
+      <DependentUpon>RoleAssign.cs</DependentUpon>
+    </Compile>
     <Compile Include="Administracion de Usuarios\UserAdmin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Abm Rubro\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Administracion de Usuarios\RoleAssign.resx">
+      <DependentUpon>RoleAssign.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Administracion de Usuarios\UserAdmin.resx">
       <DependentUpon>UserAdmin.cs</DependentUpon>

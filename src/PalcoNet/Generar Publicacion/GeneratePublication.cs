@@ -66,7 +66,7 @@ namespace PalcoNet.Generar_Publicacion
 
             //Setea globales
             dateTimePicker1.Format = DateTimePickerFormat.Custom;
-            dateTimePicker1.CustomFormat = "MM/dd/yyyy hh:mm:ss";
+            dateTimePicker1.CustomFormat = "dd/MM/yyyy hh:mm:ss";
             dateTimePicker1.MinDate = systemDate;
             dtp_date.MinDate = systemDate;
             this.user = user;
@@ -103,6 +103,9 @@ namespace PalcoNet.Generar_Publicacion
             //Oculta los id de ubicaciones
             dgv_list.Columns["UbicacionId"].Visible = false;
             dgv_list.Columns["TipoDAO"].Visible = false;
+            dgv_list.Columns["PubliID"].Visible = false;
+            dgv_list.Columns["EmpresaID"].Visible = false;
+
 
             //Grisa campos no editables
             if (this.edit)
@@ -544,6 +547,9 @@ namespace PalcoNet.Generar_Publicacion
                 sb.Append(Environment.NewLine);
             }
 
+            sb.Append("Estado: "+cb_state.Text);
+            sb.Append(Environment.NewLine);
+            sb.Append(Environment.NewLine);
             sb.Append("¿Desea confirmar los datos de la Publicación?" );
 
             DialogResult result = MessageBox.Show(sb.ToString(), "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

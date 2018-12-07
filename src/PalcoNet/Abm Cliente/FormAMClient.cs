@@ -29,12 +29,14 @@ namespace PalcoNet.Abm_Cliente
         {
             InitializeComponent();
             this.isUpper = isUpper;
+            this.chk_active.Visible = false;
             this.formPrevious = formClient;
             this.LoadDocs();
 
             if (!isUpper) // is modification
             {
                 this.userId = userId;
+                this.chk_active.Visible = true;
                 this.LoadFieldsOfClient();
             }
         }
@@ -44,6 +46,7 @@ namespace PalcoNet.Abm_Cliente
             InitializeComponent();
             this.LoadDocs();
             this.isUpper = false;
+            this.chk_active.Visible = true;
             this.formPrevious = FormCompra;
             this.formPreviusCompra = FormCompra;
             this.userId = Convert.ToString(ClientConnection.GetUserId(ClientId));
@@ -102,6 +105,10 @@ namespace PalcoNet.Abm_Cliente
                     txt_email.Text = reader.IsDBNull(13) ? "" : reader.GetString(13);
                     txt_number_card.Text = reader.IsDBNull(15) ? "" : reader.GetString(14);
                     txt_name_card.Text = reader.IsDBNull(14) ? "" : reader.GetString(15);
+
+                    if (reader.GetSqlBoolean(16))
+                        chk_active.Checked = true;
+                    
                 }
             }
 
@@ -227,17 +234,19 @@ namespace PalcoNet.Abm_Cliente
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            if (ExistsDoc())
-            {
-                MessageBox.Show("El "+cmb_type_doc.Text+" "+ txt_number_doc.Text+" ya existe en el sistema. Ingrese uno diferente.");
-                return;
-            }
+            if(!string.IsNullOrEmpty(txt_number_doc.Text))
+                if (ExistsDoc())
+                {
+                    MessageBox.Show("El "+cmb_type_doc.Text+" "+ txt_number_doc.Text+" ya existe en el sistema. Ingrese uno diferente.");
+                    return;
+                }
 
-            if (ExistsCuil())
-            {
-                MessageBox.Show("El Cuil "+ txt_cuil.Text +" ya existe en el sistema. Ingrese uno diferente.");
-                return;
-            }
+            if (!string.IsNullOrEmpty(txt_cuil.Text))
+                if (ExistsCuil())
+                {
+                    MessageBox.Show("El Cuil "+ txt_cuil.Text +" ya existe en el sistema. Ingrese uno diferente.");
+                    return;
+                }
 
             if (this.isUpper || this.isRegisterUser)
                 this.CreateClient();
@@ -257,7 +266,7 @@ namespace PalcoNet.Abm_Cliente
             {
                 ClientDAO clientDAO = GetClientDAO(null, null);
 
-                ClientConnection.UpdateClient(clientDAO, this.userId);
+                ClientConnection.UpdateClient(clientDAO, this.userId, this.chk_active.Checked);
 
                 if(!this.creditCardChange)
                     MessageBox.Show("La modificación del cliente ha sido realizada correctamente. Para ver los cambios realize nuevamente la búsqueda");

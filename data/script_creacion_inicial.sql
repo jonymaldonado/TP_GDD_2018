@@ -160,6 +160,12 @@ IF OBJECT_ID('EL_GROUP_BY.OBTENER_ROLES_ACTIVOS') IS NOT NULL
 IF OBJECT_ID('EL_GROUP_BY.OBTENER_FUNCIONALIDADES_X_ROL') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.OBTENER_FUNCIONALIDADES_X_ROL;
 
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_ROL_X_USUARIO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_ROL_X_USUARIO;
+
+IF OBJECT_ID('EL_GROUP_BY.LISTAR_ROL_X_USUARIO_NO_ASIGNADO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.LISTAR_ROL_X_USUARIO_NO_ASIGNADO;
+
 IF OBJECT_ID('EL_GROUP_BY.GUARDAR_ROL') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.GUARDAR_ROL;
 
@@ -180,6 +186,12 @@ IF OBJECT_ID('EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL') IS NOT NULL
 
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL_NO_ASIGNADAS') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_FUNCIONES_X_ROL_NO_ASIGNADAS;
+
+IF OBJECT_ID('EL_GROUP_BY.AGREGAR_ROL_A_USUARIO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.AGREGAR_ROL_A_USUARIO;
+
+IF OBJECT_ID('EL_GROUP_BY.ELIMINAR_ROL_A_USUARIO') IS NOT NULL
+	DROP PROCEDURE EL_GROUP_BY.ELIMINAR_ROL_A_USUARIO;
 
 IF OBJECT_ID('EL_GROUP_BY.LISTAR_CLIENTES_EXISTENTES') IS NOT NULL
 	DROP PROCEDURE EL_GROUP_BY.LISTAR_CLIENTES_EXISTENTES;
@@ -979,6 +991,7 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('GENERAR_PAGO_COMISIONES',1)
 	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('LISTADO_ESTADISTICO',1)
 	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('ADMINISTRACION_USUARIOS',1)
+	INSERT INTO EL_GROUP_BY.FUNCIONALIDAD VALUES ('CAMBIAR_PASSWORD',1)
 COMMIT;
 GO
 
@@ -1039,7 +1052,8 @@ BEGIN TRANSACTION
 					F.Funcionalidad_ID = 5 OR
 					F.Funcionalidad_ID = 11 OR
 					F.Funcionalidad_ID = 12 OR
-					F.Funcionalidad_ID = 13)
+					F.Funcionalidad_ID = 13 OR
+					F.Funcionalidad_ID = 14)
 	UNION
 		SELECT Rol_ID,
 				Funcionalidad_ID
@@ -1047,7 +1061,8 @@ BEGIN TRANSACTION
 			WHERE R.Rol_Nombre = 'CLIENTE' AND
 					(F.Funcionalidad_ID = 8 OR
 					F.Funcionalidad_ID = 9 OR
-					F.Funcionalidad_ID = 10)
+					F.Funcionalidad_ID = 10 OR
+					F.Funcionalidad_ID = 14)
 	UNION
 		SELECT Rol_ID,
 				Funcionalidad_ID
@@ -1055,7 +1070,8 @@ BEGIN TRANSACTION
 			WHERE R.Rol_Nombre = 'EMPRESA' AND
 					(F.Funcionalidad_ID = 4 OR
 						F.Funcionalidad_ID = 6 OR
-						F.Funcionalidad_ID = 7)
+						F.Funcionalidad_ID = 7 OR
+						F.Funcionalidad_ID = 14)
 COMMIT TRANSACTION;
 GO
 									      
@@ -1680,6 +1696,70 @@ end
 go
 
 -- -----------------------------------------------------
+-- SP - Listar roles asignados a un usuario
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.LISTAR_ROL_X_USUARIO 
+@USER_ID int
+as
+begin
+	select r.* from EL_GROUP_BY.Rol as R
+	inner join EL_GROUP_BY.Rol_Usuario as rxo on rxo.Rol_ID = r.Rol_ID 
+	and rxo.Usuario_ID = @USER_ID
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Listar Roles no asignados a un usuario
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.LISTAR_ROL_X_USUARIO_NO_ASIGNADO
+@USER_ID int
+as
+begin
+		select r.* from EL_GROUP_BY.Rol as R except
+			select r.* from EL_GROUP_BY.Rol as R
+			inner join EL_GROUP_BY.Rol_Usuario as rxo on rxo.Rol_ID = r.Rol_ID 
+			and rxo.Usuario_ID = @USER_ID
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Agregar Rol a usuario
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.AGREGAR_ROL_A_USUARIO
+@USER_ID INT,
+@ROL_ID INT 
+as
+begin
+	if not exists (select * from EL_GROUP_BY.Rol_Usuario where Rol_ID = @ROL_ID and Usuario_ID = @USER_ID)
+	begin
+		insert into EL_GROUP_BY.Rol_Usuario values (@USER_ID, @ROL_ID,1)
+	end
+end
+go
+
+-- -----------------------------------------------------
+-- SP - Quitar Rol a usuario
+-- -----------------------------------------------------
+
+create procedure EL_GROUP_BY.ELIMINAR_ROL_A_USUARIO
+@USER_ID INT,
+@ROL_ID INT 
+
+as
+begin
+	if exists (select * from EL_GROUP_BY.Rol_Usuario where Rol_ID = @ROL_ID and Usuario_ID = @USER_ID)
+	begin
+		delete from EL_GROUP_BY.Rol_Usuario where Rol_ID = @ROL_ID and Usuario_ID = @USER_ID
+	end
+end
+go
+
+
+
+-- -----------------------------------------------------
 -- SP - Listar Clientes
 -- -----------------------------------------------------
 
@@ -1794,7 +1874,8 @@ CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_CLIENTE
 @CODIGO_POSTAL VARCHAR(255),
 @FECHA_NAC DATETIME,
 @TARJETA_NOMBRE VARCHAR(255),
-@TARJETA_NRO NUMERIC(16,0)
+@TARJETA_NRO NUMERIC(16,0),
+@HABILITADO     BIT
 AS
 BEGIN TRANSACTION
 	UPDATE EL_GROUP_BY.Usuario
@@ -1805,7 +1886,8 @@ BEGIN TRANSACTION
 			Usuario_Depto = @DEPARTAMENTO,
 			Usuario_Codigo_Postal = @CODIGO_POSTAL,
 			Usuario_Localidad = @LOCALIDAD,
-			Usuario_Mail = @MAIL
+			Usuario_Mail = @MAIL,
+			Usuario_Habilitado = @HABILITADO
 		WHERE Usuario_ID = @USUARIO_ID
 
 	UPDATE EL_GROUP_BY.Cliente
@@ -1919,7 +2001,8 @@ begin
 		U.Usuario_Telefono,
 		U.Usuario_Mail,
 		C.Cliente_Tarjeta_Numero,
-		C.Cliente_Tarjeta_Marca
+		C.Cliente_Tarjeta_Marca,
+		U.Usuario_Habilitado
 	FROM EL_GROUP_BY.USUARIO U INNER JOIN EL_GROUP_BY.Cliente C 
 	ON C.Usuario_ID = U.Usuario_ID and U.Usuario_ID = @USER_ID
 end

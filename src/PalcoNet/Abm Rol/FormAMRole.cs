@@ -89,6 +89,16 @@ namespace PalcoNet.Abm_Rol
              String newName = txt_name.Text.Trim();
              RoleConnection.UpdateName(role.Id, newName, enabled);
 
+             foreach (FunctionDAO function in addedFunctions)
+             {
+                 RoleConnection.AddFunction(role, function);
+             }
+
+             foreach (FunctionDAO function in removedFunctions)
+             {
+                  RoleConnection.DeleteFunction(role, function);
+             }
+
              MessageBox.Show("La modificación del nombre y/o estado del rol la verá una vez hecho click en Reestablecer.");
 
              this.Close();
@@ -106,20 +116,27 @@ namespace PalcoNet.Abm_Rol
 
          private void btn_add_Click(object sender, EventArgs e)
          {
-             FunctionDAO itemSelected = (FunctionDAO)lst_functions_not_added.Items[lst_functions_not_added.SelectedIndex];
-             addedFunctions.Add(itemSelected);
-             removedFunctions.Remove(itemSelected);
+             if (lst_functions_not_added.SelectedIndex >= 0 )
+             {
 
-             RoleConnection.AddFunction(role, itemSelected);
+                 FunctionDAO itemSelected = (FunctionDAO)lst_functions_not_added.Items[lst_functions_not_added.SelectedIndex];
+                 addedFunctions.Add(itemSelected);
+                 removedFunctions.Remove(itemSelected);
+
+                 //RoleConnection.AddFunction(role, itemSelected);
+             }
          }
 
          private void btn_delete_Click(object sender, EventArgs e)
          {
-             FunctionDAO itemSelected = (FunctionDAO)lst_functions_added.Items[lst_functions_added.SelectedIndex];
-             removedFunctions.Add(itemSelected);
-             addedFunctions.Remove(itemSelected);
+             if (lst_functions_added.SelectedIndex >= 0)
+             {
+                 FunctionDAO itemSelected = (FunctionDAO)lst_functions_added.Items[lst_functions_added.SelectedIndex];
+                 removedFunctions.Add(itemSelected);
+                 addedFunctions.Remove(itemSelected);
 
-             RoleConnection.DeleteFunction(role, itemSelected);
+                 //RoleConnection.DeleteFunction(role, itemSelected);
+             }
          }
     }
 }

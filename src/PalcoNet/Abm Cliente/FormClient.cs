@@ -19,7 +19,7 @@ namespace PalcoNet.Abm_Cliente
         {
             InitializeComponent();
             btn_select.Visible = false;
-            dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
+            //dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
         }
 
         public FormClient(Historial_Cliente.FormClientHistory previusForm)
@@ -28,7 +28,7 @@ namespace PalcoNet.Abm_Cliente
             btn_select.Visible = true;
             this.previusForm = previusForm;
 
-            dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
+            //dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
@@ -107,5 +107,19 @@ namespace PalcoNet.Abm_Cliente
             this.Close();
         }
 
+        private void txt_numeric_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Solo deja numericos
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '.'))
+            {
+                e.Handled = true;
+            }
+
+        }
     }
 }

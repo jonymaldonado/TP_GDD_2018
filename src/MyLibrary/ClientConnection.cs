@@ -91,7 +91,7 @@ namespace MyLibrary
             Connection.WriteInTheBase("EL_GROUP_BY.CREAR_CLIENTE", Connection.Type.StoredProcedure, parameters);
         }
 
-        public static void UpdateClient(ClientDAO client, string userId)
+        public static void UpdateClient(ClientDAO client, string userId, Boolean active)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -99,6 +99,10 @@ namespace MyLibrary
 
             parameter = new SqlParameter("@USUARIO_ID", SqlDbType.Int, 50);
             parameter.Value = userId;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@HABILITADO", SqlDbType.Bit, 1);
+            parameter.Value = active;
             parameters.Add(parameter);
 
             LoadMoreParameters(client, parameters);
@@ -290,11 +294,15 @@ namespace MyLibrary
             parameter = new SqlParameter("@TIPO_DOC", SqlDbType.NVarChar, 10);
             parameter.Value = docType;
             parameters.Add(parameter);
-
+            
             parameter = new SqlParameter("@NUM_DOC", SqlDbType.BigInt);
-            parameter.Value = Convert.ToInt64(docNum);
+            parameter.Value = DBNull.Value;
+            if (!String.IsNullOrEmpty(docNum))
+            {
+                parameter.Value = Convert.ToInt64(docNum);
+            }
             parameters.Add(parameter);
-
+            
             parameter = new SqlParameter("@USER_ID", SqlDbType.Int);
             parameter.Value = DBNull.Value;
             if (!String.IsNullOrEmpty(userId))

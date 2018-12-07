@@ -49,6 +49,8 @@ namespace PalcoNet
             this.watchRecordClientToolStripMenuItem.Available = false;
             this.listToolStripMenuItem.Available = false;
             this.listStatisticalToolStripMenuItem.Available = false;
+            this.administraciónDeUsuariosToolStripMenuItem.Available = false;
+            this.cambiarPasswordToolStripMenuItem.Available = false;
             ChangeMenu(roleId);
         }
 
@@ -140,6 +142,10 @@ namespace PalcoNet
                         this.actionsToolStripMenuItem.Available = true;
                         this.administraciónDeUsuariosToolStripMenuItem.Available = true;
                         break;
+                    case 14:
+                        this.fileMenu.Available = true;
+                        this.cambiarPasswordToolStripMenuItem.Available = true;
+                        break;
 
                     default: break;
                 }
@@ -168,6 +174,7 @@ namespace PalcoNet
             //Login.Login fr = new Login.Login(this);
             //fr.Show();
             openForm(new Login.Login(this));
+            
         }
 
         private void aBMRoleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -279,6 +286,11 @@ namespace PalcoNet
         private void administraciónDeUsuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openForm(new Administracion_de_Usuarios.UserAdmin());
+        }
+
+        private void cambiarPasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openForm(new Registro_de_Usuario.FormChangePassword(this.id, this.user));
         }
     }
 

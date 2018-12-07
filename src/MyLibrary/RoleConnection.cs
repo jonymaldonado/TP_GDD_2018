@@ -109,5 +109,76 @@ namespace MyLibrary
 
             Connection.WriteInTheBase("UPDATE EL_GROUP_BY.ROL SET Rol_Habilitado = " + state.ToString() + ", Rol_Nombre = '" + newName + "' WHERE Rol_Id = " + id.ToString());
         }
+
+        public static List<RoleDAO> GetRolesForUser(Int32 id, string spname)
+        {
+            List<RoleDAO> roles = new List<RoleDAO>();
+
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            parameters.Add(new SqlParameter("@USER_ID", id));
+
+            SqlDataReader reader = Connection.GetDataReader(spname, Connection.Type.StoredProcedure, parameters);
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    RoleDAO rol = GetRoleDAO(reader);
+                    roles.Add(rol);
+                }
+            }
+
+            reader.Close();
+
+            return roles;
+        }
+        
+        private static RoleDAO GetRoleDAO(SqlDataReader reader)
+        {
+            RoleDAO role = new RoleDAO();
+
+            role.Id = reader.GetInt32(reader.GetOrdinal("Rol_ID"));
+            role.Name = reader.GetString(reader.GetOrdinal("Rol_Nombre"));
+            role.State = reader.GetBoolean(reader.GetOrdinal("Rol_Habilitado"));
+
+            return role;
+        }
+
+        public static void AddUserRole(Int32 userid, RoleDAO role)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@USER_ID", SqlDbType.Int);
+            parameter.Value = userid;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@ROL_ID", SqlDbType.Int);
+            parameter.Value = role.Id;
+            parameters.Add(parameter);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.AGREGAR_ROL_A_USUARIO", Connection.Type.StoredProcedure, parameters);
+        }
+
+        public static void DeleteUserRole(Int32 userid, RoleDAO role)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            SqlParameter parameter;
+
+            parameter = new SqlParameter("@USER_ID", SqlDbType.Int);
+            parameter.Value = userid;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@ROL_ID", SqlDbType.Int);
+            parameter.Value = role.Id;
+            parameters.Add(parameter);
+
+            Connection.WriteInTheBase("EL_GROUP_BY.ELIMINAR_ROL_A_USUARIO", Connection.Type.StoredProcedure, parameters);
+        }
+
+
     }
 }

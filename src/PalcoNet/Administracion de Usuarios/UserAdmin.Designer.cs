@@ -41,6 +41,8 @@
             this.groupBoxSearch = new System.Windows.Forms.GroupBox();
             this.btn_habilitar = new System.Windows.Forms.Button();
             this.btn_deshabilitar = new System.Windows.Forms.Button();
+            this.btn_pass = new System.Windows.Forms.Button();
+            this.btn_rol = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
             this.groupBoxSearch.SuspendLayout();
@@ -69,7 +71,7 @@
             this.label3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(234, 115);
+            this.label3.Location = new System.Drawing.Point(234, 114);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(129, 23);
             this.label3.TabIndex = 54;
@@ -81,7 +83,7 @@
             this.label2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(107, 115);
+            this.label2.Location = new System.Drawing.Point(107, 114);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(141, 23);
             this.label2.TabIndex = 53;
@@ -93,7 +95,7 @@
             this.label1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(11, 115);
+            this.label1.Location = new System.Drawing.Point(11, 114);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(109, 23);
             this.label1.TabIndex = 52;
@@ -108,12 +110,12 @@
             this.dgv_list.AllowUserToResizeRows = false;
             this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_list.Location = new System.Drawing.Point(11, 115);
+            this.dgv_list.Location = new System.Drawing.Point(11, 114);
             this.dgv_list.Name = "dgv_list";
             this.dgv_list.ReadOnly = true;
             this.dgv_list.RowHeadersVisible = false;
             this.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_list.Size = new System.Drawing.Size(352, 215);
+            this.dgv_list.Size = new System.Drawing.Size(352, 263);
             this.dgv_list.TabIndex = 51;
             // 
             // btn_search
@@ -145,23 +147,21 @@
             // 
             // groupBoxSearch
             // 
-            this.groupBoxSearch.Controls.Add(this.btn_deshabilitar);
-            this.groupBoxSearch.Controls.Add(this.btn_habilitar);
             this.groupBoxSearch.Controls.Add(this.btn_search);
             this.groupBoxSearch.Controls.Add(this.lbl_nombre);
             this.groupBoxSearch.Controls.Add(this.txt_search_name);
             this.groupBoxSearch.Location = new System.Drawing.Point(12, 28);
             this.groupBoxSearch.Name = "groupBoxSearch";
-            this.groupBoxSearch.Size = new System.Drawing.Size(352, 81);
+            this.groupBoxSearch.Size = new System.Drawing.Size(352, 51);
             this.groupBoxSearch.TabIndex = 55;
             this.groupBoxSearch.TabStop = false;
             this.groupBoxSearch.Text = "Búsqueda";
             // 
             // btn_habilitar
             // 
-            this.btn_habilitar.Location = new System.Drawing.Point(66, 47);
+            this.btn_habilitar.Location = new System.Drawing.Point(15, 85);
             this.btn_habilitar.Name = "btn_habilitar";
-            this.btn_habilitar.Size = new System.Drawing.Size(78, 23);
+            this.btn_habilitar.Size = new System.Drawing.Size(62, 23);
             this.btn_habilitar.TabIndex = 6;
             this.btn_habilitar.Text = "Habilitar";
             this.btn_habilitar.UseVisualStyleBackColor = true;
@@ -169,7 +169,7 @@
             // 
             // btn_deshabilitar
             // 
-            this.btn_deshabilitar.Location = new System.Drawing.Point(171, 47);
+            this.btn_deshabilitar.Location = new System.Drawing.Point(83, 85);
             this.btn_deshabilitar.Name = "btn_deshabilitar";
             this.btn_deshabilitar.Size = new System.Drawing.Size(78, 23);
             this.btn_deshabilitar.TabIndex = 7;
@@ -177,12 +177,36 @@
             this.btn_deshabilitar.UseVisualStyleBackColor = true;
             this.btn_deshabilitar.Click += new System.EventHandler(this.btn_deshabilitar_Click);
             // 
+            // btn_pass
+            // 
+            this.btn_pass.Location = new System.Drawing.Point(167, 85);
+            this.btn_pass.Name = "btn_pass";
+            this.btn_pass.Size = new System.Drawing.Size(102, 23);
+            this.btn_pass.TabIndex = 8;
+            this.btn_pass.Text = "Cambiar Password";
+            this.btn_pass.UseVisualStyleBackColor = true;
+            this.btn_pass.Click += new System.EventHandler(this.btn_pass_Click);
+            // 
+            // btn_rol
+            // 
+            this.btn_rol.Location = new System.Drawing.Point(275, 85);
+            this.btn_rol.Name = "btn_rol";
+            this.btn_rol.Size = new System.Drawing.Size(78, 23);
+            this.btn_rol.TabIndex = 56;
+            this.btn_rol.Text = "Roles";
+            this.btn_rol.UseVisualStyleBackColor = true;
+            this.btn_rol.Click += new System.EventHandler(this.btn_rol_Click);
+            // 
             // UserAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(375, 342);
+            this.ClientSize = new System.Drawing.Size(375, 389);
+            this.Controls.Add(this.btn_rol);
+            this.Controls.Add(this.btn_pass);
+            this.Controls.Add(this.btn_deshabilitar);
             this.Controls.Add(this.groupBoxSearch);
+            this.Controls.Add(this.btn_habilitar);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -214,5 +238,7 @@
         private System.Windows.Forms.GroupBox groupBoxSearch;
         private System.Windows.Forms.Button btn_deshabilitar;
         private System.Windows.Forms.Button btn_habilitar;
+        private System.Windows.Forms.Button btn_pass;
+        private System.Windows.Forms.Button btn_rol;
     }
 }

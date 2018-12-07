@@ -159,18 +159,19 @@ namespace PalcoNet.Login
             switch (result)
             {
                 case 0: MessageBox.Show("Usuario Inexistente");
-                    ClearFields();
+                    //ClearFields();
                     txt_user.Focus();
                     break;
 
                 case 1: MessageBox.Show("Login incorrecto");
                     UserConnection.RegisterFailedAttempt(userName);
-                    ClearFields();
+                    //ClearFields();
                     txt_user.Focus();
                     break;
 
                 case 2: MessageBox.Show("Usuario Bloqueado. Por favor contáctese con el Administrador.");
-                    this.Close();
+                    //this.Close();
+                    //return;
                     break;
 
                 case 3: countRoles = UserConnection.CountRoles(userName);
@@ -210,6 +211,12 @@ namespace PalcoNet.Login
             Registro_de_Usuario.FormUserRegister form = new Registro_de_Usuario.FormUserRegister();
             form.ShowDialog();
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Environment.Exit(0);
+        } 
+
     }
 
 }
