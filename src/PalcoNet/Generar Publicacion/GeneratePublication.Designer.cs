@@ -97,6 +97,7 @@
             // 
             // cb_state
             // 
+            this.cb_state.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_state.FormattingEnabled = true;
             this.cb_state.Location = new System.Drawing.Point(91, 139);
             this.cb_state.Name = "cb_state";
@@ -114,6 +115,7 @@
             // 
             // cb_rubro
             // 
+            this.cb_rubro.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_rubro.FormattingEnabled = true;
             this.cb_rubro.Location = new System.Drawing.Point(91, 109);
             this.cb_rubro.Name = "cb_rubro";
@@ -272,9 +274,9 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(8, 135);
+            this.dateTimePicker1.Location = new System.Drawing.Point(64, 28);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(350, 20);
+            this.dateTimePicker1.Size = new System.Drawing.Size(169, 20);
             this.dateTimePicker1.TabIndex = 2;
             this.dateTimePicker1.Value = new System.DateTime(2018, 1, 1, 0, 0, 0, 0);
             // 
@@ -365,6 +367,7 @@
             // 
             // cb_type
             // 
+            this.cb_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_type.FormattingEnabled = true;
             this.cb_type.Location = new System.Drawing.Point(74, 115);
             this.cb_type.Name = "cb_type";
