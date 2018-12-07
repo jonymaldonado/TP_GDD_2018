@@ -105,7 +105,7 @@ namespace MyLibrary
             parameter.Value = compra.Forma_Pago_ID;
             parameters.Add(parameter);
 
-            //Se otorgan 10 puntos por cada localidad comprada
+            //Se otorga la misma cantidad de putnos que el monto de compra
             parameter = new SqlParameter("@PUNTOS", SqlDbType.Decimal);
             parameter.Value = (int) compra.Compra_Monto_Total;
             parameters.Add(parameter);
