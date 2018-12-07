@@ -902,7 +902,7 @@ BEGIN TRANSACTION
 					,Cli_Fecha_Nac
 					,null
 					,null
-					,(select getdate())
+					,getdate()
 					,EL_GROUP_BY.FUNC_COD_USUARIO(Cli_Nombre + CONVERT(NVARCHAR(50),Cli_Dni))
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
@@ -1158,24 +1158,17 @@ GO
 
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_PUBLICACIONES AS
 BEGIN TRANSACTION
-	DECLARE @CANT_ESPEC_ID INT
-	DECLARE @ESPEC_ID INT
-	SET @CANT_ESPEC_ID = (SELECT COUNT(Espectaculo_ID)
-						  FROM EL_GROUP_BY.Espectaculo )
-	SET @ESPEC_ID = 1
-	WHILE @ESPEC_ID <= @CANT_ESPEC_ID
-	BEGIN
-		INSERT INTO EL_GROUP_BY.Publicacion VALUES(
-						 null
-				        ,null
-						,null
-						,0
-						,'MIGRA'
-						,@ESPEC_ID
-						,1 --Migro directamente Grado_Publicacion_ID = 1 - 'MIGRADA'
-						,2)  -- Migramos como 2 - Publicada ya que en la Maestra todos los Espectaculo_Estado son 'Publicada'
-		SET @ESPEC_ID = @ESPEC_ID + 1
-	END
+	INSERT INTO EL_GROUP_BY.Publicacion
+		SELECT 'Publicacion del espectaculo codigo ' + convert(varchar(20), E.Espectaculo_Codigo)
+		            ,GETDATE()
+					,E.Espectaculo_Fecha
+					,0 -- por ahora luego la actualizaremos
+					,'MIGRA'
+					,E.Espectaculo_ID
+					,1 --Migro directamente Grado_Publicacion_ID = 1 - 'MIGRADA'
+					,2  -- Migramos como 2 - Publicada ya que en la Maestra todos los Espectaculo_Estado son 'Publicada'
+		FROM EL_GROUP_BY.Espectaculo E
+		ORDER BY E.Espectaculo_ID ASC
 COMMIT TRANSACTION;
 GO
 
@@ -2136,6 +2129,7 @@ begin
               AND E.Empresa_Cuit LIKE ISNULL('%' + @CUIT + '%', '%')
               AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
               --AND U.Usuario_Habilitado = 1; //Se deben poder modificar las eliminadas
+	order by E.Empresa_Razon_Social, E.Empresa_Cuit, U.Usuario_Mail
 end
 go
 
@@ -2177,7 +2171,7 @@ AS
 BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Usuario VALUES (@USUARIO
 										 ,HASHBYTES('SHA2_256', @PASSWORD)
-										 ,'Empresa'		--Tipo
+										 ,'EMPRESA'		--Tipo
 										 ,1				--Habilitado
 										 ,0				--Intentos
 										 ,@PRIMER_LOGIN --Primer login
@@ -2341,7 +2335,8 @@ as
 begin
 	select  G.Grado_Publicacion_ID,
 			G.Grado_Publicacion_Comision,
-			G.Grado_Publicacion_Prioridad
+			G.Grado_Publicacion_Prioridad,
+			G.Grado_Publicacion_Peso
 	from EL_GROUP_BY.Grado_Publicacion G 
 	where G.Grado_Publicacion_Prioridad LIKE ISNULL('%' + @PRIORIDAD + '%', '%')
 	  AND G.Grado_Publicacion_Habilitado = 1
