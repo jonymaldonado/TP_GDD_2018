@@ -107,7 +107,7 @@ namespace MyLibrary
 
             //Se otorgan 10 puntos por cada localidad comprada
             parameter = new SqlParameter("@PUNTOS", SqlDbType.Decimal);
-            parameter.Value = Convert.ToDecimal(ubicaciones.Count * 10);
+            parameter.Value = (int) compra.Compra_Monto_Total;
             parameters.Add(parameter);
 
             //Los puntos se vencen 6 meses despues de la fecha de compra que los generó
