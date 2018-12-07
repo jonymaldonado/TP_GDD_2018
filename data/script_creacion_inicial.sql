@@ -1640,7 +1640,10 @@ create procedure EL_GROUP_BY.AGREGAR_FUNCIONALIDAD_A_ROL @ROL_ID INT, @FUNCIONAL
 
 as
 begin
-	insert into EL_GROUP_BY.ROL_FUNCIONALIDAD values (@ROL_ID,@FUNCIONALIDAD_ID)
+	if not exists (select * from EL_GROUP_BY.ROL_FUNCIONALIDAD where Rol_ID = @ROL_ID and Funcionalidad_ID = @FUNCIONALIDAD_ID)
+	begin
+		insert into EL_GROUP_BY.ROL_FUNCIONALIDAD values (@ROL_ID,@FUNCIONALIDAD_ID)
+	end
 end
 go
 
@@ -1651,7 +1654,10 @@ go
 create procedure EL_GROUP_BY.ELIMINAR_FUNCIONALIDAD_A_ROL @ROL_ID INT, @FUNCIONALIDAD_ID INT
 as
 begin
-	delete from EL_GROUP_BY.ROL_FUNCIONALIDAD where Rol_ID = @ROL_ID and FUNCIONALIDAD_ID = @FUNCIONALIDAD_ID
+	if exists (select * from EL_GROUP_BY.ROL_FUNCIONALIDAD where Rol_ID = @ROL_ID and Funcionalidad_ID = @FUNCIONALIDAD_ID)
+	begin
+		delete from EL_GROUP_BY.ROL_FUNCIONALIDAD where Rol_ID = @ROL_ID and FUNCIONALIDAD_ID = @FUNCIONALIDAD_ID
+	end
 end
 go
 
