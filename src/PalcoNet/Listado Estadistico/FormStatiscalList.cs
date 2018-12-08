@@ -159,8 +159,14 @@ namespace PalcoNet.Listado_Estadistico
 
             switch (cmb_list.SelectedIndex)
             {
-                case 0: selectedList = "EL_GROUP_BY.LISTAR_CLIENTES_MAYORES_PUNTOS_VENCIDOS"; break;
-                case 1: selectedList = "EL_GROUP_BY.LISTAR_CLIENTES_MAYOR_CANTIDAD_COMPRAS"; break;
+                case 0: 
+                    selectedList = "EL_GROUP_BY.LISTAR_CLIENTES_MAYORES_PUNTOS_VENCIDOS";
+                    year = 0; //El año no se usa en este sp, no debe mandarse
+                    break;
+                case 1: 
+                    selectedList = "EL_GROUP_BY.LISTAR_CLIENTES_MAYOR_CANTIDAD_COMPRAS";
+                    year = 0; //El año no se usa en este sp, no debe mandarse
+                    break;
                 case 2:
                     {
                         selectedList = "EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDIDAS";
@@ -168,18 +174,16 @@ namespace PalcoNet.Listado_Estadistico
                         ComboboxItem item = new ComboboxItem();
                         item = (ComboboxItem)cmb_grade_visibility.SelectedItem;
                         gradeVisibility = (int)item.Value; 
-                        //gradeVisibility = cmb_grade_visibility.Text;
-
+                        
                         item = new ComboboxItem();
                         item = (ComboboxItem)cmb_month.SelectedItem;
                         month = (int)item.Value; 
-                        //month = cmb_month.Text;
-
+                        
                         break;
                     }
             }
 
-            dgv_list.DataSource = StatiscalListConnection.GenerateSelectedList(selectedList, dateFrom, dateTo, gradeVisibility, month).Tables[0];
+            dgv_list.DataSource = StatiscalListConnection.GenerateSelectedList(selectedList, dateFrom, dateTo, gradeVisibility, month, year).Tables[0];
 
             if (dgv_list.RowCount == 0) MessageBox.Show("La filtros ingresados no han generado estadísticas.");
         }

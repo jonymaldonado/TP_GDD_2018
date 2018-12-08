@@ -115,6 +115,10 @@ namespace PalcoNet.Generar_Publicacion
                 lb_batch.Enabled = false;
             }
 
+            dateTimePicker1.Value = systemDate;
+            dtp_date.Value = systemDate;
+            
+
             //Carga el combo de estado
             LoadState();
         }
@@ -339,12 +343,13 @@ namespace PalcoNet.Generar_Publicacion
                 txt_filas.Clear();
                 //txt_asientos.Clear();
                 txt_filas.Enabled = false;
-                //txt_asientos.Enabled = false;
-                label11.Text = "Cantidad";
+                txt_asientos.Enabled = false;
+                //label11.Text = "Cantidad";
             }
             else
             {
                 txt_filas.Enabled = true;
+                txt_asientos.Enabled = true;
                 label11.Text = "Asientos";
             }
         }
@@ -358,8 +363,7 @@ namespace PalcoNet.Generar_Publicacion
             if (cb_no_number.Checked)
             {
 
-                if (!string.IsNullOrEmpty(txt_asientos.Text) &&
-                    !string.IsNullOrEmpty(txt_precio.Text) &&
+                if (!string.IsNullOrEmpty(txt_precio.Text) &&
                     !string.IsNullOrEmpty(cb_type.Text))
                     campos_vacios = false;
             }
@@ -379,7 +383,10 @@ namespace PalcoNet.Generar_Publicacion
                 MessageBox.Show("Complete todos los campos de Ubicación", "Error");
             else
             {
-                asientos = Convert.ToInt32(txt_asientos.Text);
+                if (String.IsNullOrEmpty(txt_asientos.Text))
+                    asientos = 1;
+                else
+                    asientos = Convert.ToInt32(txt_asientos.Text);
 
                 //for (int i = 1; i <= filas; i++)
                 //{
@@ -402,15 +409,18 @@ namespace PalcoNet.Generar_Publicacion
                         ubicacion.TipoDAO = ubicationsTypes.ElementAt(cb_type.SelectedIndex);
                         ubicacion.Precio = Convert.ToInt32(txt_precio.Text);
 
-                        if (ubications.SingleOrDefault(u => u.Fila == ubicacion.Fila && 
-                                                            u.Asiento == ubicacion.Asiento &&
-                                                            u.SinNumerar == ubicacion.SinNumerar &&
-                                                            u.Precio == ubicacion.Precio &&
-                                                            u.TipoDAO.id == ubicacion.TipoDAO.id
-                                                            ) == null)
-                        {
-                            ubications.Add(ubicacion);
-                        }
+                        //if(cb_no_number.Checked)
+                        //    ubications.Add(ubicacion);
+                        //else
+                            if (ubications.SingleOrDefault(u => u.Fila == ubicacion.Fila && 
+                                                                u.Asiento == ubicacion.Asiento &&
+                                                                u.SinNumerar == ubicacion.SinNumerar &&
+                                                                u.Precio == ubicacion.Precio &&
+                                                                u.TipoDAO.id == ubicacion.TipoDAO.id
+                                                                ) == null)
+                            {
+                                ubications.Add(ubicacion);
+                            }
 
                         
 
@@ -470,6 +480,7 @@ namespace PalcoNet.Generar_Publicacion
             LoadDynproFields();
             
             PublicationConnection.CreatePublications(publication, batchDates, ubications, idEmpresa, rubro);
+            MessageBox.Show("Se ha creado exitosamente "+batchDates.Count+" publicacion/es", "Advertencia");
             this.Close();
 
         }
@@ -483,6 +494,7 @@ namespace PalcoNet.Generar_Publicacion
             else
             {
                 PublicationConnection.EditPublication(publication, ubications, deletedUbications, rubro);
+                MessageBox.Show("Se ha modificado exitosamente la publicacion", "Advertencia");
                 this.Close();
             }
         }
