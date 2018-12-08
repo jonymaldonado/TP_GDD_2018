@@ -2013,31 +2013,72 @@ GO
 -- -----------------------------------------------------
 -- SP - Obtiene el listado de Ubicaciones canjeables para X puntos
 -- -----------------------------------------------------
-create procedure EL_GROUP_BY.LISTAR_CANJE_DISPONIBLE 
+CREATE procedure EL_GROUP_BY.LISTAR_CANJE_DISPONIBLE 
 @PUNTOS int,
 @FECHA datetime
 as
 begin
+/*
+CREATE TABLE EL_GROUP_BY.#UBICACIONES 
+	(	Ubicacion_ID INT NOT NULL,
+		Ubicacion_Fila VARCHAR(3) NULL,
+		Ubicacion_Asiento NUMERIC(18,0) NULL,
+		Ubicacion_Sin_Numerar BIT NOT NULL,
+		Ubicacion_Precio NUMERIC(18,0) NOT NULL,
+		Ubicacion_Tipo_ID INT NOT NULL
+	);
+
+	INSERT INTO EL_GROUP_BY.#UBICACIONES 
+		SELECT	U.Ubicacion_ID,
+				U.Ubicacion_Fila,
+				U.Ubicacion_Asiento,
+				U.Ubicacion_Sin_Numerar,
+				U.Ubicacion_Precio,
+				U.Ubicacion_Tipo_ID
+		FROM EL_GROUP_BY.Ubicacion U
+		WHERE (U.Ubicacion_Precio*5) < @PUNTOS
 
 	SELECT	PU.Publicacion_ID, 
 			E.Espectaculo_Descripcion,
 			convert(date, E.Espectaculo_Fecha,120) as Fecha,
-			PU.Ubicacion_ID,
+			U.Ubicacion_ID,
 			U.Ubicacion_Fila,
 			U.Ubicacion_Asiento,
 			U.Ubicacion_Sin_Numerar,
 			UT.Ubicacion_Tipo_Descripcion,
 			(U.Ubicacion_Precio*5) as Puntos
-	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
-	INNER JOIN EL_GROUP_BY.Ubicacion U on U.Ubicacion_ID = PU.Ubicacion_ID 
+	FROM EL_GROUP_BY.#UBICACIONES U 
+	INNER JOIN EL_GROUP_BY.Publicacion_Ubicacion PU on U.Ubicacion_ID = PU.Ubicacion_ID 
+	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
+	INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
+	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
+	WHERE PU.Publicacion_Ubicacion_Canjeada = 0 --Que no este canjeada
+		AND PU.Compra_ID is null --Que no este comprada
+		AND convert(date, E.Espectaculo_Fecha,120) > convert(date, @FECHA,120)
+	order by Fecha, E.Espectaculo_ID, U.Ubicacion_Fila, U.Ubicacion_asiento asc
+
+*/
+
+	SELECT	PU.Publicacion_ID, 
+			E.Espectaculo_Descripcion,
+			convert(date, E.Espectaculo_Fecha,120) as Fecha,
+			U.Ubicacion_ID,
+			U.Ubicacion_Fila,
+			U.Ubicacion_Asiento,
+			U.Ubicacion_Sin_Numerar,
+			UT.Ubicacion_Tipo_Descripcion,
+			(U.Ubicacion_Precio*5) as Puntos
+	FROM EL_GROUP_BY.Ubicacion U 
+	INNER JOIN EL_GROUP_BY.Publicacion_Ubicacion PU on U.Ubicacion_ID = PU.Ubicacion_ID 
 	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
 	INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
 	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
 	WHERE (U.Ubicacion_Precio*5) < @PUNTOS
-	AND PU.Publicacion_Ubicacion_Canjeada = 0
+	AND PU.Publicacion_Ubicacion_Canjeada = 0 --Que no este canjeada
+	AND PU.Compra_ID is null --Que no este comprada
 	AND convert(date, E.Espectaculo_Fecha,120) > convert(date, @FECHA,120)
 	order by Fecha, E.Espectaculo_ID, U.Ubicacion_Fila, U.Ubicacion_asiento asc
-	
+
 end
 GO
 
@@ -2977,7 +3018,8 @@ create procedure EL_GROUP_BY.LISTAR_EMPRESAS_MAYOR_CANTIDAD_LOCALIDADES_NO_VENDI
 @fecha_desde datetime,
 @fecha_hasta datetime,
 @PRIORIDAD int,
-@MES int
+@MES int, 
+@ANIO INT
 as
 begin
 
@@ -2985,18 +3027,22 @@ begin
 				 EM.Empresa_ID  as 'ID de la Empresa', 
 				 EM.Empresa_Razon_Social as 'Razon Social', 
 				 COUNT(PU.Publicacion_ID) AS 'Localidades no vendidas', 
-				 g.Grado_Publicacion_Prioridad as 'Grado de Prioridad'
+				 g.Grado_Publicacion_Prioridad as 'Grado de Prioridad',
+				 month(P.Publicacion_Fecha) as 'Mes',
+				 year(P.Publicacion_Fecha) as 'Año'
 	FROM EL_GROUP_BY.Publicacion_Ubicacion PU  
 	INNER JOIN EL_GROUP_BY.Publicacion P ON PU.Publicacion_ID = P.Publicacion_ID
 	AND P.Grado_Publicacion_ID = @PRIORIDAD
 	AND month(P.Publicacion_Fecha) = @MES
+	AND year(P.Publicacion_Fecha) = @ANIO
 	INNER JOIN EL_GROUP_BY.Espectaculo ES ON P.Espectaculo_ID = ES.Espectaculo_ID
 	INNER JOIN EL_GROUP_BY.Empresa EM ON ES.Empresa_ID = EM.Empresa_ID
 	INNER JOIN EL_GROUP_BY.Grado_Publicacion g on g.Grado_Publicacion_ID = p.Grado_Publicacion_ID
 	WHERE PU.Compra_ID IS NULL
 	AND PU.Publicacion_Ubicacion_Canjeada = 0
-	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, g.Grado_Publicacion_Prioridad
-
+	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, g.Grado_Publicacion_Prioridad,
+	P.Grado_Publicacion_ID, month(P.Publicacion_Fecha), year(P.Publicacion_Fecha)
+	ORDER BY 'Localidades no vendidas' DESC
 
 end
 GO
@@ -3028,12 +3074,13 @@ begin
 	inner join EL_GROUP_BY.Rubro R on E.Rubro_ID = R.Rubro_ID 
 	inner join EL_GROUP_BY.Grado_Publicacion G on P.Grado_Publicacion_ID = G.Grado_Publicacion_ID
 	inner join EL_GROUP_BY.Publicacion_Ubicacion PU on PU.Publicacion_ID = P.Publicacion_ID
-	and PU.Compra_ID is null --Que no haya sido comprada
-	and PU.Publicacion_Ubicacion_Canjeada = 0 --Que no haya sido canjeada
+	and PU.Compra_ID is null --Que no haya sido comprada la ubicacion
+	and PU.Publicacion_Ubicacion_Canjeada = 0 --Que no haya sido canjeada la ubicacion
 	inner join EL_GROUP_BY.Ubicacion U on PU.Ubicacion_ID = U.Ubicacion_ID
 	where E.Espectaculo_Fecha between @FECHA_DESDE and @FECHA_HASTA
 		and p.Estado_Publicacion_ID = 2	   
-		and E.Espectaculo_Fecha_Vencimiento > @FECHA_SIST --Que no este vencida
+		and P.Publicacion_Fecha < @FECHA_SIST		--Que ya se haya publicado al dia de la compra
+		and P.Publicacion_FechaHora > @FECHA_SIST	--Que el espectaculo no haya pasado al dia de la compra
 		and P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
 		and (E.Rubro_ID = @RUBRO_UNO or E.Rubro_ID = @RUBRO_DOS or E.Rubro_ID = @RUBRO_TRES)
 	group by P.Publicacion_ID, G.Grado_Publicacion_Prioridad, E.Espectaculo_Descripcion, 

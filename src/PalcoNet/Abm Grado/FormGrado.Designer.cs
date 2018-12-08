@@ -42,6 +42,7 @@
             this.btn_search = new System.Windows.Forms.Button();
             this.btn_select = new System.Windows.Forms.Button();
             this.txt_prioridad = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
             this.SuspendLayout();
@@ -87,7 +88,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -98,7 +99,7 @@
             this.label10.ForeColor = System.Drawing.Color.White;
             this.label10.Location = new System.Drawing.Point(23, 92);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(80, 30);
+            this.label10.Size = new System.Drawing.Size(72, 30);
             this.label10.TabIndex = 57;
             this.label10.Text = "Id Grado";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -108,9 +109,9 @@
             this.label9.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(101, 92);
+            this.label9.Location = new System.Drawing.Point(87, 92);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(103, 30);
+            this.label9.Size = new System.Drawing.Size(86, 30);
             this.label9.TabIndex = 56;
             this.label9.Text = "Comisión";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -120,9 +121,9 @@
             this.label8.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(201, 92);
+            this.label8.Location = new System.Drawing.Point(160, 92);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(99, 30);
+            this.label8.Size = new System.Drawing.Size(74, 30);
             this.label8.TabIndex = 55;
             this.label8.Text = "Prioridad";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -180,18 +181,31 @@
             this.txt_prioridad.Size = new System.Drawing.Size(218, 20);
             this.txt_prioridad.TabIndex = 62;
             // 
+            // label2
+            // 
+            this.label2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(226, 92);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(74, 30);
+            this.label2.TabIndex = 63;
+            this.label2.Text = "Peso";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // FormGrado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(327, 404);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.txt_prioridad);
             this.Controls.Add(this.btn_select);
             this.Controls.Add(this.btn_search);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.dgv_list);
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormGrado";
@@ -219,5 +233,6 @@
         private System.Windows.Forms.Button btn_search;
         private System.Windows.Forms.Button btn_select;
         private System.Windows.Forms.TextBox txt_prioridad;
+        private System.Windows.Forms.Label label2;
     }
 }

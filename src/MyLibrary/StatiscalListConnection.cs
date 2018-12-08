@@ -10,14 +10,14 @@ namespace MyLibrary
 {
     public class StatiscalListConnection
     {
-        public static DataSet GenerateSelectedList(String selectedList, DateTime dateFrom, DateTime dateTo, int gradeVisibility, int month)
+        public static DataSet GenerateSelectedList(String selectedList, DateTime dateFrom, DateTime dateTo, int gradeVisibility, int month, int year)
         {
-            List<SqlParameter> parameters = PrepareParameters(dateFrom, dateTo, gradeVisibility, month);
+            List<SqlParameter> parameters = PrepareParameters(dateFrom, dateTo, gradeVisibility, month, year);
 
             return Connection.GetDataSet(selectedList, Connection.Type.StoredProcedure, parameters);
         }
 
-        private static List<SqlParameter> PrepareParameters(DateTime dateFrom, DateTime dateTo, int gradeVisibility, int month)
+        private static List<SqlParameter> PrepareParameters(DateTime dateFrom, DateTime dateTo, int gradeVisibility, int month, int year)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
 
@@ -46,12 +46,20 @@ namespace MyLibrary
                 parameters.Add(parameter);
             }
 
+            if (year != 0)
+            {
+                parameter = new SqlParameter("@ANIO", SqlDbType.Int);
+                parameter.Value = year;
+                parameters.Add(parameter);
+            }
+
+
             return parameters;
         }
 
         public static SqlDataReader GetPriorities()
         {
-            return Connection.GetDataReader("SELECT GRADO_PUBLICACION_ID, GRADO_PUBLICACION_PRIORIDAD FROM EL_GROUP_BY.GRADO_PUBLICACION");
+            return Connection.GetDataReader("SELECT GRADO_PUBLICACION_ID, GRADO_PUBLICACION_PRIORIDAD FROM EL_GROUP_BY.GRADO_PUBLICACION ORDER BY GRADO_PUBLICACION_PESO DESC");
         }
     }
 }

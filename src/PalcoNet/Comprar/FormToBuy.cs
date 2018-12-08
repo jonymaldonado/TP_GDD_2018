@@ -16,8 +16,8 @@ namespace PalcoNet.Comprar
 {
     public partial class FormToBuy : Form
     {
-        public static string systemDate = ConfigurationManager.AppSettings["FechaSistema"];
-        private const int pageSize = 10;
+        private static DateTime systemDate = Convert.ToDateTime(ConfigurationManager.AppSettings["FechaSistema"]);
+        private const int pageSize = 15;
         private int totalRecords;
         public Int64 total = 0;
         private DataSet ds;
@@ -30,8 +30,6 @@ namespace PalcoNet.Comprar
         public FormToBuy(Int32 IdCliente)
         {
             InitializeComponent();
-            dtp_date_from.MinDate = DateTime.Parse(systemDate.ToString());
-            dtp_date_to.MinDate = DateTime.Parse(systemDate.ToString());
 
             this.IdCliente = IdCliente;
             ModifyScreen(); 
@@ -70,6 +68,12 @@ namespace PalcoNet.Comprar
 
             total = 0;
             txt_total.Text = total.ToString();
+
+            dtp_date_from.MinDate = systemDate;
+            dtp_date_to.MinDate = systemDate;
+
+            dtp_date_from.Value = systemDate;
+            dtp_date_to.Value = systemDate;
 
         }
 
@@ -169,7 +173,7 @@ namespace PalcoNet.Comprar
 
             DataSet ds = BuyConnection.ListExistingPublications(dtp_date_from.Value.Date
                                                                        , dtp_date_to.Value.Date
-                                                                       , DateTime.Parse(systemDate.ToString())
+                                                                       , systemDate
                                                                        , txt_desc.Text
                                                                        , grade1 //(cmb_1.Text != "") ? cmb_1.Text.Substring(0,1) : null
                                                                        , grade2 //(cmb_2.Text != "") ? cmb_2.Text.Substring(0,1) : null
@@ -272,6 +276,13 @@ namespace PalcoNet.Comprar
             SqlDataReader reader = BuyConnection.GetCreditCard(this.IdCliente);
             String CreditCard = "";
 
+            if (ubicationsToBuy.Count == 0)
+            {
+                MessageBox.Show("¡Debe seleccionar almenos una localidad para comprar!", "Error");
+                return;
+            }
+
+
             if (reader.HasRows)
             {
                 while (reader.Read())
@@ -310,12 +321,6 @@ namespace PalcoNet.Comprar
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
-            if (ubicationsToBuy.Count == 0)
-            {
-                MessageBox.Show("¡Debe seleccionar almenos una localidad para comprar!", "Error");
-                return;
-            }
-
             sb.Append("Su compra contiene "+ubicationsToBuy.Count+" localidad/es");
             sb.Append(Environment.NewLine);
             sb.Append("¿Desea confirmar la compra?");
@@ -343,7 +348,7 @@ namespace PalcoNet.Comprar
 
                         compra.Compra_Cantidad = ubicacionesCompra.Count;
                         compra.Compra_Monto_Total = totalCompra;
-                        compra.Compra_Fecha = Convert.ToDateTime(systemDate);
+                        compra.Compra_Fecha = systemDate;
                         compra.Cliente_ID = this.IdCliente;
                         compra.Forma_Pago_ID = 2; //Tarjeta de credito
 
@@ -363,7 +368,7 @@ namespace PalcoNet.Comprar
 
                 compra.Compra_Cantidad = ubicacionesCompra.Count;
                 compra.Compra_Monto_Total = totalCompra;
-                compra.Compra_Fecha = Convert.ToDateTime(systemDate);
+                compra.Compra_Fecha = systemDate;
                 compra.Cliente_ID = this.IdCliente;
                 compra.Forma_Pago_ID = 2; //Tarjeta de credito
 
