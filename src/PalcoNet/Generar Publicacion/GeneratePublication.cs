@@ -273,10 +273,10 @@ namespace PalcoNet.Generar_Publicacion
                         cb_rubro.Enabled = false;
                     }
                 }
-                else if (state.StateID == 1)
+                else if (state.StateID != 3)
                 {
                     cb_state.Items.Add(item);
-                    cb_state.Enabled = false;
+                    //cb_state.Enabled = false;
                 }
             }
             //Siempre el estado va a ser el primero del combo box. Si esta en estado publicado, borrador no se carga
