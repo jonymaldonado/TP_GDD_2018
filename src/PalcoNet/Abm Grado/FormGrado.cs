@@ -100,5 +100,11 @@ namespace PalcoNet.Abm_Grado
 
             this.Close();
         }
+
+        private void FormGrado_Activated(object sender, EventArgs e)
+        {
+            dgv_list.DataSource = GradoConnection.ListExistingGrado(null).Tables[0];
+        }
+
     }
 }

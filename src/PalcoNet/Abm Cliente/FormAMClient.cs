@@ -25,17 +25,16 @@ namespace PalcoNet.Abm_Cliente
         bool isRegisterUser = false;
         bool creditCardChange = false;
 
+        //Alta/modificacion de Cliente
         public FormAMClient(FormClient formClient, bool isUpper, string userId)
         {
             InitializeComponent();
-            txt_number_doc.MaxLength = 10;
-            txt_cuil.MaxLength = 12;
-            txt_number_card.MaxLength = 16;
+            ModifyScreen();
+            
             this.isUpper = isUpper;
             this.chk_active.Visible = false;
             this.formPrevious = formClient;
-            this.LoadDocs();
-
+        
             if (!isUpper) // is modification
             {
                 this.userId = userId;
@@ -44,36 +43,47 @@ namespace PalcoNet.Abm_Cliente
             }
         }
 
+        //Llamada para cambio de tarjeta de credito
         public FormAMClient(Comprar.FormToBuy FormCompra, Int32 ClientId)
         {
             InitializeComponent();
-            txt_number_doc.MaxLength = 10;
-            txt_cuil.MaxLength = 12;
-            txt_number_card.MaxLength = 16;
-            this.LoadDocs();
+            ModifyScreen();
+            
             this.isUpper = false;
             this.chk_active.Visible = true;
             this.formPrevious = FormCompra;
             this.formPreviusCompra = FormCompra;
             this.userId = Convert.ToString(ClientConnection.GetUserId(ClientId));
             this.LoadFieldsOfClient();
+            
             this.creditCardChange = true;
             groupBox3.Enabled = false;
             returnToolStripMenuItem.Enabled = false;
 
         }
 
+        //Registro de nuevo cliente
         public FormAMClient(Registro_de_Usuario.FormUserRegister formRegisterUser, string user, string password)
         {
             InitializeComponent();
-            txt_number_doc.MaxLength = 10;
-            txt_cuil.MaxLength = 12;
-            txt_number_card.MaxLength = 16;
+            ModifyScreen();
+                
             this.isRegisterUser = true;
             this.user = user;
             this.password = password;
             this.formPrevious = formRegisterUser;
+            
+        }
+
+        private void ModifyScreen()
+        {
+            txt_number_doc.MaxLength = 10;
+            txt_cuil.MaxLength = 20;
+            txt_number_card.MaxLength = 16;
             this.LoadDocs();
+
+            this.txt_cuil.Validating += txt_cuil_Validating;
+            this.txt_email.Validating += txt_email_Validating;
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)

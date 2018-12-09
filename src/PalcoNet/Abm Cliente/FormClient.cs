@@ -20,7 +20,7 @@ namespace PalcoNet.Abm_Cliente
             InitializeComponent();
             btn_select.Visible = false;
             txt_number_doc.MaxLength = 10;
-            //dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
+            
         }
 
         public FormClient(Historial_Cliente.FormClientHistory previusForm)
@@ -29,7 +29,6 @@ namespace PalcoNet.Abm_Cliente
             btn_select.Visible = true;
             this.previusForm = previusForm;
             txt_number_doc.MaxLength = 10;
-            //dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
@@ -47,22 +46,11 @@ namespace PalcoNet.Abm_Cliente
 
         private void btn_search_Click(object sender, EventArgs e)
         {
-            if (this.ExistsValueEntered()) 
-            {
-                dgv_list.DataSource = ClientConnection.ListExistingClients(txt_name.Text
-                                                                       , txt_surname.Text
-                                                                       , txt_email.Text
-                                                                       , txt_number_doc.Text).Tables[0];
-            } 
-            else 
-            {
-                MessageBox.Show("Debe completar al menos un filtro.");
-            }
-        }
-
-        private bool ExistsValueEntered()
-        {
-            return txt_name.Text != "" || txt_surname.Text != "" || txt_email.Text != "" || txt_number_doc.Text != "";
+            dgv_list.DataSource = ClientConnection.ListExistingClients(txt_name.Text
+                                                                    , txt_surname.Text
+                                                                    , txt_email.Text
+                                                                    , txt_number_doc.Text).Tables[0];
+            
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)

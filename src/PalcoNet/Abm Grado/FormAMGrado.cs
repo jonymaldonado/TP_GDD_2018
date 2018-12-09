@@ -27,6 +27,8 @@ namespace PalcoNet.Abm_Grado
             this.isUpper = isUpper;
             this.formPrevious = formGrado;
 
+            this.txt_comision.Validating += txt_comision_Validating;
+
             if (!isUpper) //Modificacion
             {
                 this.id = id;
@@ -37,12 +39,6 @@ namespace PalcoNet.Abm_Grado
 
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txt_prioridad.Text))
-            {
-                MessageBox.Show("Debe ingresar un nombre.");
-                return;
-            }
-
             try
             {
                 if (this.isUpper)
@@ -66,6 +62,7 @@ namespace PalcoNet.Abm_Grado
         private void limpiarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             txt_comision.Text = "";
+            txt_prioridad.Text = "";
             txt_peso.Text = "";
         }
 
@@ -74,7 +71,6 @@ namespace PalcoNet.Abm_Grado
             if (this.checkMandatoryFields())
             {
                 grado = GetGradoDAO();
-                //MessageBox.Show("grado "+grado.Comision+" des"+grado.Prioridad);
                 GradoConnection.CreateGrado(grado);
                 MessageBox.Show("El Grado ha sido creado correctamente.");
 
@@ -92,7 +88,7 @@ namespace PalcoNet.Abm_Grado
             {
                 grado = GetGradoDAO();
                 GradoConnection.UpdateGrado(grado, this.id);
-                MessageBox.Show("La modificación del grado ha sido realizado correctamente. Realize nuevamente una búsqueda para visualizar los cambios.");
+                MessageBox.Show("La modificación del grado ha sido realizado correctamente.");
                 formPrevious.Show();
                 this.Close();
             }
@@ -104,7 +100,9 @@ namespace PalcoNet.Abm_Grado
 
         private bool checkMandatoryFields()
         {
-            return (!string.IsNullOrEmpty(txt_comision.Text));
+            return (!string.IsNullOrEmpty(txt_prioridad.Text) &&
+                    !string.IsNullOrEmpty(txt_comision.Text) &&
+                    !string.IsNullOrEmpty(txt_peso.Text));
         }
 
         private GradoDAO GetGradoDAO()
@@ -169,9 +167,6 @@ namespace PalcoNet.Abm_Grado
                 e.Cancel = false;
 
         }
-
-
-
 
     }
 }

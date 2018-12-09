@@ -27,6 +27,7 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public FormAMEmpresa(FormEmpresa formAMEmpresa, bool isUpper, string userId)
         {
             InitializeComponent();
+            ModifyScreen();
             this.isUpper = isUpper;
             this.formPrevious = formAMEmpresa;
 
@@ -41,10 +42,17 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
         public FormAMEmpresa(Registro_de_Usuario.FormUserRegister formUserRegister, string user, string password)
         {
             InitializeComponent();
+            ModifyScreen();
             this.user = user;
             this.password = password;
             formPrevious = formUserRegister;
             isRegisterUser = true;
+        }
+
+        private void ModifyScreen()
+        {
+            this.txt_cuit.Validating += txt_cuit_Validating;
+            this.txt_email.Validating += txt_email_Validating;
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
