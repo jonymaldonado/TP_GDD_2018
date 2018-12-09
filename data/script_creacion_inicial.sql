@@ -1703,12 +1703,12 @@ begin
 			U.Usuario_Habilitado
 	from EL_GROUP_BY.Cliente C inner join EL_GROUP_BY.USUARIO U
 	on C.Usuario_ID = U.Usuario_ID
-		AND C.Cliente_Nombre LIKE ISNULL('%' + @NOMBRE + '%', '%')
-              AND C.Cliente_Apellido LIKE ISNULL('%' + @APELLIDO + '%', '%')
-              AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
-              AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
-              --AND U.Usuario_Habilitado = 1 //Se deben poder modificar las eliminadas
-	order by C.Cliente_Nombre, C.Cliente_Apellido, U.Usuario_Mail, C.Cliente_Numero_Documento;
+			AND C.Cliente_Nombre LIKE ISNULL('%' + @NOMBRE + '%', '%')
+            AND C.Cliente_Apellido LIKE ISNULL('%' + @APELLIDO + '%', '%')
+			AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
+            AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
+            --AND U.Usuario_Habilitado = 1 //Se deben poder modificar las eliminadas
+	order by C.Cliente_Nombre, C.Cliente_Apellido, C.Cliente_Numero_Documento, U.Usuario_Mail;
 end
 go
 
@@ -2592,9 +2592,8 @@ begin
 	AND ES.Estado_Publicacion_ID != 3 --No debe traer las finalizadas
 	inner join EL_GROUP_BY.Rubro R on r.Rubro_ID = e.Rubro_ID
 	WHERE P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
-	AND p.Publicacion_Usuario = @USERNAME
-    AND convert(date, p.Publicacion_Fecha, 120) between convert(date, @FECHA_DESDE, 120) and convert(date, @FECHA_HASTA, 120) 
-	          
+	AND convert(date, p.Publicacion_Fecha, 120) between convert(date, @FECHA_DESDE, 120) and convert(date, @FECHA_HASTA, 120) 
+	AND p.Publicacion_Usuario = @USERNAME          
 end
 go
 
@@ -2840,13 +2839,13 @@ begin
 	WHERE exists(
 		Select 1 FROM  EL_GROUP_BY.Publicacion P
 		INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
-		WHERE p.Publicacion_Descripcion = @DESCRIPCION 
+		WHERE P.Publicacion_ID != @PUBLI_ID
+		AND p.Publicacion_Descripcion = @DESCRIPCION 
 		AND p.Publicacion_Fecha =  @FECHA_PUBLI 
 		AND e.Espectaculo_Fecha = @FECHA_ESPEC
 		AND E.Espectaculo_Direccion = @DIRECCION 
 		AND E.Rubro_ID = @RUBRO_ID 
-		AND P.Grado_Publicacion_ID = @GRADO_ID 
-		AND P.Publicacion_ID != @PUBLI_ID)
+		AND P.Grado_Publicacion_ID = @GRADO_ID)
 		
 end
 GO
