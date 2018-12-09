@@ -110,7 +110,7 @@ namespace PalcoNet.Abm_Rol
             }
             else
             {
-                MessageBox.Show("Debe indicar el nombre del nuevo rol.");
+                MessageBox.Show("Debe ingresar el nombre del nuevo rol.");
             }
 
             RoleConnection.LoadDGV(dg_rol);

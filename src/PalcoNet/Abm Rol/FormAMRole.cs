@@ -87,6 +87,13 @@ namespace PalcoNet.Abm_Rol
              Boolean enabled = chk_enabled.Checked;
 
              String newName = txt_name.Text.Trim();
+
+             if (string.IsNullOrEmpty(newName))
+             {
+                 MessageBox.Show("Debe ingresar el nombre del rol.");
+                 return;
+             }
+
              RoleConnection.UpdateName(role.Id, newName, enabled);
 
              foreach (FunctionDAO function in addedFunctions)

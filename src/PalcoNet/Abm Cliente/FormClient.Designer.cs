@@ -53,6 +53,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.dgv_list = new System.Windows.Forms.DataGridView();
             this.btn_select = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_list)).BeginInit();
@@ -99,7 +100,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -210,7 +211,7 @@
             this.label12.BackColor = System.Drawing.Color.Black;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.White;
-            this.label12.Location = new System.Drawing.Point(437, 198);
+            this.label12.Location = new System.Drawing.Point(402, 198);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(76, 30);
             this.label12.TabIndex = 34;
@@ -234,9 +235,9 @@
             this.label9.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(173, 198);
+            this.label9.Location = new System.Drawing.Point(158, 198);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(103, 30);
+            this.label9.Size = new System.Drawing.Size(84, 30);
             this.label9.TabIndex = 39;
             this.label9.Text = "Nombre";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -246,9 +247,9 @@
             this.label8.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(273, 198);
+            this.label8.Location = new System.Drawing.Point(229, 198);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(99, 30);
+            this.label8.Size = new System.Drawing.Size(87, 30);
             this.label8.TabIndex = 38;
             this.label8.Text = "Apellido";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -258,9 +259,9 @@
             this.label7.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(334, 198);
+            this.label7.Location = new System.Drawing.Point(306, 198);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(125, 30);
+            this.label7.Size = new System.Drawing.Size(104, 30);
             this.label7.TabIndex = 37;
             this.label7.Text = "Mail";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -270,9 +271,9 @@
             this.label6.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(504, 198);
+            this.label6.Location = new System.Drawing.Point(472, 198);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(139, 30);
+            this.label6.Size = new System.Drawing.Size(101, 30);
             this.label6.TabIndex = 36;
             this.label6.Text = "Nro Doc";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -286,6 +287,7 @@
             this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_list.Location = new System.Drawing.Point(95, 210);
+            this.dgv_list.MultiSelect = false;
             this.dgv_list.Name = "dgv_list";
             this.dgv_list.ReadOnly = true;
             this.dgv_list.RowHeadersVisible = false;
@@ -303,12 +305,25 @@
             this.btn_select.UseVisualStyleBackColor = true;
             this.btn_select.Click += new System.EventHandler(this.btn_select_Click);
             // 
+            // label4
+            // 
+            this.label4.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(556, 198);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(87, 30);
+            this.label4.TabIndex = 42;
+            this.label4.Text = "Habilitado";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(754, 471);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.btn_select);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label10);
@@ -324,6 +339,7 @@
             this.Name = "FormClient";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ABM Cliente";
+            this.Activated += new System.EventHandler(this.FormClient_Activated);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -360,5 +376,6 @@
         private System.Windows.Forms.Label label6;
         public System.Windows.Forms.DataGridView dgv_list;
         private System.Windows.Forms.Button btn_select;
+        private System.Windows.Forms.Label label4;
     }
 }

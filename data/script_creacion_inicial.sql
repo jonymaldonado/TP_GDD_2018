@@ -1775,14 +1775,15 @@ begin
 			C.Cliente_Apellido,
 			U.Usuario_Mail,
 			C.Cliente_Tipo_Documento,
-			convert(varchar(50), C.Cliente_Numero_Documento) as NRO_DOC
+			convert(varchar(50), C.Cliente_Numero_Documento) as NRO_DOC,
+			U.Usuario_Habilitado
 	from EL_GROUP_BY.Cliente C inner join EL_GROUP_BY.USUARIO U
 	on C.Usuario_ID = U.Usuario_ID
 		AND C.Cliente_Nombre LIKE ISNULL('%' + @NOMBRE + '%', '%')
               AND C.Cliente_Apellido LIKE ISNULL('%' + @APELLIDO + '%', '%')
               AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
               AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
-              AND U.Usuario_Habilitado = 1
+              --AND U.Usuario_Habilitado = 1 //Se deben poder modificar las eliminadas
 	order by C.Cliente_Nombre, C.Cliente_Apellido, U.Usuario_Mail, C.Cliente_Numero_Documento;
 end
 go
@@ -2246,7 +2247,8 @@ begin
 			E.Empresa_Razon_Social,
 			E.Empresa_Cuit,
 			U.Usuario_Mail,
-			E.Empresa_Ciudad
+			E.Empresa_Ciudad,
+			U.Usuario_Habilitado
 	from EL_GROUP_BY.Empresa E inner join EL_GROUP_BY.USUARIO U
 	on E.Usuario_ID = U.Usuario_ID
 		AND E.Empresa_Razon_Social LIKE ISNULL('%' + @RAZON_SOCIAL + '%', '%')

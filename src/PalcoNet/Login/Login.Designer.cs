@@ -32,7 +32,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.lbl_register = new System.Windows.Forms.LinkLabel();
             this.btn_init = new System.Windows.Forms.Button();
             this.lbl_rol = new System.Windows.Forms.Label();
             this.cmb_rol = new System.Windows.Forms.ComboBox();
@@ -68,7 +68,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.linkLabel1);
+            this.groupBox1.Controls.Add(this.lbl_register);
             this.groupBox1.Controls.Add(this.btn_init);
             this.groupBox1.Controls.Add(this.lbl_rol);
             this.groupBox1.Controls.Add(this.cmb_rol);
@@ -84,16 +84,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Acceso al Sistema";
             // 
-            // linkLabel1
+            // lbl_register
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(119, 148);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(57, 13);
-            this.linkLabel1.TabIndex = 9;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Regístrate";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.lbl_register.AutoSize = true;
+            this.lbl_register.Location = new System.Drawing.Point(119, 148);
+            this.lbl_register.Name = "lbl_register";
+            this.lbl_register.Size = new System.Drawing.Size(57, 13);
+            this.lbl_register.TabIndex = 9;
+            this.lbl_register.TabStop = true;
+            this.lbl_register.Text = "Regístrate";
+            this.lbl_register.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // btn_init
             // 
@@ -194,6 +194,7 @@
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -209,6 +210,6 @@
         private System.Windows.Forms.Label lbl_user;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btn_init;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel lbl_register;
     }
 }

@@ -28,6 +28,9 @@ namespace PalcoNet.Abm_Cliente
         public FormAMClient(FormClient formClient, bool isUpper, string userId)
         {
             InitializeComponent();
+            txt_number_doc.MaxLength = 10;
+            txt_cuil.MaxLength = 12;
+            txt_number_card.MaxLength = 16;
             this.isUpper = isUpper;
             this.chk_active.Visible = false;
             this.formPrevious = formClient;
@@ -44,6 +47,9 @@ namespace PalcoNet.Abm_Cliente
         public FormAMClient(Comprar.FormToBuy FormCompra, Int32 ClientId)
         {
             InitializeComponent();
+            txt_number_doc.MaxLength = 10;
+            txt_cuil.MaxLength = 12;
+            txt_number_card.MaxLength = 16;
             this.LoadDocs();
             this.isUpper = false;
             this.chk_active.Visible = true;
@@ -60,6 +66,9 @@ namespace PalcoNet.Abm_Cliente
         public FormAMClient(Registro_de_Usuario.FormUserRegister formRegisterUser, string user, string password)
         {
             InitializeComponent();
+            txt_number_doc.MaxLength = 10;
+            txt_cuil.MaxLength = 12;
+            txt_number_card.MaxLength = 16;
             this.isRegisterUser = true;
             this.user = user;
             this.password = password;
@@ -78,7 +87,7 @@ namespace PalcoNet.Abm_Cliente
             cmb_type_doc.Items.Add("DNI");
             cmb_type_doc.Items.Add("DUI");
             cmb_type_doc.Items.Add("CI");
-            cmb_type_doc.Items.Add("Otros");
+            cmb_type_doc.Items.Add("Otro");
         }
 
         private void LoadFieldsOfClient()
@@ -269,7 +278,7 @@ namespace PalcoNet.Abm_Cliente
                 ClientConnection.UpdateClient(clientDAO, this.userId, this.chk_active.Checked);
 
                 if(!this.creditCardChange)
-                    MessageBox.Show("La modificación del cliente ha sido realizada correctamente. Para ver los cambios realize nuevamente la búsqueda");
+                    MessageBox.Show("La modificación ha sido realizada correctamente.");
                 else
                 {
                     MessageBox.Show("Se ha actualizado la tarjeta de crédito exitosamente.");

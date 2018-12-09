@@ -16,9 +16,10 @@ namespace PalcoNet.Abm_Cliente
         public Historial_Cliente.FormClientHistory previusForm;
 
         public FormClient()
-        {
+        {   
             InitializeComponent();
             btn_select.Visible = false;
+            txt_number_doc.MaxLength = 10;
             //dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
         }
 
@@ -27,7 +28,7 @@ namespace PalcoNet.Abm_Cliente
             InitializeComponent();
             btn_select.Visible = true;
             this.previusForm = previusForm;
-
+            txt_number_doc.MaxLength = 10;
             //dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
         }
 
@@ -66,21 +67,13 @@ namespace PalcoNet.Abm_Cliente
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ConfirmarBaja())
-            {
-                string userId = dgv_list.CurrentRow.Cells[0].Value.ToString();
-                ClientConnection.DeleteClient(userId);
+ 
+            string userId = dgv_list.CurrentRow.Cells[0].Value.ToString();
+            ClientConnection.DeleteClient(userId);
 
-                MessageBox.Show("El cliente ha sido dado de baja correctamente.");
+            MessageBox.Show("El cliente ha sido dado de baja correctamente.");
 
-                dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
-            }
-        }
-
-        private bool ConfirmarBaja()
-        {
-            DialogResult result = MessageBox.Show("Realmente desea eliminar al cliente seleccionado?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            return result == DialogResult.Yes;
+            dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
         }
 
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
@@ -119,7 +112,12 @@ namespace PalcoNet.Abm_Cliente
             {
                 e.Handled = true;
             }
-
         }
+
+        private void FormClient_Activated(object sender, EventArgs e)
+        {
+            dgv_list.DataSource = ClientConnection.ListExistingClients(null, null, null, null).Tables[0];
+        }
+
     }
 }

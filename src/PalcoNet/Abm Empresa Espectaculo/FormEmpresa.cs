@@ -52,22 +52,13 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ConfirmarBaja())
-            {
-                EmpresaDAO empresa = new EmpresaDAO() ;
+            EmpresaDAO empresa = new EmpresaDAO() ;
 
-                empresa.UserId = Convert.ToInt32(dgv_list.CurrentRow.Cells[0].Value.ToString());
-                EmpresaConnection.DeleteEmpresa(empresa);
-                MessageBox.Show("La Empresa ha sido dada de baja correctamente.");
+            empresa.UserId = Convert.ToInt32(dgv_list.CurrentRow.Cells[0].Value.ToString());
+            EmpresaConnection.DeleteEmpresa(empresa);
+            MessageBox.Show("La Empresa ha sido dada de baja correctamente.");
 
-                dgv_list.DataSource = EmpresaConnection.ListExistingEmpresa(null).Tables[0];
-            }
-        }
-
-        private bool ConfirmarBaja()
-        {
-            DialogResult result = MessageBox.Show("¿Realmente desea eliminar la empresa seleccionada?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            return result == DialogResult.Yes;
+            dgv_list.DataSource = EmpresaConnection.ListExistingEmpresa(null).Tables[0];
         }
 
         private void btn_clean_Click(object sender, EventArgs e)
@@ -108,6 +99,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
             this.previusForm.Email = Convert.ToString(selectedRow.Cells["Usuario_Mail"].Value); 
 
             this.Close();
+        }
+
+        private void FormEmpresa_Activated(object sender, EventArgs e)
+        {
+            dgv_list.DataSource = EmpresaConnection.ListExistingEmpresa(null).Tables[0];
         }
 
     }
