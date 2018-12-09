@@ -137,6 +137,7 @@
             this.dgv_list.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_list.Location = new System.Drawing.Point(23, 104);
+            this.dgv_list.MultiSelect = false;
             this.dgv_list.Name = "dgv_list";
             this.dgv_list.ReadOnly = true;
             this.dgv_list.RowHeadersVisible = false;
@@ -209,6 +210,7 @@
             this.Controls.Add(this.dgv_list);
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormGrado";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ABM Grado";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

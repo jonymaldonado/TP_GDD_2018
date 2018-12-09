@@ -83,6 +83,7 @@ namespace PalcoNet.Login
                 if (countRoles > 1)
                 {
                     btn_init.Enabled = false;
+                    lbl_register.Enabled = false;
                     EnableRoleSelection(false);
                     this.LoadCombo(userId);
                 }

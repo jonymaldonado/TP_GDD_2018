@@ -68,6 +68,7 @@
             this.txt_number_card = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.chk_active = new System.Windows.Forms.CheckBox();
+            this.label18 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -131,7 +132,7 @@
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.txt_street);
             this.groupBox3.Controls.Add(this.label6);
-            this.groupBox3.Location = new System.Drawing.Point(64, 40);
+            this.groupBox3.Location = new System.Drawing.Point(65, 61);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(299, 387);
             this.groupBox3.TabIndex = 59;
@@ -226,7 +227,6 @@
             this.txt_cuil.Name = "txt_cuil";
             this.txt_cuil.Size = new System.Drawing.Size(163, 20);
             this.txt_cuil.TabIndex = 5;
-            this.txt_cuil.Validating += txt_cuil_Validating;
             // 
             // label1
             // 
@@ -352,7 +352,6 @@
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(162, 20);
             this.txt_email.TabIndex = 13;
-            this.txt_email.Validating += txt_email_Validating;
             // 
             // label7
             // 
@@ -434,11 +433,21 @@
             this.chk_active.UseVisualStyleBackColor = true;
             this.chk_active.Visible = false;
             // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(323, 34);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(104, 13);
+            this.label18.TabIndex = 68;
+            this.label18.Text = "(*) Datos obligatorios";
+            // 
             // FormAMClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(745, 469);
+            this.Controls.Add(this.label18);
             this.Controls.Add(this.chk_active);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox3);
@@ -498,5 +507,6 @@
         private System.Windows.Forms.TextBox txt_number_card;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.CheckBox chk_active;
+        private System.Windows.Forms.Label label18;
     }
 }

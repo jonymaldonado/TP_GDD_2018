@@ -253,6 +253,7 @@
             this.dg_rol.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dg_rol.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dg_rol.Location = new System.Drawing.Point(63, 249);
+            this.dg_rol.MultiSelect = false;
             this.dg_rol.Name = "dg_rol";
             this.dg_rol.ReadOnly = true;
             this.dg_rol.RowHeadersVisible = false;
