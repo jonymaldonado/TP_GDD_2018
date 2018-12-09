@@ -581,7 +581,8 @@ CREATE TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA As Table
 	Ubicacion_Asiento NUMERIC(18,0) NULL,
 	Ubicacion_Sin_Numerar BIT NOT NULL,
 	Ubicacion_Precio NUMERIC(18,0) NOT NULL,
-	Ubicacion_Tipo_ID INT NOT NULL
+	Ubicacion_Tipo_ID INT NOT NULL, 
+	Publicacion_Ubicacion_Posicion INT NULL
 )
 
 -- -----------------------------------------------------
@@ -590,7 +591,8 @@ CREATE TYPE EL_GROUP_BY.UBICACION_TIPO_TABLA As Table
 CREATE TYPE EL_GROUP_BY.PUBLICACION_UBICACION_TIPO_TABLA As Table
 (
 	Ubicacion_ID INT NULL,
-	Publicacion_ID INT NULL
+	Publicacion_ID INT NULL, 
+	Publicacion_Ubicacion_Posicion INT NULL
 )
 
 -- -----------------------------------------------------
@@ -736,11 +738,12 @@ CREATE TABLE EL_GROUP_BY.Puntos (
 CREATE TABLE EL_GROUP_BY.Publicacion_Ubicacion (
 		Ubicacion_ID INT NOT NULL,
 		Publicacion_ID INT NOT NULL,
+		Publicacion_Ubicacion_Posicion INT NOT NULL,
 		Compra_ID INT NULL,
 		Publicacion_Ubicacion_Canjeada BIT NOT NULL,
 		Publicacion_Ubicacion_Fecha_Canje DATETIME NULL,
 		Publicacion_Ubicacion_Cliente_Canje INT NULL
-	PRIMARY KEY (Ubicacion_ID, Publicacion_ID),
+	PRIMARY KEY (Ubicacion_ID, Publicacion_ID, Publicacion_Ubicacion_Posicion),
 	CONSTRAINT FK_Ubicacion_Cliente_Canje_ID FOREIGN KEY (Publicacion_Ubicacion_Cliente_Canje)     
 		REFERENCES EL_GROUP_BY.Cliente (Cliente_ID)     
 		ON UPDATE CASCADE)
@@ -1213,6 +1216,7 @@ BEGIN TRANSACTION
 	INSERT INTO EL_GROUP_BY.Publicacion_Ubicacion
 		SELECT DISTINCT U.Ubicacion_ID
 				,P.Publicacion_ID
+				,0    -- No hay ubicaciones sin numerar en la migracion, y este campo es para diferenciar esas
 				,NULL -- La compra la voy a relacionar luego
 				,0 -- NO Canjeada dado que el canje de puntos es una funcionalidad nueva
 				,NULL -- fecha de canje - idem campo anterior
@@ -2055,7 +2059,7 @@ begin
 	FROM EL_GROUP_BY.USUARIO U 
 	INNER JOIN EL_GROUP_BY.Cliente C ON C.Usuario_ID = U.Usuario_ID and C.Cliente_ID = @CLIENT_ID
 	LEFT JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
-	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @FECHA, 120) 
+	AND P.Puntos_Fecha_Vencimiento > @FECHA 
 	GROUP BY C.Cliente_Nombre,
 	C.Cliente_Apellido,
 	U.Usuario_Mail,
@@ -2067,7 +2071,8 @@ GO
 -- -----------------------------------------------------
 -- SP - Obtener Datos del historial de Cliente
 -- -----------------------------------------------------
-create procedure EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID @CLIENT_ID int
+create procedure EL_GROUP_BY.OBTENER_HISTORIAL_CLIENTE_ID 
+@CLIENT_ID int
 as
 begin
 
@@ -2089,37 +2094,18 @@ begin
 		INNER JOIN EL_GROUP_BY.Forma_Pago F on F.Forma_Pago_ID = C.Forma_Pago_ID
 		INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
 		WHERE C.Cliente_ID = @CLIENT_ID
-		ORDER BY FechaCompra ASC
+		ORDER BY FechaCompra, C.Compra_ID, P.Publicacion_ID ASC
 end
 GO
 
 -- -----------------------------------------------------
 -- SP - Obtiene el listado de Ubicaciones canjeables para X puntos
 -- -----------------------------------------------------
-CREATE procedure EL_GROUP_BY.LISTAR_CANJE_DISPONIBLE 
+create procedure EL_GROUP_BY.LISTAR_CANJE_DISPONIBLE 
 @PUNTOS int,
 @FECHA datetime
 as
 begin
-/*
-CREATE TABLE EL_GROUP_BY.#UBICACIONES 
-	(	Ubicacion_ID INT NOT NULL,
-		Ubicacion_Fila VARCHAR(3) NULL,
-		Ubicacion_Asiento NUMERIC(18,0) NULL,
-		Ubicacion_Sin_Numerar BIT NOT NULL,
-		Ubicacion_Precio NUMERIC(18,0) NOT NULL,
-		Ubicacion_Tipo_ID INT NOT NULL
-	);
-
-	INSERT INTO EL_GROUP_BY.#UBICACIONES 
-		SELECT	U.Ubicacion_ID,
-				U.Ubicacion_Fila,
-				U.Ubicacion_Asiento,
-				U.Ubicacion_Sin_Numerar,
-				U.Ubicacion_Precio,
-				U.Ubicacion_Tipo_ID
-		FROM EL_GROUP_BY.Ubicacion U
-		WHERE (U.Ubicacion_Precio*5) < @PUNTOS
 
 	SELECT	PU.Publicacion_ID, 
 			E.Espectaculo_Descripcion,
@@ -2129,28 +2115,8 @@ CREATE TABLE EL_GROUP_BY.#UBICACIONES
 			U.Ubicacion_Asiento,
 			U.Ubicacion_Sin_Numerar,
 			UT.Ubicacion_Tipo_Descripcion,
-			(U.Ubicacion_Precio*5) as Puntos
-	FROM EL_GROUP_BY.#UBICACIONES U 
-	INNER JOIN EL_GROUP_BY.Publicacion_Ubicacion PU on U.Ubicacion_ID = PU.Ubicacion_ID 
-	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
-	INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
-	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
-	WHERE PU.Publicacion_Ubicacion_Canjeada = 0 --Que no este canjeada
-		AND PU.Compra_ID is null --Que no este comprada
-		AND convert(date, E.Espectaculo_Fecha,120) > convert(date, @FECHA,120)
-	order by Fecha, E.Espectaculo_ID, U.Ubicacion_Fila, U.Ubicacion_asiento asc
-
-*/
-
-	SELECT	PU.Publicacion_ID, 
-			E.Espectaculo_Descripcion,
-			convert(date, E.Espectaculo_Fecha,120) as Fecha,
-			U.Ubicacion_ID,
-			U.Ubicacion_Fila,
-			U.Ubicacion_Asiento,
-			U.Ubicacion_Sin_Numerar,
-			UT.Ubicacion_Tipo_Descripcion,
-			(U.Ubicacion_Precio*5) as Puntos
+			(U.Ubicacion_Precio*5) as Puntos,
+			PU.Publicacion_Ubicacion_Posicion
 	FROM EL_GROUP_BY.Ubicacion U 
 	INNER JOIN EL_GROUP_BY.Publicacion_Ubicacion PU on U.Ubicacion_ID = PU.Ubicacion_ID 
 	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
@@ -2159,7 +2125,10 @@ CREATE TABLE EL_GROUP_BY.#UBICACIONES
 	WHERE (U.Ubicacion_Precio*5) < @PUNTOS
 	AND PU.Publicacion_Ubicacion_Canjeada = 0 --Que no este canjeada
 	AND PU.Compra_ID is null --Que no este comprada
-	AND convert(date, E.Espectaculo_Fecha,120) > convert(date, @FECHA,120)
+	--AND convert(date, E.Espectaculo_Fecha,120) > convert(date, @FECHA,120)
+	and p.Estado_Publicacion_ID = 2			--Publicada
+	and P.Publicacion_Fecha <= @FECHA		--Que ya se haya publicado al dia de la compra
+	and P.Publicacion_FechaHora >= @FECHA	--Que el espectaculo no haya pasado al dia de la compra
 	order by Fecha, E.Espectaculo_ID, U.Ubicacion_Fila, U.Ubicacion_asiento asc
 
 end
@@ -2174,14 +2143,17 @@ CREATE PROCEDURE EL_GROUP_BY.CANJEAR_UBICACION
 @PUNTOS INT,
 @PUBLICACION_ID INT,
 @UBICACION_ID INT,
+@POSICION INT,
 @FECHA DATETIME
 AS
 BEGIN TRANSACTION
 	UPDATE EL_GROUP_BY.Publicacion_Ubicacion
 		SET	Publicacion_Ubicacion_Canjeada = 1,
-			Publicacion_Ubicacion_Cliente_Canje = @CLIENTE_ID 
+			Publicacion_Ubicacion_Cliente_Canje = @CLIENTE_ID,
+			Publicacion_Ubicacion_Fecha_Canje = @FECHA
 		WHERE Ubicacion_ID = @UBICACION_ID
 		AND Publicacion_ID = @PUBLICACION_ID
+		AND Publicacion_Ubicacion_Posicion = @POSICION
 
 	DECLARE CU_PUNTOS CURSOR FOR
 	SELECT	P.Puntos_ID,
@@ -2602,9 +2574,10 @@ BEGIN TRANSACTION
 	DECLARE @PRECIO NUMERIC(18,0) 
 	DECLARE @TIPO_ID INT 
 	DECLARE @UBICACION_ID INT
+	DECLARE @POSICION INT
 
 	OPEN CU_UBICACION
-	FETCH CU_UBICACION INTO @FILA, @ASIENTO, @SIN_NUMERAR, @PRECIO, @TIPO_ID
+	FETCH CU_UBICACION INTO @FILA, @ASIENTO, @SIN_NUMERAR, @PRECIO, @TIPO_ID, @POSICION 
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 
@@ -2627,10 +2600,10 @@ BEGIN TRANSACTION
 			END 
 
 		INSERT INTO EL_GROUP_BY.Publicacion_Ubicacion
-		VALUES( @UBICACION_ID, @PUBLI_ID, null, 0, NULL, NULL)
+		VALUES( @UBICACION_ID, @PUBLI_ID, @POSICION, null, 0, NULL, NULL)
+			
+		FETCH CU_UBICACION INTO @FILA, @ASIENTO, @SIN_NUMERAR, @PRECIO, @TIPO_ID, @POSICION 
 	
-		FETCH CU_UBICACION INTO @FILA, @ASIENTO, @SIN_NUMERAR, @PRECIO, @TIPO_ID
-		
 	END
 	
 	CLOSE CU_UBICACION
@@ -2662,7 +2635,8 @@ BEGIN TRANSACTION
 	DELETE EL_GROUP_BY.Publicacion_Ubicacion
 	WHERE Ubicacion_ID IN (SELECT Ubicacion_ID FROM  @UBICACIONES)
 	AND Publicacion_ID IN (SELECT Publicacion_ID FROM  @UBICACIONES)
-	
+	AND Publicacion_Ubicacion_Posicion IN (SELECT Publicacion_Ubicacion_Posicion FROM  @UBICACIONES)
+
 	/*
 	DELETE EL_GROUP_BY.Ubicacion 
 	WHERE Ubicacion_ID IN (SELECT Ubicacion_ID FROM  @UBICACIONES)
@@ -2765,12 +2739,13 @@ begin
 			u.Ubicacion_Tipo_ID,
 			T.Ubicacion_Tipo_ID,
 			T.Ubicacion_Tipo_Codigo,
-			T.Ubicacion_Tipo_Descripcion
+			T.Ubicacion_Tipo_Descripcion,
+			PU.Publicacion_Ubicacion_Posicion
 	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
 	INNER JOIN EL_GROUP_BY.Ubicacion U ON U.Ubicacion_ID = PU.Ubicacion_ID
 	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo T ON T.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
 	WHERE PU.Publicacion_ID = @PUBLI_ID
-
+	ORDER BY PU.Ubicacion_ID
 end
 go
 
@@ -2779,7 +2754,7 @@ go
 -- disponibles para la compra
 -- -----------------------------------------------------
 
-create procedure EL_GROUP_BY.OBTENER_UBICACIONES_PARA_COMPRA
+CREATE procedure EL_GROUP_BY.OBTENER_UBICACIONES_PARA_COMPRA
 @PUBLI_ID int
 as
 begin
@@ -2793,7 +2768,8 @@ SELECT	PU.Publicacion_ID,
 			u.Ubicacion_Sin_Numerar,
 			u.Ubicacion_Precio,
 			u.Ubicacion_Tipo_ID,
-			T.Ubicacion_Tipo_Codigo
+			T.Ubicacion_Tipo_Codigo,
+			PU.Publicacion_Ubicacion_Posicion
 	FROM EL_GROUP_BY.Publicacion_Ubicacion PU
 	INNER JOIN EL_GROUP_BY.Ubicacion U ON U.Ubicacion_ID = PU.Ubicacion_ID
 	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo T ON T.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
@@ -2802,6 +2778,7 @@ SELECT	PU.Publicacion_ID,
 	WHERE PU.Publicacion_ID = @PUBLI_ID
 	AND PU.Publicacion_Ubicacion_Canjeada = 0
 	AND PU.Compra_ID is null
+	ORDER BY PU.Ubicacion_ID
 
 end
 go
@@ -2838,6 +2815,7 @@ BEGIN TRANSACTION
 		SET Compra_ID = @COMPRA_ID
 		WHERE Ubicacion_ID IN ( SELECT Ubicacion_ID FROM @UBICACIONES)
 		AND Publicacion_ID IN ( SELECT Publicacion_ID FROM @UBICACIONES)
+		AND Publicacion_Ubicacion_Posicion IN (SELECT Publicacion_Ubicacion_Posicion FROM @UBICACIONES)
 
 	INSERT EL_GROUP_BY.Puntos VALUES(
 		@PUNTOS,
@@ -3160,12 +3138,12 @@ begin
 	and PU.Compra_ID is null --Que no haya sido comprada la ubicacion
 	and PU.Publicacion_Ubicacion_Canjeada = 0 --Que no haya sido canjeada la ubicacion
 	inner join EL_GROUP_BY.Ubicacion U on PU.Ubicacion_ID = U.Ubicacion_ID
-	where E.Espectaculo_Fecha between @FECHA_DESDE and @FECHA_HASTA
-		and p.Estado_Publicacion_ID = 2	   
-		and P.Publicacion_Fecha < @FECHA_SIST		--Que ya se haya publicado al dia de la compra
-		and P.Publicacion_FechaHora > @FECHA_SIST	--Que el espectaculo no haya pasado al dia de la compra
-		and P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
-		and (E.Rubro_ID = @RUBRO_UNO or E.Rubro_ID = @RUBRO_DOS or E.Rubro_ID = @RUBRO_TRES)
+	where P.Publicacion_Descripcion LIKE ISNULL('%' + @DESCRIPCION + '%', '%')
+	and P.Publicacion_Fecha <= @FECHA_SIST		--Que ya se haya publicado al dia de la compra
+	and P.Publicacion_FechaHora >= @FECHA_SIST	--Que el espectaculo no haya pasado al dia de la compra
+	and P.Publicacion_FechaHora between @FECHA_DESDE and @FECHA_HASTA
+	and p.Estado_Publicacion_ID = 2	   
+	and (E.Rubro_ID = @RUBRO_UNO or E.Rubro_ID = @RUBRO_DOS or E.Rubro_ID = @RUBRO_TRES)
 	group by P.Publicacion_ID, G.Grado_Publicacion_Prioridad, E.Espectaculo_Descripcion, 
 			 E.Espectaculo_Fecha, G.Grado_Publicacion_ID, E.Espectaculo_Direccion, R.Rubro_Descripcion, G.Grado_Publicacion_Peso
 	order by G.Grado_Publicacion_Peso desc
