@@ -3258,7 +3258,14 @@ ADD CONSTRAINT CHK_Monto_No_Negativo
 /****************************************************************
 *						INDICES - INICIO						*
 ****************************************************************/
-
+CREATE INDEX IN1_Usuario ON EL_GROUP_BY.Usuario (Usuario_Username,Usuario_Password); -- para SP Buscar_Usuario
+CREATE INDEX IN2_Usuario ON EL_GROUP_BY.Usuario (Usuario_Mail,Usuario_Habilitado); -- para SP Listar_Clientes
+CREATE INDEX IN2_Cliente ON EL_GROUP_BY.Cliente (Cliente_Cuil);--Para SP de Existe_Cuil_Cliente
+CREATE INDEX IN1_Espectaculo ON EL_GROUP_BY.Espectaculo (Espectaculo_Fecha, Espectaculo_Direccion);-- para SP EXISTE_ESPECTACULO_UBICACION
+CREATE INDEX IN1_Ubicacion ON EL_GROUP_BY.Ubicacion (Ubicacion_Fila, Ubicacion_Asiento, Ubicacion_Precio, Ubicacion_Sin_Numerar); -- para SP de Ubicacion
+CREATE INDEX IN1_Publicacion ON EL_GROUP_BY.Publicacion (Publicacion_Descripcion,Publicacion_Fecha, Publicacion_FechaHora, Publicacion_Usuario)-- para SP Listar_Ubicaciones y LISTAR_PUBLICACIONES_DISPONIBLES_COMPRAS
+CREATE INDEX IN1_Compra ON EL_GROUP_BY.Compra (Compra_Fecha, Compra_Rendida); -- para SP LISTAR_COMPRAS_EMPRESA
+CREATE INDEX IN1_Puntos ON EL_GROUP_BY.Puntos (Puntos_Fecha_Vencimiento, Puntos_Cantidad); --para SP LISTAR_CLIENTES_MAYORES_PUNTOS_VENCIDOS
 /****************************************************************
 *						INDICES - FIN							*
 ****************************************************************/
