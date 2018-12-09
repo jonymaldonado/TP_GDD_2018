@@ -230,7 +230,7 @@ namespace MyLibrary
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@FECHA_VENCIMIENTO", SqlDbType.DateTime);
-            parameter.Value = publication.EspecDate.AddMonths(6);
+            parameter.Value = publication.EspecDate;
             parameters.Add(parameter);
 
             parameter = new SqlParameter("@RUBRO_ID", SqlDbType.Int);

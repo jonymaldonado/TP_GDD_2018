@@ -37,6 +37,12 @@ namespace PalcoNet.Abm_Grado
 
         private void aceptarToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(txt_prioridad.Text))
+            {
+                MessageBox.Show("Debe ingresar un nombre.");
+                return;
+            }
+
             try
             {
                 if (this.isUpper)
@@ -86,7 +92,7 @@ namespace PalcoNet.Abm_Grado
             {
                 grado = GetGradoDAO();
                 GradoConnection.UpdateGrado(grado, this.id);
-                MessageBox.Show("La modificación del grado ha sido realizado correctamente.");
+                MessageBox.Show("La modificación del grado ha sido realizado correctamente. Realize nuevamente una búsqueda para visualizar los cambios.");
                 formPrevious.Show();
                 this.Close();
             }

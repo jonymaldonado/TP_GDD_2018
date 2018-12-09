@@ -24,7 +24,7 @@ namespace DAO
         }
         public Int32 PubliID { get; set; }
         public Int32 EmpresaID { get; set; }
-        
+        public Int32 Posicion { get; set; }
     }
 
     public class UbicationTypeDAO

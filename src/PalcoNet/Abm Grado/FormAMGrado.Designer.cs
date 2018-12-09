@@ -34,12 +34,12 @@
             this.returnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.limpiarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.group_empresa = new System.Windows.Forms.GroupBox();
+            this.txt_prioridad = new System.Windows.Forms.TextBox();
             this.txt_peso = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_comision = new System.Windows.Forms.TextBox();
-            this.txt_prioridad = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.group_empresa.SuspendLayout();
             this.SuspendLayout();
@@ -68,7 +68,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -93,6 +93,14 @@
             this.group_empresa.TabIndex = 61;
             this.group_empresa.TabStop = false;
             this.group_empresa.Text = "Datos Empresa";
+            // 
+            // txt_prioridad
+            // 
+            this.txt_prioridad.Location = new System.Drawing.Point(88, 63);
+            this.txt_prioridad.MaxLength = 255;
+            this.txt_prioridad.Name = "txt_prioridad";
+            this.txt_prioridad.Size = new System.Drawing.Size(184, 20);
+            this.txt_prioridad.TabIndex = 60;
             // 
             // txt_peso
             // 
@@ -139,14 +147,6 @@
             this.txt_comision.TabIndex = 0;
             this.txt_comision.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_comision_KeyPress);
             // 
-            // txt_prioridad
-            // 
-            this.txt_prioridad.Location = new System.Drawing.Point(88, 63);
-            this.txt_prioridad.MaxLength = 255;
-            this.txt_prioridad.Name = "txt_prioridad";
-            this.txt_prioridad.Size = new System.Drawing.Size(184, 20);
-            this.txt_prioridad.TabIndex = 60;
-            // 
             // FormAMGrado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,6 +155,7 @@
             this.Controls.Add(this.group_empresa);
             this.Controls.Add(this.menuStrip1);
             this.Name = "FormAMGrado";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Grado";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

@@ -58,6 +58,7 @@
             this.txt_email = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_razon_social = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.group_empresa.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -100,6 +101,7 @@
             // 
             // group_empresa
             // 
+            this.group_empresa.Controls.Add(this.label6);
             this.group_empresa.Controls.Add(this.chk_active);
             this.group_empresa.Controls.Add(this.groupBox1);
             this.group_empresa.Controls.Add(this.label4);
@@ -288,7 +290,6 @@
             this.txt_cuit.Name = "txt_cuit";
             this.txt_cuit.Size = new System.Drawing.Size(184, 20);
             this.txt_cuit.TabIndex = 6;
-            this.txt_cuit.Validating += txt_cuit_Validating;
             // 
             // label3
             // 
@@ -324,7 +325,6 @@
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(184, 20);
             this.txt_email.TabIndex = 2;
-            this.txt_email.Validating += txt_email_Validating;
             // 
             // label1
             // 
@@ -342,6 +342,15 @@
             this.txt_razon_social.Name = "txt_razon_social";
             this.txt_razon_social.Size = new System.Drawing.Size(184, 20);
             this.txt_razon_social.TabIndex = 0;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(435, 253);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(104, 13);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "(*) Datos obligatorios";
             // 
             // FormAMEmpresa
             // 
@@ -395,5 +404,6 @@
         private System.Windows.Forms.TextBox txt_street;
         private System.Windows.Forms.ToolStripMenuItem limpiarToolStripMenuItem;
         private System.Windows.Forms.CheckBox chk_active;
+        private System.Windows.Forms.Label label6;
     }
 }

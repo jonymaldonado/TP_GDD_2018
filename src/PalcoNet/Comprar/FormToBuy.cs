@@ -48,6 +48,7 @@ namespace PalcoNet.Comprar
             dgv_ubicaciones.Columns["PubliID"].Visible = false;
             dgv_ubicaciones.Columns["EmpresaID"].Visible = false;
             dgv_ubicaciones.Columns["TipoDAO"].Visible = false;
+            dgv_ubicaciones.Columns["Posicion"].Visible = false;
 
             dgv_ubicaciones.Columns["Tipo"].DisplayIndex = 1;
             dgv_ubicaciones.Columns["Fila"].DisplayIndex = 2;
@@ -58,6 +59,8 @@ namespace PalcoNet.Comprar
             dgv_ubications_to_buy.Columns["UbicacionId"].Visible = false;
             dgv_ubications_to_buy.Columns["EmpresaID"].Visible = false;
             dgv_ubications_to_buy.Columns["TipoDAO"].Visible = false;
+            dgv_ubications_to_buy.Columns["Posicion"].Visible = false;
+            
 
             dgv_ubications_to_buy.Columns["PubliID"].DisplayIndex = 1;
             dgv_ubications_to_buy.Columns["Tipo"].DisplayIndex = 2;
@@ -69,29 +72,38 @@ namespace PalcoNet.Comprar
             total = 0;
             txt_total.Text = total.ToString();
 
+            dtp_date_from.Format = DateTimePickerFormat.Custom;
+            dtp_date_from.CustomFormat = "dd/MM/yyyy HH:mm:ss";
             dtp_date_from.MinDate = systemDate;
+
+            dtp_date_to.Format = DateTimePickerFormat.Custom;
+            dtp_date_to.CustomFormat = "dd/MM/yyyy HH:mm:ss";
             dtp_date_to.MinDate = systemDate;
 
             dtp_date_from.Value = systemDate;
             dtp_date_to.Value = systemDate;
 
+            
+
         }
 
         private void bindingSource1_CurrentChanged(object sender, EventArgs e)
         {
-            int offset = (int) bindingSource1.Current;
-
-            DataSet ds1 = this.ds;
-            DataSet ds2 = new DataSet();
-            ds2 = ds1.Clone();
-
-            for (int i = offset; i < offset + pageSize && i < totalRecords; i++)
+            if (bindingSource1.Current != null)
             {
-                ds2.Tables[0].ImportRow(ds1.Tables[0].Rows[i]);
+                int offset = (int)bindingSource1.Current;
+
+                DataSet ds1 = this.ds;
+                DataSet ds2 = new DataSet();
+                ds2 = ds1.Clone();
+
+                for (int i = offset; i < offset + pageSize && i < totalRecords; i++)
+                {
+                    ds2.Tables[0].ImportRow(ds1.Tables[0].Rows[i]);
+                }
+
+                dgv_list.DataSource = ds2.Tables[0];
             }
-
-            dgv_list.DataSource = ds2.Tables[0];
-
         }
 
         class PageOffsetList : System.ComponentModel.IListSource
@@ -227,6 +239,8 @@ namespace PalcoNet.Comprar
                     ubicacion.Asiento = Convert.ToInt32(reader.GetDecimal(5));
                     ubicacion.SinNumerar = reader.GetBoolean(6);
                     ubicacion.Precio = Convert.ToInt32(reader.GetDecimal(7));
+                    ubicacion.Posicion = reader.GetInt32(10);
+
                     tipo.id = reader.GetInt32(8);
                     tipo.cod = Convert.ToInt32(reader.GetDecimal(9));
                     tipo.desc = reader.IsDBNull(3) ? "" : reader.GetString(3);
@@ -248,7 +262,9 @@ namespace PalcoNet.Comprar
                 UbicationDAO ubicacion = new UbicationDAO();
                 ubicacion = ubications.ElementAt(row.Index);
 
-                if (ubicationsToBuy.SingleOrDefault(u => u.PubliID == ubicacion.PubliID && u.UbicacionId == ubicacion.UbicacionId) == null)
+                if (ubicationsToBuy.SingleOrDefault(u => u.PubliID == ubicacion.PubliID && 
+                                                         u.UbicacionId == ubicacion.UbicacionId &&
+                                                         u.Posicion == ubicacion.Posicion ) == null)
                 {
                     ubicationsToBuy.Add(ubicacion);
                     total += ubicacion.Precio;
@@ -273,15 +289,14 @@ namespace PalcoNet.Comprar
 
         private void btn_buy_Click(object sender, EventArgs e)
         {
-            SqlDataReader reader = BuyConnection.GetCreditCard(this.IdCliente);
-            String CreditCard = "";
-
             if (ubicationsToBuy.Count == 0)
             {
                 MessageBox.Show("¡Debe seleccionar almenos una localidad para comprar!", "Error");
                 return;
             }
 
+            SqlDataReader reader = BuyConnection.GetCreditCard(this.IdCliente);
+            String CreditCard = "";
 
             if (reader.HasRows)
             {
