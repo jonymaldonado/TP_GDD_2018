@@ -78,14 +78,16 @@ namespace MyLibrary
             dataTable.Columns.Add("Ubicacion_Sin_Numerar", typeof(int));
             dataTable.Columns.Add("Ubicacion_Precio", typeof(int));
             dataTable.Columns.Add("Ubicacion_Tipo_ID", typeof(int));
-            
+            dataTable.Columns.Add("Publicacion_Ubicacion_Posicion", typeof(int));
+
             foreach (UbicationDAO ubicacion in ubicaciones)
             {
                 dataTable.Rows.Add( ubicacion.Fila,
                                     ubicacion.Asiento,
                                     ubicacion.SinNumerar,
                                     ubicacion.Precio,
-                                    ubicacion.TipoDAO.id );
+                                    ubicacion.TipoDAO.id, 
+                                    ubicacion.Posicion);
             }
             List<SqlParameter> parameters = new List<SqlParameter>();
             SqlParameter parameter = new SqlParameter();
@@ -109,11 +111,13 @@ namespace MyLibrary
 
             dataTable.Columns.Add("Ubicacion_ID", typeof(int));
             dataTable.Columns.Add("Publicacion_ID", typeof(int));
-            
+            dataTable.Columns.Add("Publicacion_Ubicacion_Posicion", typeof(int));        
+
             foreach (UbicationDAO ubicacion in ubicaciones)
             {
                 dataTable.Rows.Add(ubicacion.UbicacionId,
-                                   publicID);
+                                   publicID, 
+                                   ubicacion.Posicion);
             }
 
             List<SqlParameter> parameters = new List<SqlParameter>();

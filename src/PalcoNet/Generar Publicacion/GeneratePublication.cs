@@ -66,7 +66,7 @@ namespace PalcoNet.Generar_Publicacion
 
             //Setea globales
             dateTimePicker1.Format = DateTimePickerFormat.Custom;
-            dateTimePicker1.CustomFormat = "dd/MM/yyyy hh:mm:ss";
+            dateTimePicker1.CustomFormat = "dd/MM/yyyy HH:mm:ss";
             dateTimePicker1.MinDate = systemDate;
             dtp_date.MinDate = systemDate;
             this.user = user;
@@ -105,8 +105,8 @@ namespace PalcoNet.Generar_Publicacion
             dgv_list.Columns["TipoDAO"].Visible = false;
             dgv_list.Columns["PubliID"].Visible = false;
             dgv_list.Columns["EmpresaID"].Visible = false;
-
-
+            dgv_list.Columns["Posicion"].Visible = false;
+            
             //Grisa campos no editables
             if (this.edit)
             {
@@ -115,9 +115,11 @@ namespace PalcoNet.Generar_Publicacion
                 lb_batch.Enabled = false;
             }
 
-            dateTimePicker1.Value = systemDate;
-            dtp_date.Value = systemDate;
-            
+            if (!this.edit)
+            {
+                dateTimePicker1.Value = systemDate;
+                dtp_date.Value = systemDate;
+            }
 
             //Carga el combo de estado
             LoadState();
@@ -216,6 +218,8 @@ namespace PalcoNet.Generar_Publicacion
                     ubicacion.Asiento = Convert.ToInt32(reader.GetDecimal(3));
                     ubicacion.SinNumerar = reader.GetBoolean(4);
                     ubicacion.Precio = Convert.ToInt32(reader.GetDecimal(5));
+                    ubicacion.Posicion = reader.GetInt32(10);
+                    
                     tipo.id = reader.GetInt32(7);
                     tipo.cod = Convert.ToInt32(reader.GetDecimal(8));
                     tipo.desc = reader.IsDBNull(9) ? "" : reader.GetString(9);
@@ -343,13 +347,13 @@ namespace PalcoNet.Generar_Publicacion
                 txt_filas.Clear();
                 //txt_asientos.Clear();
                 txt_filas.Enabled = false;
-                txt_asientos.Enabled = false;
-                //label11.Text = "Cantidad";
+                //txt_asientos.Enabled = false;
+                label11.Text = "Cantidad";
             }
             else
             {
                 txt_filas.Enabled = true;
-                txt_asientos.Enabled = true;
+                //txt_asientos.Enabled = true;
                 label11.Text = "Asientos";
             }
         }
@@ -364,6 +368,7 @@ namespace PalcoNet.Generar_Publicacion
             {
 
                 if (!string.IsNullOrEmpty(txt_precio.Text) &&
+                    !string.IsNullOrEmpty(txt_asientos.Text) &&
                     !string.IsNullOrEmpty(cb_type.Text))
                     campos_vacios = false;
             }
@@ -383,10 +388,8 @@ namespace PalcoNet.Generar_Publicacion
                 MessageBox.Show("Complete todos los campos de Ubicación", "Error");
             else
             {
-                if (String.IsNullOrEmpty(txt_asientos.Text))
-                    asientos = 1;
-                else
-                    asientos = Convert.ToInt32(txt_asientos.Text);
+                
+                asientos = Convert.ToInt32(txt_asientos.Text);
 
                 //for (int i = 1; i <= filas; i++)
                 //{
@@ -399,28 +402,28 @@ namespace PalcoNet.Generar_Publicacion
                         {
                             ubicacion.Fila = txt_filas.Text;
                             ubicacion.Asiento = j;
+                            ubicacion.Posicion = 0;
                         }
                         else
                         {
                             ubicacion.SinNumerar = true;
                             ubicacion.Fila = "0";
                             ubicacion.Asiento = 0;
-                        }
+                            ubicacion.Posicion = j;
+                        }   
                         ubicacion.TipoDAO = ubicationsTypes.ElementAt(cb_type.SelectedIndex);
                         ubicacion.Precio = Convert.ToInt32(txt_precio.Text);
 
-                        //if(cb_no_number.Checked)
-                        //    ubications.Add(ubicacion);
-                        //else
-                            if (ubications.SingleOrDefault(u => u.Fila == ubicacion.Fila && 
+                        if (ubications.SingleOrDefault(u => u.Fila == ubicacion.Fila && 
                                                                 u.Asiento == ubicacion.Asiento &&
                                                                 u.SinNumerar == ubicacion.SinNumerar &&
                                                                 u.Precio == ubicacion.Precio &&
-                                                                u.TipoDAO.id == ubicacion.TipoDAO.id
+                                                                u.TipoDAO.id == ubicacion.TipoDAO.id &&
+                                                                u.Posicion == ubicacion.Posicion
                                                                 ) == null)
-                            {
-                                ubications.Add(ubicacion);
-                            }
+                        {
+                            ubications.Add(ubicacion);
+                        }
 
                         
 

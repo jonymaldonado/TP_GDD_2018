@@ -71,11 +71,13 @@ namespace MyLibrary
 
             dataTable.Columns.Add("Ubicacion_ID", typeof(int));
             dataTable.Columns.Add("Publicacion_ID", typeof(int));
-            
+            dataTable.Columns.Add("Publicacion_Ubicacion_Posicion", typeof(int));
+
             foreach (UbicationDAO ubicacion in ubicaciones)
             {
                 dataTable.Rows.Add( ubicacion.UbicacionId,
-                                    ubicacion.PubliID );
+                                    ubicacion.PubliID,
+                                    ubicacion.Posicion);
             }
             List<SqlParameter> parameters = new List<SqlParameter>();
             SqlParameter parameter = new SqlParameter();

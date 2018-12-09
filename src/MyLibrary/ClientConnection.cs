@@ -208,9 +208,13 @@ namespace MyLibrary
         public static SqlDataReader GetClientData(int clientId)
         {
             List<SqlParameter> parameters = new List<SqlParameter>();
+            SqlParameter parameter;
+            
             parameters.Add(new SqlParameter("@CLIENT_ID", clientId));
 
-            parameters.Add(new SqlParameter("@FECHA", ConfigurationManager.AppSettings["FechaSistema"]));
+            parameter = new SqlParameter("@FECHA", SqlDbType.DateTime);
+            parameter.Value = Convert.ToDateTime(ConfigurationManager.AppSettings["FechaSistema"]);
+            parameters.Add(parameter);
 
             SqlDataReader reader = Connection.GetDataReader("EL_GROUP_BY.OBTENER_DATOS_CLIENTE_X_ID", Connection.Type.StoredProcedure, parameters);
             
@@ -239,18 +243,20 @@ namespace MyLibrary
 
             SqlParameter parameter;
 
-            parameter = new SqlParameter("@PUNTOS", SqlDbType.Int, 1);
+            parameter = new SqlParameter("@PUNTOS", SqlDbType.Int);
             parameter.Value = Convert.ToString(points);
             parameters.Add(parameter);
 
-            parameters.Add(new SqlParameter("@FECHA", ConfigurationManager.AppSettings["FechaSistema"]));
+            parameter = new SqlParameter("@FECHA", SqlDbType.DateTime);
+            parameter.Value = Convert.ToDateTime(ConfigurationManager.AppSettings["FechaSistema"]);
+            parameters.Add(parameter);
 
             DataSet ds = Connection.GetDataSet("EL_GROUP_BY.LISTAR_CANJE_DISPONIBLE", Connection.Type.StoredProcedure, parameters);
 
             return ds;
         }
 
-        public static void  ChangePoints(int clientId, int puntos, int Publicacion_ID, int Ubicacion_ID)
+        public static void  ChangePoints(int clientId, int puntos, int Publicacion_ID, int Ubicacion_ID, int Posicion)
         {
 
             List<SqlParameter> parameters = new List<SqlParameter>();
@@ -273,8 +279,14 @@ namespace MyLibrary
             parameter.Value = Ubicacion_ID;
             parameters.Add(parameter);
 
-            parameters.Add(new SqlParameter("@FECHA", ConfigurationManager.AppSettings["FechaSistema"]));
-            
+            parameter = new SqlParameter("@POSICION", SqlDbType.Int);
+            parameter.Value = Posicion;
+            parameters.Add(parameter);
+
+            parameter = new SqlParameter("@FECHA", SqlDbType.DateTime);
+            parameter.Value = Convert.ToDateTime(ConfigurationManager.AppSettings["FechaSistema"]);
+            parameters.Add(parameter);
+
             Connection.WriteInTheBase("EL_GROUP_BY.CANJEAR_UBICACION", Connection.Type.StoredProcedure, parameters);
 
         }

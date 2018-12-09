@@ -61,6 +61,8 @@ namespace PalcoNet.Canje_Puntos
         public void setChangeList(int points)
         {
             dgv_list.DataSource = ClientConnection.GetChangeList(points).Tables[0]; 
+            if(dgv_list.Rows.Count > 0)
+                dgv_list.Columns["Publicacion_Ubicacion_Posicion"].Visible = false;
         }
 
         private void btn_exchange_Click(object sender, EventArgs e)
@@ -102,7 +104,8 @@ namespace PalcoNet.Canje_Puntos
                     ClientConnection.ChangePoints(  this.clientId, 
                                                     Convert.ToInt32(puntos), 
                                                     Convert.ToInt32(selectedRow.Cells["Publicacion_ID"].Value), 
-                                                    Convert.ToInt32(selectedRow.Cells["Ubicacion_ID"].Value) );
+                                                    Convert.ToInt32(selectedRow.Cells["Ubicacion_ID"].Value),
+                                                    Convert.ToInt32(selectedRow.Cells["Publicacion_Ubicacion_Posicion"].Value));
                     
                     this.points = setClientData(this.clientId);
                     setChangeList(this.points);
