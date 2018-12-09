@@ -16,7 +16,6 @@ namespace MyLibrary
 
             functionDAO.Id = reader.GetInt32(reader.GetOrdinal("Funcionalidad_ID"));
             functionDAO.Name = reader.GetString(reader.GetOrdinal("Funcionalidad_Nombre"));
-            functionDAO.Visible = reader.GetBoolean(reader.GetOrdinal("Funcionalidad_Visible"));
 
             return functionDAO;
         }

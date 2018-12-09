@@ -11,6 +11,7 @@ using System.Data;
 using System.Drawing;
 using DAO;
 using MyLibrary;
+using Microsoft.SqlServer.Server;
 
 namespace MyLibrary
 {
@@ -48,22 +49,27 @@ namespace MyLibrary
 
         public static void CreateItems(List<ItemDAO> items)
         {
-            DataTable dataTable = new DataTable("ITEM_TIPO");
+            var dataTable = new List<SqlDataRecord>();
 
-            dataTable.Columns.Add("Item_Monto", typeof(Decimal));
-            dataTable.Columns.Add("Item_Cantidad", typeof(Decimal));
-            dataTable.Columns.Add("Item_Descripcion", typeof(String));
-            dataTable.Columns.Add("Factura_ID", typeof(int));
-            dataTable.Columns.Add("Compra_ID", typeof(int));
-           
             foreach (ItemDAO item in items)
             {
-                dataTable.Rows.Add( item.Item_Monto,
-                                    item.Item_Cantidad,
-                                    item.Item_Descripcion,
-                                    item.Factura_ID,
-                                    item.Compra_ID
-                                  );
+
+                var rec = new SqlDataRecord(
+                                new SqlMetaData("Item_Monto", SqlDbType.Decimal, 18,2),
+                                new SqlMetaData("Item_Cantidad", SqlDbType.Decimal),
+                                new SqlMetaData("Item_Descripcion", SqlDbType.NVarChar, 255),
+                                new SqlMetaData("Factura_ID", SqlDbType.Int),
+                                new SqlMetaData("Compra_ID", SqlDbType.Int)
+                                );
+                
+                rec.SetDecimal(0, item.Item_Monto);
+                rec.SetDecimal(1, item.Item_Cantidad);
+                rec.SetString(2, item.Item_Descripcion);
+                rec.SetInt32(3, item.Factura_ID);
+                rec.SetInt32(4, item.Compra_ID);
+                
+                dataTable.Add(rec);
+
             }
 
             List<SqlParameter> parameters = new List<SqlParameter>();

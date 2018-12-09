@@ -481,7 +481,16 @@ namespace PalcoNet.Generar_Publicacion
         private void CreatePublication()
         {
             LoadDynproFields();
-            
+
+            foreach (DateTime dt in batchDates)
+            {
+                if (dt < dtp_date.Value)
+                {
+                    MessageBox.Show("La fecha del espectáculo debe ser mayor a la fecha de publicacion, verifique la fecha de publicación", "Advertencia");
+                    return;   
+                }
+            }
+
             PublicationConnection.CreatePublications(publication, batchDates, ubications, idEmpresa, rubro);
             MessageBox.Show("Se ha creado exitosamente "+batchDates.Count+" publicacion/es", "Advertencia");
             this.Close();

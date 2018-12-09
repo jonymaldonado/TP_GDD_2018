@@ -39,8 +39,8 @@ namespace PalcoNet.Abm_Rol
         
             if (isSignUp)
             {
-                chk_enabled.Visible = false;
-
+                
+                chk_enabled.Checked = role.State;
                 List<FunctionDAO> functions = FunctionConnection.GetFunctions();
 
                 foreach (FunctionDAO item in functions)

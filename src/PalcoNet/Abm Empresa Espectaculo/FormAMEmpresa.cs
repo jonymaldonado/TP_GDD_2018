@@ -145,6 +145,11 @@ namespace PalcoNet.Abm_Empresa_Espectaculo
                     this.formPrevious.Close();
                     return;
                 }
+                else
+                {
+                    formPrevious.Show();
+                    this.Close();
+                }
 
             }
             else

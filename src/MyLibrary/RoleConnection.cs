@@ -108,6 +108,12 @@ namespace MyLibrary
             }
 
             Connection.WriteInTheBase("UPDATE EL_GROUP_BY.ROL SET Rol_Habilitado = " + state.ToString() + ", Rol_Nombre = '" + newName + "' WHERE Rol_Id = " + id.ToString());
+
+            //Si se deshabilita el rol, se lo eliminamos a los usuarios que lo poseen
+            if (state == 0)
+            {
+                Connection.WriteInTheBase("DELETE EL_GROUP_BY.Rol_Usuario WHERE Rol_Id = " + id.ToString());
+            }
         }
 
         public static List<RoleDAO> GetRolesForUser(Int32 id, string spname)
