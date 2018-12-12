@@ -29,6 +29,11 @@ namespace PalcoNet.Abm_Cliente
             btn_select.Visible = true;
             this.previusForm = previusForm;
             txt_number_doc.MaxLength = 10;
+
+            addToolStripMenuItem.Visible = false;
+            deleteToolStripMenuItem.Visible = false;
+            updateToolStripMenuItem.Visible = false;
+
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)

@@ -1786,8 +1786,9 @@ begin
 	on C.Usuario_ID = U.Usuario_ID
 			AND C.Cliente_Nombre LIKE ISNULL('%' + @NOMBRE + '%', '%')
             AND C.Cliente_Apellido LIKE ISNULL('%' + @APELLIDO + '%', '%')
-			AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
-            AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
+			--AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
+            AND C.Cliente_Numero_Documento = @NRO_DOC
+			AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
             --AND U.Usuario_Habilitado = 1 //Se deben poder modificar las eliminadas
 	order by C.Cliente_Nombre, C.Cliente_Apellido, C.Cliente_Numero_Documento, U.Usuario_Mail;
 end
@@ -1879,7 +1880,7 @@ CREATE PROCEDURE EL_GROUP_BY.ACTUALIZAR_CLIENTE
 @CODIGO_POSTAL VARCHAR(255),
 @FECHA_NAC DATETIME,
 @TARJETA_NOMBRE VARCHAR(255),
-@TARJETA_NRO NUMERIC(16,0),
+@TARJETA_NRO NVARCHAR(20),
 @HABILITADO     BIT
 AS
 BEGIN TRANSACTION
@@ -2224,8 +2225,9 @@ begin
 	from EL_GROUP_BY.Empresa E inner join EL_GROUP_BY.USUARIO U
 	on E.Usuario_ID = U.Usuario_ID
 		AND E.Empresa_Razon_Social LIKE ISNULL('%' + @RAZON_SOCIAL + '%', '%')
-              AND E.Empresa_Cuit LIKE ISNULL('%' + @CUIT + '%', '%')
-              AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
+              --AND E.Empresa_Cuit LIKE ISNULL('%' + @CUIT + '%', '%')
+              AND E.Empresa_Cuit = @CUIT
+			  AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
               --AND U.Usuario_Habilitado = 1; //Se deben poder modificar las eliminadas
 	order by E.Empresa_Razon_Social, E.Empresa_Cuit, U.Usuario_Mail
 end
@@ -3177,8 +3179,9 @@ CREATE PROCEDURE EL_GROUP_BY.SET_USUARIO_HABILITADO
 AS
 BEGIN TRANSACTION
 	UPDATE EL_GROUP_BY.USUARIO
-		SET Usuario_Habilitado = @HABILITADO 
-		WHERE Usuario_ID = @USUARIO_ID;
+		SET Usuario_Habilitado = @HABILITADO,
+			Usuario_Intentos = 0
+		WHERE Usuario_ID = @USUARIO_ID
 COMMIT
 GO
 
