@@ -2124,7 +2124,7 @@ begin
 	INNER JOIN EL_GROUP_BY.Publicacion P on P.Publicacion_ID = PU.Publicacion_ID
 	INNER JOIN EL_GROUP_BY.Espectaculo E on E.Espectaculo_ID = P.Espectaculo_ID
 	INNER JOIN EL_GROUP_BY.Ubicacion_Tipo UT on UT.Ubicacion_Tipo_ID = U.Ubicacion_Tipo_ID
-	WHERE (U.Ubicacion_Precio*5) < @PUNTOS
+	WHERE (U.Ubicacion_Precio*5) <= @PUNTOS
 	AND PU.Publicacion_Ubicacion_Canjeada = 0 --Que no este canjeada
 	AND PU.Compra_ID is null --Que no este comprada
 	--AND convert(date, E.Espectaculo_Fecha,120) > convert(date, @FECHA,120)
