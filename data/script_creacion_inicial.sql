@@ -1786,8 +1786,7 @@ begin
 	on C.Usuario_ID = U.Usuario_ID
 			AND C.Cliente_Nombre LIKE ISNULL('%' + @NOMBRE + '%', '%')
             AND C.Cliente_Apellido LIKE ISNULL('%' + @APELLIDO + '%', '%')
-			--AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
-            AND C.Cliente_Numero_Documento = @NRO_DOC
+			AND convert(varchar(50), C.Cliente_Numero_Documento) LIKE ISNULL('%' + convert(varchar(50),@NRO_DOC) + '%', '%')
 			AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
             --AND U.Usuario_Habilitado = 1 //Se deben poder modificar las eliminadas
 	order by C.Cliente_Nombre, C.Cliente_Apellido, C.Cliente_Numero_Documento, U.Usuario_Mail;
@@ -2225,8 +2224,7 @@ begin
 	from EL_GROUP_BY.Empresa E inner join EL_GROUP_BY.USUARIO U
 	on E.Usuario_ID = U.Usuario_ID
 		AND E.Empresa_Razon_Social LIKE ISNULL('%' + @RAZON_SOCIAL + '%', '%')
-              --AND E.Empresa_Cuit LIKE ISNULL('%' + @CUIT + '%', '%')
-              AND E.Empresa_Cuit = @CUIT
+              AND E.Empresa_Cuit LIKE ISNULL('%' + @CUIT + '%', '%')
 			  AND U.Usuario_Mail LIKE ISNULL('%' + @EMAIL + '%', '%')
               --AND U.Usuario_Habilitado = 1; //Se deben poder modificar las eliminadas
 	order by E.Empresa_Razon_Social, E.Empresa_Cuit, U.Usuario_Mail
