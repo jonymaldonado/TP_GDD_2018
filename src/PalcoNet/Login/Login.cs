@@ -180,7 +180,7 @@ namespace PalcoNet.Login
                     if (countRoles == 0)
                     {
                         MessageBox.Show("No dispone de roles activos.");
-                        this.Close();
+                        //this.Close();
                         return;
                     }
                     else

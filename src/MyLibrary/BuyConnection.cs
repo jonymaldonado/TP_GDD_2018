@@ -24,15 +24,15 @@ namespace MyLibrary
 
             SqlParameter parameter;
 
-            parameter = new SqlParameter("@FECHA_DESDE", SqlDbType.DateTime, 100);
+            parameter = new SqlParameter("@FECHA_DESDE", SqlDbType.DateTime);
             parameter.Value = dateFrom;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@FECHA_HASTA", SqlDbType.DateTime, 100);
+            parameter = new SqlParameter("@FECHA_HASTA", SqlDbType.DateTime);
             parameter.Value = dateTo;
             parameters.Add(parameter);
 
-            parameter = new SqlParameter("@FECHA_SIST", SqlDbType.DateTime, 100);
+            parameter = new SqlParameter("@FECHA_SIST", SqlDbType.DateTime);
             parameter.Value = systemDate;
             parameters.Add(parameter);
 
