@@ -1089,18 +1089,13 @@ GO
 									      
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_RUBROS AS
 BEGIN TRANSACTION
-	INSERT INTO EL_GROUP_BY.Rubro
-		SELECT DISTINCT Espectaculo_Rubro_Descripcion
-			FROM gd_esquema.Maestra M
-			WHERE M.Espectaculo_Rubro_Descripcion IS NOT NULL
-
-
+	--Rubro para publicaciones migradas
+	INSERT EL_GROUP_BY.Rubro VALUES('Otros')
 	--Cargo rubros genéricos para no implementar el ABM
 	INSERT EL_GROUP_BY.Rubro VALUES('Musical')
 	INSERT EL_GROUP_BY.Rubro VALUES('Teatro')
 	INSERT EL_GROUP_BY.Rubro VALUES('Opera')
 	INSERT EL_GROUP_BY.Rubro VALUES('Cine')
-	
 COMMIT TRANSACTION;	
 GO	
 									      
@@ -1140,7 +1135,7 @@ BEGIN TRANSACTION
 					,null
 					,M.Espectaculo_Fecha
 					,M.Espectaculo_Fecha_Venc
-					,EL_GROUP_BY.FUNC_ID_RUBRO(M.Espectaculo_Rubro_Descripcion)
+					,1 --Insertamos directamente el ID del rubro ‘Otros’ definido para la migración
 					,EL_GROUP_BY.FUNC_ID_EMPRESA(M.Espec_Empresa_Razon_Social, M.Espec_Empresa_Cuit)
 		FROM gd_esquema.Maestra M
 		WHERE Espec_Empresa_Cuit IS NOT NULL
