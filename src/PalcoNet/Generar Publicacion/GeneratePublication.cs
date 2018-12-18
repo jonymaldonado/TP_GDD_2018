@@ -161,6 +161,7 @@ namespace PalcoNet.Generar_Publicacion
                     this.publication.EspecID = reader.GetInt32(6);
                     this.publication.GradeID = reader.GetInt32(7);
                     this.publication.StateID = reader.GetInt32(8);
+                    this.publication.Comision = reader.GetDecimal(23);
 
                     //Espectaculo
                     this.publication.Espectaculo_ID = reader.GetInt32(9);
@@ -192,7 +193,7 @@ namespace PalcoNet.Generar_Publicacion
                     //cb_state.SelectedIndex = publicationState.StateID - 1;
 
                     txt_grade.Text = gradeEdit.Prioridad;
-                    txt_comision.Text = Convert.ToString(gradeEdit.Comision);
+                    txt_comision.Text = Convert.ToString(this.publication.Comision);
 
                 }
             }
@@ -469,6 +470,7 @@ namespace PalcoNet.Generar_Publicacion
             publication.Username = this.user;
             publication.GradeID = this.IdGrado;
             publication.Espectaculo_Direccion = txt_direction.Text;
+            publication.Comision = Convert.ToDecimal(txt_comision.Text);
 
             rubro = rubros.ElementAt(cb_rubro.SelectedIndex);
             

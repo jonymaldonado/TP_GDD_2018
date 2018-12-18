@@ -619,6 +619,7 @@ CREATE TABLE EL_GROUP_BY.Publicacion (
 		Publicacion_Usuario NVARCHAR(50) NOT NULL,
 		Espectaculo_ID INT NOT NULL,
 		Grado_Publicacion_ID INT NOT NULL,
+		Publicacion_Comision NUMERIC(3,2) NOT NULL,
 		Estado_Publicacion_ID INT NOT NULL,
   PRIMARY KEY (Publicacion_ID),
   CONSTRAINT FK_Publicacion_Grado_Publicacion_ID FOREIGN KEY (Grado_Publicacion_ID)     
@@ -920,6 +921,7 @@ BEGIN TRANSACTION
 		FROM gd_esquema.Maestra
 		WHERE Cli_Dni IS NOT NULL
 		ORDER BY Cli_Dni
+
 COMMIT
 GO
 
@@ -937,6 +939,7 @@ BEGIN TRANSACTION
 					,EL_GROUP_BY.FUNC_COD_USUARIO(Espec_Empresa_Razon_Social + CONVERT(NVARCHAR(50),Espec_Empresa_Cuit))
 		FROM gd_esquema.Maestra
 		WHERE Espec_Empresa_Cuit IS NOT NULL
+
 COMMIT
 GO
 
@@ -1086,18 +1089,13 @@ GO
 									      
 CREATE PROCEDURE EL_GROUP_BY.CARGAR_RUBROS AS
 BEGIN TRANSACTION
-	INSERT INTO EL_GROUP_BY.Rubro
-		SELECT DISTINCT Espectaculo_Rubro_Descripcion
-			FROM gd_esquema.Maestra M
-			WHERE M.Espectaculo_Rubro_Descripcion IS NOT NULL
-
-
+	--Rubro para publicaciones migradas
+	INSERT EL_GROUP_BY.Rubro VALUES('Otros')
 	--Cargo rubros genéricos para no implementar el ABM
 	INSERT EL_GROUP_BY.Rubro VALUES('Musical')
 	INSERT EL_GROUP_BY.Rubro VALUES('Teatro')
 	INSERT EL_GROUP_BY.Rubro VALUES('Opera')
 	INSERT EL_GROUP_BY.Rubro VALUES('Cine')
-	
 COMMIT TRANSACTION;	
 GO	
 									      
@@ -1137,7 +1135,7 @@ BEGIN TRANSACTION
 					,null
 					,M.Espectaculo_Fecha
 					,M.Espectaculo_Fecha_Venc
-					,EL_GROUP_BY.FUNC_ID_RUBRO(M.Espectaculo_Rubro_Descripcion)
+					,1 --Insertamos directamente el ID del rubro ‘Otros’ definido para la migración
 					,EL_GROUP_BY.FUNC_ID_EMPRESA(M.Espec_Empresa_Razon_Social, M.Espec_Empresa_Cuit)
 		FROM gd_esquema.Maestra M
 		WHERE Espec_Empresa_Cuit IS NOT NULL
@@ -1157,6 +1155,7 @@ BEGIN TRANSACTION
 					,'MIGRA'
 					,E.Espectaculo_ID
 					,1 --Migro directamente Grado_Publicacion_ID = 1 - 'MIGRADA'
+					,0.1 --Comision 
 					,2  -- Migramos como 2 - Publicada ya que en la Maestra todos los Espectaculo_Estado son 'Publicada'
 		FROM EL_GROUP_BY.Espectaculo E
 		ORDER BY E.Espectaculo_ID ASC
@@ -2504,6 +2503,7 @@ CREATE PROCEDURE EL_GROUP_BY.CREAR_ESPECTACULO_PUBLICACION
 @CANT_LOC INT,
 @USERNAME NVARCHAR(50),
 @GRADO_ID INT,
+@COMISION		NUMERIC(3,2),
 @ESTADO_ID INT,
 @PUBLI_ID INT OUTPUT
 as
@@ -2526,6 +2526,7 @@ begin transaction
 		@USERNAME,
 		SCOPE_IDENTITY(),
 		@GRADO_ID,
+		@COMISION,
 		@ESTADO_ID)
 	
 	SET @PUBLI_ID = SCOPE_IDENTITY();
@@ -2643,7 +2644,7 @@ begin
 			E.Espectaculo_Direccion as 'Dirección',
 			E.Espectaculo_Fecha as 'Fecha Espectáculo',
 			g.Grado_Publicacion_Prioridad as 'Prioridad',
-			g.Grado_Publicacion_Comision as 'Comision',
+			P.Publicacion_Comision as 'Comision',
 			ES.Estado_Publicacion_Descripcion as 'Estado',
 			r.Rubro_Descripcion as 'Rubro'
 	from EL_GROUP_BY.Publicacion P 
@@ -2689,7 +2690,8 @@ begin
 			G.Grado_Publicacion_Prioridad,
 			ES.Estado_Publicacion_ID,
 			ES.Estado_Publicacion_Descripcion,
-			ES.Estado_Publicacion_Modificable
+			ES.Estado_Publicacion_Modificable, 
+			P.Publicacion_Comision
 	FROM EL_GROUP_BY.Publicacion P
 	INNER JOIN EL_GROUP_BY.Espectaculo E ON P.Espectaculo_ID = E.Espectaculo_ID
 	INNER JOIN EL_GROUP_BY.Grado_Publicacion G ON G.Grado_Publicacion_ID = P.Grado_Publicacion_ID
@@ -2852,6 +2854,7 @@ CREATE PROCEDURE EL_GROUP_BY.EDITAR_ESPECTACULO_PUBLICACION
 @FECHA_PUBLI DateTime,
 @CANT_LOC INT,
 @GRADO_ID INT,
+@COMISION		NUMERIC(3,2),
 @ESTADO_ID INT
 as
 begin transaction
@@ -2872,6 +2875,7 @@ begin transaction
 			Publicacion_FechaHora =  @FECHA_ESPEC,
 			Publicacion_Cantidad_Localidades =  @CANT_LOC,
 			Grado_Publicacion_ID = @GRADO_ID,
+			Publicacion_Comision = @COMISION,
 			Estado_Publicacion_ID = @ESTADO_ID
 		WHERE Publicacion_ID = @PUBLI_ID	
 
@@ -2890,6 +2894,7 @@ CREATE PROCEDURE EL_GROUP_BY.EXISTE_ESPECTACULO_PUBLICACION
 @DIRECCION NVarChar(255),
 @RUBRO_ID Int,
 @GRADO_ID INT,
+@COMISION		NUMERIC(3,2),
 @EXISTE BIT OUTPUT
 as
 begin
@@ -2906,7 +2911,8 @@ begin
 		AND e.Espectaculo_Fecha = @FECHA_ESPEC
 		AND E.Espectaculo_Direccion = @DIRECCION 
 		AND E.Rubro_ID = @RUBRO_ID 
-		AND P.Grado_Publicacion_ID = @GRADO_ID)
+		AND P.Grado_Publicacion_ID = @GRADO_ID
+		AND P.Publicacion_Comision = @COMISION)
 		
 end
 GO
@@ -2933,7 +2939,7 @@ begin
 			U.Ubicacion_Sin_Numerar as 'Sin Numerar',
 			UT.Ubicacion_Tipo_Descripcion AS 'Tipo de Ubicación',
 			u.Ubicacion_Precio as 'Precio',
-			G.Grado_Publicacion_Comision as 'Comision de compra',
+			P.Publicacion_Comision as 'Comision de compra',
 			FP.Forma_Pago_Descripcion AS 'Forma de Pago',
 			P.Grado_Publicacion_ID
 	FROM EL_GROUP_BY.Compra C
@@ -3075,6 +3081,7 @@ begin
 	AND P.Grado_Publicacion_ID = @PRIORIDAD
 	AND month(P.Publicacion_Fecha) = @MES
 	AND year(P.Publicacion_Fecha) = @ANIO
+	AND P.Estado_Publicacion_ID != 1 --Que no sea borrador
 	INNER JOIN EL_GROUP_BY.Espectaculo ES ON P.Espectaculo_ID = ES.Espectaculo_ID
 	INNER JOIN EL_GROUP_BY.Empresa EM ON ES.Empresa_ID = EM.Empresa_ID
 	INNER JOIN EL_GROUP_BY.Grado_Publicacion g on g.Grado_Publicacion_ID = p.Grado_Publicacion_ID

@@ -178,6 +178,10 @@ namespace MyLibrary
             parameter.Value = publication.GradeID;
             parameters.Add(parameter);
 
+            parameter = new SqlParameter("@COMISION", SqlDbType.Decimal);
+            parameter.Value = publication.Comision;
+            parameters.Add(parameter);
+
             parameter = new SqlParameter("@ESTADO_ID", SqlDbType.Int);
             parameter.Value = publication.StateID;
             parameters.Add(parameter);
@@ -249,6 +253,10 @@ namespace MyLibrary
             parameter.Value = publication.GradeID;
             parameters.Add(parameter);
 
+            parameter = new SqlParameter("@COMISION", SqlDbType.Decimal);
+            parameter.Value = publication.Comision;
+            parameters.Add(parameter);
+
             parameter = new SqlParameter("@ESTADO_ID", SqlDbType.Int);
             parameter.Value = publication.StateID;
             parameters.Add(parameter);
@@ -293,7 +301,11 @@ namespace MyLibrary
             parameter = new SqlParameter("@GRADO_ID", SqlDbType.Int);
             parameter.Value = publication.GradeID;
             parameters.Add(parameter);
-            
+
+            parameter = new SqlParameter("@COMISION", SqlDbType.Decimal);
+            parameter.Value = publication.Comision;
+            parameters.Add(parameter);
+
             SqlParameter result = new SqlParameter("@EXISTE", SqlDbType.Bit);
             result.Size = sizeof(bool);
             result.Direction = ParameterDirection.Output;

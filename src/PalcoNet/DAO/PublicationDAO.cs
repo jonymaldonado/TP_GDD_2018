@@ -17,6 +17,7 @@ namespace DAO
         public Int32 EspecID { get; set; }
         public Int32 GradeID { get; set; }
         public Int32 StateID { get; set; }
+        public Decimal Comision { get; set; }
 
     }
 
