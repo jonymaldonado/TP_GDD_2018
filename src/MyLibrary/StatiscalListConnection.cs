@@ -59,7 +59,7 @@ namespace MyLibrary
 
         public static SqlDataReader GetPriorities()
         {
-            return Connection.GetDataReader("SELECT GRADO_PUBLICACION_ID, GRADO_PUBLICACION_PRIORIDAD FROM EL_GROUP_BY.GRADO_PUBLICACION WHERE Grado_Publicacion_Habilitado = 1 ORDER BY GRADO_PUBLICACION_PESO DESC");
+            return Connection.GetDataReader("SELECT GRADO_PUBLICACION_ID, GRADO_PUBLICACION_PRIORIDAD FROM EL_GROUP_BY.GRADO_PUBLICACION ORDER BY GRADO_PUBLICACION_PESO DESC");
         }
     }
 }

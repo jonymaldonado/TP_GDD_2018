@@ -155,14 +155,15 @@ namespace PalcoNet.Generar_Rendicion_Comisiones
             info.Append("Total a pagar a la empresa " + pago);
             info.Append(Environment.NewLine);
             info.Append("Se crearon " + items.Count + " items");
-            MessageBox.Show(info.ToString(), "Información");
-
+            
             foreach( ItemDAO item in items)
             {
                 item.Factura_ID = IDFactura;
             }
             
             FacturaConnection.CreateItems(items);
+
+            MessageBox.Show(info.ToString(), "Información");
 
             //Actualiza la pantalla
             this.ds = EmpresaConnection.ListComprasByEmpresa(Empresa.IdEmpresa, dtp_date.Value);

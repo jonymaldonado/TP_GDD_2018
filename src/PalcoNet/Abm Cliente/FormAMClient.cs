@@ -59,6 +59,7 @@ namespace PalcoNet.Abm_Cliente
             this.creditCardChange = true;
             groupBox3.Enabled = false;
             returnToolStripMenuItem.Enabled = false;
+            this.chk_active.Enabled = false;
 
         }
 

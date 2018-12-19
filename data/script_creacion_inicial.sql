@@ -3074,21 +3074,21 @@ begin
 				 EM.Empresa_Razon_Social as 'Razon Social', 
 				 COUNT(PU.Publicacion_ID) AS 'Localidades no vendidas', 
 				 g.Grado_Publicacion_Prioridad as 'Grado de Prioridad',
-				 month(P.Publicacion_Fecha) as 'Mes',
-				 year(P.Publicacion_Fecha) as 'Año'
+				 month(P.Publicacion_FechaHora) as 'Mes',
+				 year(P.Publicacion_FechaHora) as 'Año'
 	FROM EL_GROUP_BY.Publicacion_Ubicacion PU  
 	INNER JOIN EL_GROUP_BY.Publicacion P ON PU.Publicacion_ID = P.Publicacion_ID
 	AND P.Grado_Publicacion_ID = @PRIORIDAD
-	AND month(P.Publicacion_Fecha) = @MES
-	AND year(P.Publicacion_Fecha) = @ANIO
-	AND P.Estado_Publicacion_ID != 1 --Que no sea borrador
+	AND month(P.Publicacion_FechaHora) = @MES
+	AND year(P.Publicacion_FechaHora) = @ANIO
+	AND ( P.Estado_Publicacion_ID = 2 OR P.Estado_Publicacion_ID = 3) --Que no sea borrador
 	INNER JOIN EL_GROUP_BY.Espectaculo ES ON P.Espectaculo_ID = ES.Espectaculo_ID
 	INNER JOIN EL_GROUP_BY.Empresa EM ON ES.Empresa_ID = EM.Empresa_ID
 	INNER JOIN EL_GROUP_BY.Grado_Publicacion g on g.Grado_Publicacion_ID = p.Grado_Publicacion_ID
 	WHERE PU.Compra_ID IS NULL
 	AND PU.Publicacion_Ubicacion_Canjeada = 0
 	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, g.Grado_Publicacion_Prioridad,
-	P.Grado_Publicacion_ID, month(P.Publicacion_Fecha), year(P.Publicacion_Fecha)
+	P.Grado_Publicacion_ID, month(P.Publicacion_FechaHora), year(P.Publicacion_FechaHora)
 	ORDER BY 'Localidades no vendidas' DESC
 
 end
