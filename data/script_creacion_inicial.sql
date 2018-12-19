@@ -3021,7 +3021,6 @@ begin
 	INNER JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @fecha_desde, 120) 
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) < convert(date, @fecha_hasta, 120) 
-	WHERE 'puntos vencidos' > '0'
 	GROUP BY C.Cliente_ID, C.Cliente_Nombre, c.Cliente_Apellido
 	ORDER BY 'Puntos Vencidos' DESC
 
