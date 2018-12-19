@@ -89,6 +89,7 @@
             this.label23 = new System.Windows.Forms.Label();
             this.dgv_ubications_to_buy = new System.Windows.Forms.DataGridView();
             this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
             this.groupBox4.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
@@ -112,6 +113,7 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label25);
             this.groupBox4.Controls.Add(this.btn_select);
             this.groupBox4.Controls.Add(this.dtp_date_to);
             this.groupBox4.Controls.Add(this.dtp_date_from);
@@ -713,6 +715,15 @@
             this.label24.Text = "ID Publ.";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(302, 84);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(296, 13);
+            this.label25.TabIndex = 32;
+            this.label25.Text = "Seleccione el/los rubro/s de espectáculo que desea comprar";
+            // 
             // FormToBuy
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -826,5 +837,6 @@
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.DataGridView dgv_ubications_to_buy;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label25;
     }
 }
