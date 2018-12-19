@@ -140,7 +140,7 @@
             // txt_search_name
             // 
             this.txt_search_name.Location = new System.Drawing.Point(66, 21);
-            this.txt_search_name.MaxLength = 10;
+            this.txt_search_name.MaxLength = 100;
             this.txt_search_name.Name = "txt_search_name";
             this.txt_search_name.Size = new System.Drawing.Size(183, 20);
             this.txt_search_name.TabIndex = 1;
