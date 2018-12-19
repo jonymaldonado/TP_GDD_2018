@@ -3017,7 +3017,7 @@ begin
 		c.Cliente_Apellido as 'Apellido',
 		isnull(sum(P.Puntos_Cantidad),0) as 'Puntos Vencidos'
 	FROM EL_GROUP_BY.Cliente C
-	LEFT JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
+	INNER JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @fecha_desde, 120) 
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) < convert(date, @fecha_hasta, 120) 
 	GROUP BY C.Cliente_ID, C.Cliente_Nombre, c.Cliente_Apellido
