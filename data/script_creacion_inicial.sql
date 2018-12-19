@@ -3021,6 +3021,7 @@ begin
 	INNER JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) > convert(date, @fecha_desde, 120) 
 	AND convert(date, P.Puntos_Fecha_Vencimiento, 120) < convert(date, @fecha_hasta, 120) 
+	WHERE 'puntos vencidos' > '0'
 	GROUP BY C.Cliente_ID, C.Cliente_Nombre, c.Cliente_Apellido
 	ORDER BY 'Puntos Vencidos' DESC
 
@@ -3088,8 +3089,8 @@ begin
 	INNER JOIN EL_GROUP_BY.Grado_Publicacion g on g.Grado_Publicacion_ID = p.Grado_Publicacion_ID
 	WHERE PU.Compra_ID IS NULL
 	AND PU.Publicacion_Ubicacion_Canjeada = 0
-	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, g.Grado_Publicacion_Prioridad,
-	P.Grado_Publicacion_ID, month(P.Publicacion_FechaHora), year(P.Publicacion_FechaHora)
+	GROUP BY EM.Empresa_ID, EM.Empresa_Razon_Social, month(P.Publicacion_FechaHora), year(P.Publicacion_FechaHora),
+			 g.Grado_Publicacion_Prioridad,	P.Grado_Publicacion_ID
 	ORDER BY 'Localidades no vendidas' DESC
 
 end
