@@ -90,7 +90,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -214,11 +214,11 @@
             this.label12.BackColor = System.Drawing.Color.Black;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.White;
-            this.label12.Location = new System.Drawing.Point(305, 162);
+            this.label12.Location = new System.Drawing.Point(303, 162);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(63, 30);
+            this.label12.Size = new System.Drawing.Size(79, 30);
             this.label12.TabIndex = 62;
-            this.label12.Text = "Fecha";
+            this.label12.Text = "Fecha Espectáculo";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label10
@@ -276,7 +276,7 @@
             this.label6.ForeColor = System.Drawing.Color.White;
             this.label6.Location = new System.Drawing.Point(366, 162);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(73, 30);
+            this.label6.Size = new System.Drawing.Size(81, 30);
             this.label6.TabIndex = 64;
             this.label6.Text = "Fila";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -302,9 +302,9 @@
             this.label11.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(435, 162);
+            this.label11.Location = new System.Drawing.Point(441, 162);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(85, 30);
+            this.label11.Size = new System.Drawing.Size(84, 30);
             this.label11.TabIndex = 69;
             this.label11.Text = "Asiento";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -314,9 +314,9 @@
             this.label13.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ForeColor = System.Drawing.Color.White;
-            this.label13.Location = new System.Drawing.Point(515, 162);
+            this.label13.Location = new System.Drawing.Point(519, 162);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(91, 30);
+            this.label13.Size = new System.Drawing.Size(77, 30);
             this.label13.TabIndex = 70;
             this.label13.Text = "Sin Numeración";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -326,7 +326,7 @@
             this.label14.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.Color.White;
-            this.label14.Location = new System.Drawing.Point(586, 162);
+            this.label14.Location = new System.Drawing.Point(589, 162);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(84, 30);
             this.label14.TabIndex = 71;
@@ -465,12 +465,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(760, 451);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.label15);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.label13);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.label12);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);

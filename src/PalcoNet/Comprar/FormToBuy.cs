@@ -183,8 +183,8 @@ namespace PalcoNet.Comprar
             item = (ComboboxItem)cmb_3.SelectedItem;
             grade3 = (int)item.Value;
 
-            DataSet ds = BuyConnection.ListExistingPublications(dtp_date_from.Value.Date
-                                                                       , dtp_date_to.Value.Date
+            DataSet ds = BuyConnection.ListExistingPublications(dtp_date_from.Value
+                                                                       , dtp_date_to.Value
                                                                        , systemDate
                                                                        , txt_desc.Text
                                                                        , grade1 //(cmb_1.Text != "") ? cmb_1.Text.Substring(0,1) : null
@@ -386,7 +386,7 @@ namespace PalcoNet.Comprar
                 compra.Compra_Fecha = systemDate;
                 compra.Cliente_ID = this.IdCliente;
                 compra.Forma_Pago_ID = 2; //Tarjeta de credito
-
+               
                 BuyConnection.CreateBuy(compra, ubicacionesCompra, empresaAnt);
                 totalCompra = 0;
                 ubicacionesCompra.Clear();

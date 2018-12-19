@@ -2038,7 +2038,7 @@ begin
 	FROM EL_GROUP_BY.USUARIO U 
 	INNER JOIN EL_GROUP_BY.Cliente C ON C.Usuario_ID = U.Usuario_ID and C.Cliente_ID = @CLIENT_ID
 	LEFT JOIN EL_GROUP_BY.Puntos P ON P.Cliente_ID = C.Cliente_ID
-	AND P.Puntos_Fecha_Vencimiento > @FECHA 
+	AND P.Puntos_Fecha_Vencimiento >= @FECHA 
 	GROUP BY C.Cliente_Nombre,
 	C.Cliente_Apellido,
 	U.Usuario_Mail,
@@ -2792,11 +2792,12 @@ BEGIN TRANSACTION
 
 	SET @COMPRA_ID = SCOPE_IDENTITY()
 
-	UPDATE EL_GROUP_BY.Publicacion_Ubicacion 
+	UPDATE EL_GROUP_BY.Publicacion_Ubicacion
 		SET Compra_ID = @COMPRA_ID
-		WHERE Ubicacion_ID IN ( SELECT Ubicacion_ID FROM @UBICACIONES)
-		AND Publicacion_ID IN ( SELECT Publicacion_ID FROM @UBICACIONES)
-		AND Publicacion_Ubicacion_Posicion IN (SELECT Publicacion_Ubicacion_Posicion FROM @UBICACIONES)
+		FROM @UBICACIONES U
+		WHERE EL_GROUP_BY.Publicacion_Ubicacion.Ubicacion_ID  = U.Ubicacion_ID	
+		AND EL_GROUP_BY.Publicacion_Ubicacion.Publicacion_ID = U.Publicacion_ID	
+		AND EL_GROUP_BY.Publicacion_Ubicacion.Publicacion_Ubicacion_Posicion = U.Publicacion_Ubicacion_Posicion		
 
 	INSERT EL_GROUP_BY.Puntos VALUES(
 		@PUNTOS,

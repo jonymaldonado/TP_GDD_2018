@@ -260,7 +260,7 @@
             // 
             this.returnToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("returnToolStripMenuItem.Image")));
             this.returnToolStripMenuItem.Name = "returnToolStripMenuItem";
-            this.returnToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.returnToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.returnToolStripMenuItem.Text = "Volver";
             this.returnToolStripMenuItem.Click += new System.EventHandler(this.returnToolStripMenuItem_Click);
             // 
@@ -432,11 +432,11 @@
             this.label12.BackColor = System.Drawing.Color.Black;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.White;
-            this.label12.Location = new System.Drawing.Point(232, 169);
+            this.label12.Location = new System.Drawing.Point(250, 169);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(104, 30);
+            this.label12.Size = new System.Drawing.Size(85, 30);
             this.label12.TabIndex = 87;
-            this.label12.Text = "Fecha";
+            this.label12.Text = "Fecha y Hora Espectáculo";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label7
@@ -444,7 +444,7 @@
             this.label7.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(171, 169);
+            this.label7.Location = new System.Drawing.Point(169, 169);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(86, 30);
             this.label7.TabIndex = 90;
@@ -718,6 +718,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 567);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label13);
             this.Controls.Add(this.label24);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label20);
@@ -728,20 +732,16 @@
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label16);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label12);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label15);
-            this.Controls.Add(this.label11);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.bindingNavigator1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.label19);
-            this.Controls.Add(this.label13);
             this.Controls.Add(this.dgv_list);
             this.Controls.Add(this.dgv_ubicaciones);
             this.Name = "FormToBuy";
