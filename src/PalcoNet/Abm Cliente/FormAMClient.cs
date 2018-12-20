@@ -78,7 +78,7 @@ namespace PalcoNet.Abm_Cliente
 
         private void ModifyScreen()
         {
-            txt_number_doc.MaxLength = 10;
+            txt_number_doc.MaxLength = 8;
             txt_cuil.MaxLength = 20;
             txt_number_card.MaxLength = 16;
             this.LoadDocs();
