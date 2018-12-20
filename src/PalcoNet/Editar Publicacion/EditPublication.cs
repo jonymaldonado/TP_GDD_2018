@@ -25,8 +25,8 @@ namespace PalcoNet.Editar_Publicacion
 
             this.user = user;
             this.idEmpresa = idEmpresa;
-            dtp_public_date.MinDate = systemDate;
-            dtp_date_to.MinDate = systemDate;
+            dtp_public_date.Value = systemDate; // dtp_public_date.MinDate = systemDate;
+            dtp_date_to.Value = systemDate; //dtp_date_to.MinDate = systemDate;
         }
 
         private void returnToolStripMenuItem_Click(object sender, EventArgs e)
